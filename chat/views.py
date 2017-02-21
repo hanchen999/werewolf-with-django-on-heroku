@@ -27,6 +27,12 @@ def create_room(request):
     new_room = None
     
     return redirect(chat_room, label=label)
+def join_room(request):
+    #Create a new room for lang ren sha
+    #
+    new_room = None
+    
+    return redirect(chat_room, label=label)
 
 def chat_room(request):
     """
