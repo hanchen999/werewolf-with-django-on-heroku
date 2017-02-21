@@ -21,7 +21,14 @@ def new_room(request):
             new_room = Room.objects.create(label=label)
     return redirect(chat_room, label=label)
 
-def chat_room(request, label):
+def create_room(request):
+    #Create a new room for lang ren sha
+    #
+    new_room = None
+    
+    return redirect(chat_room, label=label)
+
+def chat_room(request):
     """
     Room view - show the room, with latest messages.
 

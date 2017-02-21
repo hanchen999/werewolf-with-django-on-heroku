@@ -6,9 +6,22 @@ from django.utils import timezone
 class Room(models.Model):
     name = models.TextField()
     label = models.SlugField(unique=True)
-
+    pwd = models.IntegerField()
+    gameStart = models.IntegerField()
+    playerNumber = models.IntegerField()
+    roleList = models.CommaSeparatedIntegerField()
+    playerList = models.CommaSeparatedIntegerField()
+    livingList = models.CommaSeparatedIntegerField()
+    policeOfficer = models.IntegerField()
     def __unicode__(self):
         return self.label
+    def jinghui(self, policeOfficer):
+        self.policeOfficer = policeOfficer
+    def initialize(self, playerList):
+        self.playerList = playerList
+    def update(self, livingList):
+        self.livingList = livingList
+
 
 class Message(models.Model):
     room = models.ForeignKey(Room, related_name='messages')
