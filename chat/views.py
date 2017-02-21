@@ -28,6 +28,8 @@ def create_room(request):
         return render(request, "chat/create_room.html", {})
     else:
         label = request.POST['id']
+        if Room.objects.filter(label=label).exists():
+            render(request, "chat/error.html", {'messages' : 'this name has been used'})
         playNumber = 0
         roleList = request.POST['cunmin'] + ',' + request.POST['langren']
         playNumber += int(request.POST['cunmin']) + int(request.POST['langren'])
@@ -52,14 +54,15 @@ def create_room(request):
         else:
             roleList = roleList + ',' + '0'
         gameStart = 0
-    return redirect(chat_room, label=label, playNumber=playNumber, gameStart=gameStart, roleList=roleList)
+        new_room = Room.objects.create(label=label, playNumber=playNumber, gameStart=gameStart, roleList=roleList)
+    return redirect(chat_room, label=label)
 def join_room(request):
     #Create a new room for lang ren sha
     #
     new_room = None
     return redirect(chat_room, label=1111, playNumber=12, gameStart=0, roleList='')
 
-def chat_room(request, label, playNumber, gameStart, roleList):
+def chat_room(request, label):
     """
     Room view - show the room, with latest messages.
 
@@ -68,7 +71,7 @@ def chat_room(request, label, playNumber, gameStart, roleList):
     """
     # If the room with the given label doesn't exist, automatically create it
     # upon first visit (a la etherpad).
-    room, created = Room.objects.get_or_create(label=label, playNumber=playNumber, gameStart=gameStart, roleList=roleList)
+    room, created = Room.objects.get(label=label)
 
     # We want to show the last 50 messages, ordered most-recent-last
     messages = reversed(room.messages.order_by('-timestamp')[:50])
