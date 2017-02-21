@@ -59,7 +59,7 @@ def join_room(request):
     new_room = None
     return redirect(chat_room, label=1111, playNumber=12, gameStart=0, roleList='')
 
-def chat_room(request):
+def chat_room(request, label, playNumber, gameStart, roleList):
     """
     Room view - show the room, with latest messages.
 
