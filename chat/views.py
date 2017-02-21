@@ -62,6 +62,8 @@ def create_room(request):
 def join_room(request):
     #Create a new room for lang ren sha
     #
+    if request.method == 'GET':
+        return render(request, "chat/join_room.html", {})
     label = request.POST['label']
     return redirect(chat_room, label=label)
 
