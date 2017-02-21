@@ -8,6 +8,7 @@ class Room(models.Model):
     label = models.SlugField(unique=True)
     gameStart = models.IntegerField()
     playerNumber = models.IntegerField()
+    roleList = models.
     def __unicode__(self):
         return self.label
     def jinghui(self, policeOfficer):
