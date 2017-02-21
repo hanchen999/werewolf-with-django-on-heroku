@@ -54,13 +54,13 @@ def create_room(request):
         else:
             roleList = roleList + ',' + '0'
         gameStart = 0
-        new_room = Room.objects.create(label=label, gameStart=gameStart, playNumber=12, roleList=roleList)
+        new_room = Room.objects.create(label=label, gameStart=gameStart, playerNumber=playNumber, roleList=roleList)
     return redirect(chat_room, label=label)
 def join_room(request):
     #Create a new room for lang ren sha
     #
     new_room = None
-    return redirect(chat_room, label=1111, playNumber=12, gameStart=0, roleList='')
+    return redirect(chat_room, label=1111, playerNumber=playNumber, gameStart=0, roleList='')
 
 def chat_room(request, label):
     """

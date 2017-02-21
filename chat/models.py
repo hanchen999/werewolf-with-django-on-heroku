@@ -6,8 +6,8 @@ from django.utils import timezone
 class Room(models.Model):
     name = models.TextField()
     label = models.SlugField(unique=True)
-    gameStart = models.IntegerField()
-    playerNumber = models.IntegerField()
+    gameStart = models.IntegerField(default=0)
+    playerNumber = models.IntegerField(default=0)
     roleList = models.TextField()
     def __unicode__(self):
         return self.label
