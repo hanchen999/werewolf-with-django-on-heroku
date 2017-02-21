@@ -54,7 +54,7 @@ def create_room(request):
         else:
             roleList = roleList + ',' + '0'
         gameStart = 0
-        new_room = Room.objects.create(label=label, gameStart=gameStart, playNumber=int(playNumber), roleList=roleList)
+        new_room = Room.objects.create(label=label, gameStart=gameStart, playNumber=12, roleList=roleList)
     return redirect(chat_room, label=label)
 def join_room(request):
     #Create a new room for lang ren sha
