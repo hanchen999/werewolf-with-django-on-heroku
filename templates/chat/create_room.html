@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}房间配置{% endblock %}
+{% block content %}
+<form id="myForm" action="{% url 'create_room' %}" method="post">
+<label><b>房间号</b></label>
+<input type="text" placeholder="输入房间号" name="id" id="id">
+<label><b>狼人</b></label>
+<input type="text" placeholder="输入狼人数目" name="langren" value="4" required>
+<label><b>村民</b></label>
+<input type="text" placeholder="输入村民数目" name="cunmin" value="4" required>
+<div class="checkbox">
+<label><input type="checkbox" name="yuyanjia" id="yuyanjia">预言家</label>
+<div class="checkbox">
+<label><input type="checkbox" name="nvwu" id="nvwu">女巫</label>
+<div class="checkbox">
+<label><input type="checkbox" name="lieren" id="lieren">猎人</label>
+<div class="checkbox">
+<label><input type="checkbox" name="shouwei" id="shouwei">守卫</label>
+<div>
+<button type="submit">创建房间</button>
+</div>
+</form>
+{% endblock content %}
