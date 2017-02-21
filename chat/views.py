@@ -32,7 +32,7 @@ def create_room(request):
     else:
         label = request.POST['id']
         if Room.objects.filter(label=label).exists():
-            render(request, "chat/error.html", {'messages' : 'this name has been used'})
+            return render(request, "chat/error.html", {'messages' : 'this name has been used'})
         playNumber = 0
         roleList = request.POST['cunmin'] + ',' + request.POST['langren']
         playNumber = playNumber + int(request.POST['cunmin']) + int(request.POST['langren'])
