@@ -8,11 +8,9 @@ class Room(models.Model):
     label = models.SlugField(unique=True)
     gameStart = models.IntegerField()
     playerNumber = models.IntegerField()
-    roleList = models.
+    roleList = models.TextField()
     def __unicode__(self):
         return self.label
-    def jinghui(self, policeOfficer):
-        self.policeOfficer = policeOfficer
 
 
 class Message(models.Model):
