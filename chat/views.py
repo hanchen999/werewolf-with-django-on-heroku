@@ -74,7 +74,7 @@ def chat_room(request, label):
     """
     # If the room with the given label doesn't exist, automatically create it
     # upon first visit (a la etherpad).
-    room, created = Room.objects.get(label=label)
+    room = Room.objects.filter(label=label).first()
 
     # We want to show the last 50 messages, ordered most-recent-last
     messages = reversed(room.messages.order_by('-timestamp')[:50])
