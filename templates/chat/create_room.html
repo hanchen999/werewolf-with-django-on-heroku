@@ -2,6 +2,7 @@
 {% block title %}房间配置{% endblock %}
 {% block content %}
 <form id="myForm" action="{% url 'create_room' %}" method="post">
+{% csrf_token %}
 <label><b>房间号</b></label>
 <input type="text" placeholder="输入房间号" name="id" id="id">
 <label><b>狼人</b></label>
