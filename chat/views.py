@@ -32,7 +32,7 @@ def create_room(request):
             render(request, "chat/error.html", {'messages' : 'this name has been used'})
         playNumber = 0
         roleList = request.POST['cunmin'] + ',' + request.POST['langren']
-        playNumber += int(request.POST['cunmin']) + int(request.POST['langren'])
+        playNumber = playNumber + int(request.POST['cunmin']) + int(request.POST['langren'])
         if request.POST['yuyanjia']:
             roleList = roleList + ',' + '1'
             playNumber = playNumber + 1
@@ -54,7 +54,7 @@ def create_room(request):
         else:
             roleList = roleList + ',' + '0'
         gameStart = 0
-        new_room = Room.objects.create(label=label, gameStart=gameStart, playNumber=playNumber, roleList=roleList)
+        new_room = Room.objects.create(label=label, gameStart=gameStart, playNumber=int(playNumber), roleList=roleList)
     return redirect(chat_room, label=label)
 def join_room(request):
     #Create a new room for lang ren sha
