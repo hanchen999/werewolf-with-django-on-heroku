@@ -30,6 +30,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.TextField()),
                 ('label', models.SlugField(unique=True)),
+                ('gameStart', models.IntegerField(default=0)),
+                ('playerNumber', models.IntegerField(default=0)),
+                ('roleList', models.TextField(default='')),
             ],
         ),
         migrations.AddField(
