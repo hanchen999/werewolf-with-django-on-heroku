@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Error Message</h1>
+<p>
+    {{message}}
+    <div>
+    <a class="button button-primary" href="{% url '' %}">回到主页</a>
+    </div>
+</p>
+{% endblock content %}
