@@ -62,8 +62,8 @@ def create_room(request):
 def join_room(request):
     #Create a new room for lang ren sha
     #
-    new_room = None
-    return redirect(chat_room, label=1111, playerNumber=playNumber, gameStart=0, roleList='')
+    label = request.POST['label']
+    return redirect(chat_room, label=label)
 
 def chat_room(request, label):
     """
