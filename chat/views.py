@@ -27,26 +27,26 @@ def create_room(request):
     if request.method == 'GET':
         return render(request, "chat/create_room.html", {})
     else:
-        label = request.POST.get['id']
+        label = request.POST['id']
         playNumber = 0
-        roleList = request.POST.get['cunmin'] + ',' + request.POST.get['langren']
-        playNumber += int(request.POST.get['cunmin']) + int(request.POST.get['langren'])
-        if request.POST.get['yuyanjia']:
+        roleList = request.POST['cunmin'] + ',' + request.POST['langren']
+        playNumber += int(request.POST['cunmin']) + int(request.POST['langren'])
+        if request.POST['yuyanjia']:
             roleList = roleList + ',' + '1'
             playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
-        if request.POST.get['nvwu']:
+        if request.POST['nvwu']:
             roleList = roleList + ',' + '1'
             playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
-        if request.POST.get['lieren']:
+        if request.POST['lieren']:
             roleList = roleList + ',' + '1'
             playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
-        if request.POST.get['shouwei']:
+        if request.POST['shouwei']:
             roleList = roleList + ',' + '1'
             playNumber = playNumber + 1
         else:
