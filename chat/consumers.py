@@ -32,6 +32,7 @@ def ws_connect(message):
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
     Group('chat-'+label, channel_layer=message.channel_layer).add(message.reply_channel)
+    Group('chat-'+label, channel_layer=message.channel_layer).send({'text': 'someone Joined the room'})
 
     message.channel_session['room'] = room.label
 
@@ -74,5 +75,6 @@ def ws_disconnect(message):
         label = message.channel_session['room']
         room = Room.objects.get(label=label)
         Group('chat-'+label, channel_layer=message.channel_layer).discard(message.reply_channel)
+        Group('chat-'+label, channel_layer=message.channel_layer).send({'text': 'someone leaves the room'})
     except (KeyError, Room.DoesNotExist):
         pass
