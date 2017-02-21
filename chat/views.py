@@ -33,22 +33,22 @@ def create_room(request):
         playNumber += int(request.form.get['cunmin']) + int(request.form.get['langren'])
         if request.form.get['yuyanjia']:
             roleList = roleList + ',' + '1'
-            playNumber++
+            playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
         if request.form.get['nvwu']:
             roleList = roleList + ',' + '1'
-            playNumber++
+            playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
         if request.form.get['lieren']:
             roleList = roleList + ',' + '1'
-            playNumber++
+            playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
         if request.form.get['shouwei']:
             roleList = roleList + ',' + '1'
-            playNumber++
+            playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
         gameStart = 0
