@@ -3,11 +3,11 @@
 {% block content %}
 <form id="myForm" action="{% url 'create_room' %}" method="post">
 <label><b>房间号</b></label>
-<input type="text" placeholder="输入房间号" name="id">
+<input type="text" placeholder="输入房间号" name="id" id="id">
 <label><b>狼人</b></label>
-<input type="text" placeholder="输入狼人数目" name="langren" required>
+<input type="text" placeholder="输入狼人数目" name="langren" value="4" required>
 <label><b>村民</b></label>
-<input type="text" placeholder="输入村民数目" name="cunmin" required>
+<input type="text" placeholder="输入村民数目" name="cunmin" value="4" required>
 <div class="checkbox">
 <label><input type="checkbox" name="yuyanjia" id="yuyanjia">预言家</label>
 <div class="checkbox">

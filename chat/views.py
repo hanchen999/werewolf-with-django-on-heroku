@@ -24,14 +24,39 @@ def new_room(request):
 def create_room(request):
     #Create a new room for lang ren sha
     #
-    new_room = None
-    
-    return redirect(chat_room, label=label)
+    if request.method == 'GET':
+        return render(request, "chat/create_room.html", {})
+    else:
+        label = request.form.get['id']
+        playNumber = 0
+        roleList = request.form.get['cunmin'] + ',' + request.form.get['langren']
+        playNumber += int(request.form.get['cunmin']) + int(request.form.get['langren'])
+        if request.form.get['yuyanjia']:
+            roleList = roleList + ',' + '1'
+            playNumber++
+        else:
+            roleList = roleList + ',' + '0'
+        if request.form.get['nvwu']:
+            roleList = roleList + ',' + '1'
+            playNumber++
+        else:
+            roleList = roleList + ',' + '0'
+        if request.form.get['lieren']:
+            roleList = roleList + ',' + '1'
+            playNumber++
+        else:
+            roleList = roleList + ',' + '0'
+        if request.form.get['shouwei']:
+            roleList = roleList + ',' + '1'
+            playNumber++
+        else:
+            roleList = roleList + ',' + '0'
+        gameStart = 0
+    return redirect(chat_room, label=label, playNumber=playNumber, gameStart=gameStart, roleList=roleList)
 def join_room(request):
     #Create a new room for lang ren sha
     #
     new_room = None
-    
     return redirect(chat_room, label=label)
 
 def chat_room(request):
@@ -43,7 +68,7 @@ def chat_room(request):
     """
     # If the room with the given label doesn't exist, automatically create it
     # upon first visit (a la etherpad).
-    room, created = Room.objects.get_or_create(label=label)
+    room, created = Room.objects.get_or_create(label=label, playNumber=playNumber, gameStart=gameStart, roleList=roleList)
 
     # We want to show the last 50 messages, ordered most-recent-last
     messages = reversed(room.messages.order_by('-timestamp')[:50])
