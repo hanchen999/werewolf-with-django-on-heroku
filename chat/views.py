@@ -8,18 +8,18 @@ from .models import Room
 def about(request):
     return render(request, "chat/about.html")
 
-def new_room(request):
-    """
-    Randomly create a new room, and redirect to it.
-    """
-    new_room = None
-    while not new_room:
-        with transaction.atomic():
-            label = haikunator.haikunate()
-            if Room.objects.filter(label=label).exists():
-                continue
-            new_room = Room.objects.create(label=label)
-    return redirect(chat_room, label=label)
+# def new_room(request):
+#     """
+#     Randomly create a new room, and redirect to it.
+#     """
+#     new_room = None
+#     while not new_room:
+#         with transaction.atomic():
+#             label = haikunator.haikunate()
+#             if Room.objects.filter(label=label).exists():
+#                 continue
+#             new_room = Room.objects.create(label=label)
+#     return redirect(chat_room, label=label)
 
 def create_room(request):
     #Create a new room for lang ren sha
@@ -53,11 +53,11 @@ def create_room(request):
             roleList = roleList + ',' + '0'
         gameStart = 0
     return redirect(chat_room, label=label, playNumber=playNumber, gameStart=gameStart, roleList=roleList)
-def join_room(request):
-    #Create a new room for lang ren sha
-    #
-    new_room = None
-    return redirect(chat_room, label=label)
+# def join_room(request):
+#     #Create a new room for lang ren sha
+#     #
+#     new_room = None
+#     return redirect(chat_room, label=label)
 
 def chat_room(request):
     """
