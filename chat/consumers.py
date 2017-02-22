@@ -14,16 +14,17 @@ gameHasStarted = 'game has started'
 notReady = 'someone is not ready'
 
 def printError(label, name, error):
-    message = map()
+    message = dict()
     message['handler'] = 'system'
     message['message'] = error
+    message['typo'] = 'error'
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return
     room.messages.create(**message)
-    Channel(address=message.reply_channel.name).send({'text': json.dumps(message.as_dict())})
+    Channel(address=name).send({'text': json.dumps(message.as_dict())})
 
 
 
