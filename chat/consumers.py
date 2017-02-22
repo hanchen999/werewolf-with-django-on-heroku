@@ -2,6 +2,7 @@ import re
 import json
 import logging
 from channels import Group
+from channels import group_channels
 from channels.sessions import channel_session
 from .models import Room
 from .models import Player
