@@ -2,11 +2,31 @@ import re
 import json
 import logging
 from channels import Group
+from channels import Channel
 from channels.sessions import channel_session
 from .models import Room
 from .models import Player
 
 log = logging.getLogger(__name__)
+
+noEnoughPeople = '人数尚不足以开始游戏'
+gameHasStarted = '游戏已经开始'
+notReady = '有人还没有准备好'
+
+def printError(label, name, error):
+    message = map()
+    message['handler'] = 'system'
+    message['message'] = error
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return
+    room.messages.create(**message)
+    Channel(address=message.reply_channel.name).send({'text': json.dumps(message.as_dict())})
+
+
+
 
 @channel_session
 def ws_connect(message):
@@ -84,6 +104,10 @@ def ws_receive(message):
             room.players.create(position=data['handle'],address=message.reply_channel.name)
         log.debug('chat message room=%s handle=%s message=%s', 
             room.label, data['handle'], data['message'])
+        if data['type'] == 'startGame':
+            if room.currentNumber < room.playerNumber:
+                printError(room.label, message.reply_channel.name, noEnoughPeople)
+                return
         m = room.messages.create(**data)
 
         # See above for the note about Group

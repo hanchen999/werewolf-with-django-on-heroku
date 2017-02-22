@@ -25,6 +25,18 @@ $(function() {
         var message = {
             handle: $('#handle').val(),
             message: $('#message').val(),
+            type: 'Vote'
+        }
+        chatsock.send(JSON.stringify(message));
+        $("#message").val('').focus();
+        return false;
+    });
+
+    $("#startGame").on("submit", function(event) {
+        var message = {
+            handle: $('#handle').val(),
+            message: 'vote',
+            type: 'startGame'
         }
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();
