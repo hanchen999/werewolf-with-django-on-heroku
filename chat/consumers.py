@@ -34,7 +34,7 @@ def ws_connect(message):
     Group('chat-'+label, channel_layer=message.channel_layer).add(message.reply_channel)
     data = {'handle':'system', 'message':'someone Joined the room'}
     m = room.messages.create(**data)
-    Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())}, immediately=True)
+    Group('chat-'+label).send({'text': json.dumps(m.as_dict())}, immediately=True)
     message.channel_session['room'] = room.label
 
 @channel_session
@@ -78,6 +78,6 @@ def ws_disconnect(message):
         Group('chat-'+label, channel_layer=message.channel_layer).discard(message.reply_channel)
         data = {'handle':'system', 'message':'someone Left the room'}
         m = room.messages.create(**data)
-        Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())}, immediately=True)
+        Group('chat-'+label).send({'text': json.dumps(m.as_dict())}, immediately=True)
     except (KeyError, Room.DoesNotExist):
         pass
