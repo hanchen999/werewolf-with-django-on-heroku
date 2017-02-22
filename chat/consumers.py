@@ -39,7 +39,7 @@ def ws_connect(message):
         return
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
-    Room.objects.get(label=label).update(currentNumber=room.currentNumber + 1)
+    Room.objects.filter(label=label).update(currentNumber=room.currentNumber + 1)
     Group('chat-'+label).add(message.reply_channel)
     message.channel_session['room'] = room.label
 
@@ -97,7 +97,7 @@ def ws_disconnect(message):
         Group('chat-'+label).discard(message.reply_channel)
         player = room.players.filter(address=message.reply_channel.name).first()
         if player is not None:
-            Room.objects.get(label=label).update(currentNumber=room.currentNumber - 1)
+            Room.objects.filter(label=label).update(currentNumber=room.currentNumber - 1)
             room.players.filter(address=message.reply_channel.name).delete()
     except (KeyError, Room.DoesNotExist):
         pass
