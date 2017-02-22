@@ -15,7 +15,7 @@ notReady = 'someone is not ready'
 
 def printError(label, name, error):
     message = dict()
-    message['handler'] = 'system'
+    message['handle'] = 'system'
     message['message'] = error
     message['typo'] = 'error'
     try:
