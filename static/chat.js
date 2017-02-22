@@ -25,7 +25,7 @@ $(function() {
         var message = {
             handle: $('#handle').val(),
             message: $('#message').val(),
-            type: 'Vote'
+            typo: 'Vote'
         }
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();
@@ -36,7 +36,7 @@ $(function() {
         var message = {
             handle: $('#handle').val(),
             message: 'vote',
-            type: 'startGame'
+            typo: 'startGame'
         }
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();

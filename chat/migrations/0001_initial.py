@@ -21,6 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('handle', models.TextField()),
                 ('message', models.TextField()),
+                ('typo', models.TextField()),
                 ('timestamp', models.DateTimeField(db_index=True, default=django.utils.timezone.now)),
             ],
         ),

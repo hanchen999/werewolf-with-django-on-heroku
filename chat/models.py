@@ -30,7 +30,7 @@ class Message(models.Model):
         return self.timestamp.strftime('%b %-d %-I:%M %p')
     
     def as_dict(self):
-        return {'handle': self.handle, 'message': self.message, 'timestamp': self.formatted_timestamp, 'type': self.typo}
+        return {'handle': self.handle, 'message': self.message, 'typo': self.typo, 'timestamp': self.formatted_timestamp}
 
 class Player(models.Model):
     room = models.ForeignKey(Room, related_name='players')
