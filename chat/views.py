@@ -2,6 +2,7 @@ import random
 import string
 from django.db import transaction
 from django.shortcuts import render, redirect
+from channels import Group
 import haikunator
 from .models import Room
 
@@ -59,6 +60,7 @@ def create_room(request):
         gameStart = 0
         new_room = Room.objects.create(label=label, gameStart=gameStart, playerNumber=playNumber, roleList=roleList)
     return redirect(chat_room, label=label)
+
 def join_room(request):
     #Create a new room for lang ren sha
     #
