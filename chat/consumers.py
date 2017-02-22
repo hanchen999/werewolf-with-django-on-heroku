@@ -3,7 +3,6 @@ import json
 import logging
 from channels import Group
 from channels.sessions import channel_session
-from channels.asgi import get_channel_layer
 from .models import Room
 from .models import Player
 
@@ -32,11 +31,7 @@ def ws_connect(message):
     log.debug('chat connect room=%s client=%s:%s', 
         room.label, message['client'][0], message['client'][1])
 
-    channel_layer = get_channel_layer()
-
-    length = channel_layer.group_channels('chat-'+label).len()
-    
-    if length == room.playerNumber:
+    if room.playerNumber == room.currentNumber:
         log.debug('room is full')
         return
     if room.gameStart == 1:
@@ -44,6 +39,7 @@ def ws_connect(message):
         return
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
+    Room.objects.get(label=label).update(currentNumber=room.currentNumber + 1)
     Group('chat-'+label).add(message.reply_channel)
     message.channel_session['room'] = room.label
 
@@ -101,6 +97,7 @@ def ws_disconnect(message):
         Group('chat-'+label).discard(message.reply_channel)
         player = room.players.filter(address=message.reply_channel.name).first()
         if player is not None:
+            Room.objects.get(label=label).update(currentNumber=room.currentNumber - 1)
             room.players.filter(address=message.reply_channel.name).delete()
     except (KeyError, Room.DoesNotExist):
         pass

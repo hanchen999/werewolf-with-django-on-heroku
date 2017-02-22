@@ -32,6 +32,7 @@ class Migration(migrations.Migration):
                 ('label', models.SlugField(unique=True)),
                 ('gameStart', models.IntegerField(default=0)),
                 ('playerNumber', models.IntegerField(default=0)),
+                ('currentNumber', models.IntegerField(default=0)),
                 ('roleList', models.TextField(default='')),
             ],
         ),

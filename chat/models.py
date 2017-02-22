@@ -9,6 +9,7 @@ class Room(models.Model):
     label = models.SlugField(unique=True)
     gameStart = models.IntegerField(default=0)
     playerNumber = models.IntegerField(default=0)
+    currentNumber = models.IntegerField(default=0)
     roleList = models.TextField(default='')
     def __unicode__(self):
         return self.label
