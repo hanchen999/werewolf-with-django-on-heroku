@@ -31,6 +31,13 @@ def ws_connect(message):
     log.debug('chat connect room=%s client=%s:%s', 
         room.label, message['client'][0], message['client'][1])
     
+    length = group_channels(Group('chat-'+label)).len()
+    if length == room.playerNumber:
+        log.debug('room is full')
+        return
+    if room.gameStart == 1:
+        log.debug('game has been started!')
+        return
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
     Group('chat-'+label).add(message.reply_channel)
