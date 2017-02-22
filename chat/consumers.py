@@ -24,7 +24,7 @@ def printError(label, name, error):
         log.debug('ws room does not exist label=%s', label)
         return
     room.messages.create(**message)
-    Channel(address=name).send({'text': json.dumps(message.as_dict())})
+    Channel(name).send({'text': json.dumps(message.as_dict())})
 
 
 
