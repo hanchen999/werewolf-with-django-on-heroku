@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils import timezone
+from channels import Channel
 
 class Room(models.Model):
     name = models.TextField()
@@ -28,3 +29,12 @@ class Message(models.Model):
     
     def as_dict(self):
         return {'handle': self.handle, 'message': self.message, 'timestamp': self.formatted_timestamp}
+
+class Player(models.Model):
+    room = models.ForeignKey(Room, related_name='messages')
+    position = models.SlugField(unique=True)
+    address = models.TextField()
+    def __unicode__(self):
+        return '{position}: {address}'.format(**self.as_dict())
+    def as_dict(self):
+        return {'position': self.position, 'address': self.address}

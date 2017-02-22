@@ -35,9 +35,22 @@ class Migration(migrations.Migration):
                 ('roleList', models.TextField(default='')),
             ],
         ),
+        migrations.CreateModel(
+            name='Player',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('position', models.SlugField(unique=True)),
+                ('address', models.TextField()),
+            ],
+        ),
         migrations.AddField(
             model_name='message',
             name='room',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='messages', to='chat.Room'),
+        ),
+        migrations.AddField(
+            model_name='player',
+            name='room',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='players', to='chat.Room'),
         ),
     ]

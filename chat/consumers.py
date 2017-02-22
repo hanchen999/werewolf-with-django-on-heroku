@@ -4,6 +4,7 @@ import logging
 from channels import Group
 from channels.sessions import channel_session
 from .models import Room
+from .models import Player
 
 log = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ def ws_connect(message):
             log.debug('invalid ws path=%s', message['path'])
             return
         room = Room.objects.get(label=label)
+
     except ValueError:
         log.debug('invalid ws path=%s', message['path'])
         return
@@ -31,7 +33,7 @@ def ws_connect(message):
     
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
-    Group('chat-'+label, channel_layer=message.channel_layer).add(message.reply_channel)
+    Group('chat-'+label).add(message.reply_channel)
     message.channel_session['room'] = room.label
 
 @channel_session
@@ -47,6 +49,7 @@ def ws_receive(message):
         log.debug('recieved message, buy room does not exist label=%s', label)
         return
 
+
     # Parse out a chat message from the content text, bailing if it doesn't
     # conform to the expected message format.
     try:
@@ -60,18 +63,30 @@ def ws_receive(message):
         return
 
     if data:
+        player = None
+        try:
+            player = room.players.filter(position=data['handle']).first()
+        except ValueError:
+            log.debug("something is wrong")
+            return
+        if player is not None:
+            if player.address != message.reply_channel.name:
+                log.debug("this room's position has been occupied by another guy")
+                return
+        else:
+            room.players.create(position=data['handle'],address=message.reply_channel.name)
         log.debug('chat message room=%s handle=%s message=%s', 
             room.label, data['handle'], data['message'])
         m = room.messages.create(**data)
 
         # See above for the note about Group
-        Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
+        Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
 
 @channel_session
 def ws_disconnect(message):
     try:
         label = message.channel_session['room']
         room = Room.objects.get(label=label)
-        Group('chat-'+label, channel_layer=message.channel_layer).discard(message.reply_channel)
+        Group('chat-'+label).discard(message.reply_channel)
     except (KeyError, Room.DoesNotExist):
         pass
