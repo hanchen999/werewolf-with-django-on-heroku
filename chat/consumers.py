@@ -9,9 +9,9 @@ from .models import Player
 
 log = logging.getLogger(__name__)
 
-noEnoughPeople = '人数尚不足以开始游戏'
-gameHasStarted = '游戏已经开始'
-notReady = '有人还没有准备好'
+noEnoughPeople = 'not enough people in the room'
+gameHasStarted = 'game has started'
+notReady = 'someone is not ready'
 
 def printError(label, name, error):
     message = map()
