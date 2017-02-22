@@ -88,5 +88,8 @@ def ws_disconnect(message):
         label = message.channel_session['room']
         room = Room.objects.get(label=label)
         Group('chat-'+label).discard(message.reply_channel)
+        player = room.player.filter(address=message.reply_channel.name).first()
+        if player is not None:
+            room.player.filter(address=message.reply_channel.name).delete()
     except (KeyError, Room.DoesNotExist):
         pass
