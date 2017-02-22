@@ -31,7 +31,7 @@ class Message(models.Model):
         return {'handle': self.handle, 'message': self.message, 'timestamp': self.formatted_timestamp}
 
 class Player(models.Model):
-    room = models.ForeignKey(Room, related_name='messages')
+    room = models.ForeignKey(Room, related_name='players')
     position = models.SlugField(unique=True)
     address = models.TextField()
     def __unicode__(self):
