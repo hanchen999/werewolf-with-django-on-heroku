@@ -2,8 +2,8 @@ import re
 import json
 import logging
 from channels import Group
-from channels import group_channels
 from channels.sessions import channel_session
+from channels.asgi import get_channel_layer
 from .models import Room
 from .models import Player
 
@@ -31,8 +31,11 @@ def ws_connect(message):
 
     log.debug('chat connect room=%s client=%s:%s', 
         room.label, message['client'][0], message['client'][1])
+
+    channel_layer = get_channel_layer()
+
+    length = channel_layer.group_channels('chat-'+label).len()
     
-    length = group_channels(Group('chat-'+label)).len()
     if length == room.playerNumber:
         log.debug('room is full')
         return
