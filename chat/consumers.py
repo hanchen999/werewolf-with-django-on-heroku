@@ -1,23 +1,31 @@
 import re
 import json
 import logging
+import random
 from channels import Group
 from channels import Channel
 from channels.sessions import channel_session
 from .models import Room
 from .models import Player
 
+
 log = logging.getLogger(__name__)
+
 
 noEnoughPeople = 'not enough people in the room'
 gameHasStarted = 'game has started'
+gameNotStart = 'game does not start'
 notReady = 'someone is not ready'
+notRightPerson = 'You are not the right person to vote'
+voteInfo = 'You vote '
+dayerror = 'This is in the day'
+nighterror = 'This is in the night'
 
-def printError(label, name, error):
+def sendMessage(label, name, message, typo):
     message = dict()
     message['handle'] = 'system'
-    message['message'] = error
-    message['typo'] = 'error'
+    message['typo'] = typo
+    message['message'] = message
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
@@ -25,6 +33,106 @@ def printError(label, name, error):
         return
     m = room.messages.create(**message)
     Channel(name).send({'text': json.dumps(m.as_dict())})
+
+def sendGroupMessage(label, message, typo):
+    message = dict()
+    message['handle'] = 'system'
+    message['typo'] = typo
+    message['message'] = message
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return
+    m = room.messages.create(**message)
+    CGroup('chat-'+label).send({'text': json.dumps(m.as_dict())})
+
+
+def judgement(label):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return -1
+    roleList = room.roleList.split(",")
+    cunMin = roleList[0]
+    langRen = roleList[1]
+    shenMin = room.playerNumber - cunMin - langRen
+    for player in room.players.all():
+        if player.alive == 0:
+            if player.identification == 0:
+                cunMin = cunMin - 1
+            else if player.identification == 1:
+                langRen = langRen - 1
+            else:
+                shenMin = shenMin - 1
+    if cunMin == 0 || shenMin == 0 || langRen >= cunMin + shenMin:
+        return 1
+    else if langRen == 0:
+        return 2
+    else:
+        return 3
+
+def judgementView(label, name):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        sendMessage(label, name, 'room does not exist!', 'error')
+        return
+
+def room_status(label, number, gameStatus):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return -2
+
+def startGame(label):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        sendGroupMessage(label, 'room does not exist!', 'error')
+        return
+    roleList = room.roleList.split(",")
+    playerList = []
+    gameStatus = []
+    gameStatus.append(0)
+    gameStatus.append(1)
+    for i in range(0, roleList[0]):
+        playerList.append(0)
+    for i in range(0, roleList[1]):
+        playerList.append(1)
+    for i in range(0, roleList[2]):
+        playerList.append(2)
+    if roleList[2] is not 0:
+        gameStatus.append(2)
+    for i in range(0, roleList[3]):
+        playerList.append(3)
+    if roleList[3] is not 0:
+        gameStatus.append(3)
+    for i in range(0, roleList[4]):
+        playerList.append(4)
+    if roleList[4] is not 0:
+        gameStatus.append(4)
+    for i in range(0, roleList[5]):
+        playerList.append(5)
+    if roleList[5] is not 0:
+        gameStatus.append(5)
+    random.shuffle(playerList)
+    for i in range(1, room.playerNumber + 1):
+        player = room.players.filter(position=i).first()
+        player.identification = playerList[i - 1]
+        player.save()
+
+
+
+
+
+
+
+
 
 
 
@@ -107,12 +215,43 @@ def ws_receive(message):
             room.label, data['handle'], data['message'])
         if data['typo'] == 'startGame':
             if room.currentNumber < room.playerNumber:
-                printError(room.label, message.reply_channel.name, noEnoughPeople)
+                sendMessage(room.label, message.reply_channel.name, noEnoughPeople, 'error')
                 return
-        m = room.messages.create(**data)
+            if room.gameStart == 1:
+                sendMessage(room.label, message.reply_channel.name, gameHasStarted, 'error')
+                return
+            if room.players.all().count() < room.playerNumber:
+                sendMessage(room.label, message.reply_channel.name, notReady, 'error')
+                return
+            startGame(label)
+        else if data['typo'] == 'Vote':
+            if votingTime == 1:
+                votingDictionary[data['handle']] = data['message']
+                sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
+            return
+        else if data['typo'] == 'posion':
+            if room.gameStart == 0:
+                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+                return
+        else if data['typo'] == 'heal':
+            if room.gameStart == 0:
+                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+                return
+        else if data['typo'] == 'guard':
+            if room.gameStart == 0:
+                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+                return
+        else if data['typo'] == 'bloom':
+            if room.gameStart == 0:
+                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+                return
+
+
+
+        #m = room.messages.create(**data)
 
         # See above for the note about Group
-        Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
+        #Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
 
 @channel_session
 def ws_disconnect(message):

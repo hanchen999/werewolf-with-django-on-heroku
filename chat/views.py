@@ -37,7 +37,12 @@ def create_room(request):
         playNumber = 0
         roleList = request.POST['cunmin'] + ',' + request.POST['langren']
         playNumber = playNumber + int(request.POST['cunmin']) + int(request.POST['langren'])
-        if request.POST.get('nvwu', False):
+        if request.POST.get('yuyanjia', False):
+            roleList = roleList + ',' + '1'
+            playNumber = playNumber + 1
+        else:
+            roleList = roleList + ',' + '0'
+        if request.POST.get('lieren', False):
             roleList = roleList + ',' + '1'
             playNumber = playNumber + 1
         else:
@@ -47,12 +52,7 @@ def create_room(request):
             playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
-        if request.POST.get('nvwu', False):
-            roleList = roleList + ',' + '1'
-            playNumber = playNumber + 1
-        else:
-            roleList = roleList + ',' + '0'
-        if request.POST.get('nvwu', False):
+        if request.POST.get('shouwei', False):
             roleList = roleList + ',' + '1'
             playNumber = playNumber + 1
         else:

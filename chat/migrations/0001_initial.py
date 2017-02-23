@@ -35,6 +35,9 @@ class Migration(migrations.Migration):
                 ('playerNumber', models.IntegerField(default=0)),
                 ('currentNumber', models.IntegerField(default=0)),
                 ('roleList', models.TextField(default='')),
+                ('voteList', models.TextField(default='')),
+                ('jinghui', models.IntegerField(default=1)),
+                ('daystatus', models.IntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
@@ -43,6 +46,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('position', models.SlugField(unique=True)),
                 ('address', models.TextField()),
+                ('jingzhang', models.IntegerField(default=0)),
+                ('identification', models.IntegerField(default=-1)),
+                ('alive', models.IntegerField(default=1)),
             ],
         ),
         migrations.AddField(

@@ -11,6 +11,9 @@ class Room(models.Model):
     playerNumber = models.IntegerField(default=0)
     currentNumber = models.IntegerField(default=0)
     roleList = models.TextField(default='')
+    voteList = models.TextField(default='')
+    jinghui = models.IntegerField(default=1)
+    daystatus = models.TextField(default='')
     def __unicode__(self):
         return self.label
 
@@ -36,6 +39,9 @@ class Player(models.Model):
     room = models.ForeignKey(Room, related_name='players')
     position = models.SlugField(unique=True)
     address = models.TextField()
+    jingzhang = models.IntegerField(default=0)
+    identification = models.IntegerField(default=-1)
+    alive = models.IntegerField(default=1)
     def __unicode__(self):
         return '{position}: {address}'.format(**self.as_dict())
     def as_dict(self):
