@@ -21,11 +21,11 @@ voteInfo = 'You vote '
 dayerror = 'This is in the day'
 nighterror = 'This is in the night'
 
-def sendMessage(label, name, message, typo):
+def sendMessage(label, name, messageInfo, typo):
     message = dict()
     message['handle'] = 'system'
     message['typo'] = typo
-    message['message'] = message
+    message['message'] = messageInfo
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
