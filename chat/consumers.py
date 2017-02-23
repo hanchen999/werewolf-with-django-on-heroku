@@ -62,13 +62,13 @@ def judgement(label):
         if player.alive == 0:
             if player.identification == 0:
                 cunMin = cunMin - 1
-            else if player.identification == 1:
+            elif player.identification == 1:
                 langRen = langRen - 1
             else:
                 shenMin = shenMin - 1
     if cunMin == 0 || shenMin == 0 || langRen >= cunMin + shenMin:
         return 1
-    else if langRen == 0:
+    elif langRen == 0:
         return 2
     else:
         return 3
@@ -224,24 +224,24 @@ def ws_receive(message):
                 sendMessage(room.label, message.reply_channel.name, notReady, 'error')
                 return
             startGame(label)
-        else if data['typo'] == 'Vote':
+        elif data['typo'] == 'Vote':
             if votingTime == 1:
                 votingDictionary[data['handle']] = data['message']
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
             return
-        else if data['typo'] == 'posion':
+        elif data['typo'] == 'posion':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
                 return
-        else if data['typo'] == 'heal':
+        elif data['typo'] == 'heal':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
                 return
-        else if data['typo'] == 'guard':
+        elif data['typo'] == 'guard':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
                 return
-        else if data['typo'] == 'bloom':
+        elif data['typo'] == 'bloom':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
                 return
