@@ -66,7 +66,7 @@ def judgement(label):
                 langRen = langRen - 1
             else:
                 shenMin = shenMin - 1
-    if cunMin == 0 || shenMin == 0 || langRen >= cunMin + shenMin:
+    if cunMin == 0 or shenMin == 0 or langRen >= cunMin + shenMin:
         return 1
     elif langRen == 0:
         return 2
