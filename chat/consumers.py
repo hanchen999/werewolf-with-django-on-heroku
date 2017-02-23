@@ -225,8 +225,6 @@ def ws_receive(message):
                 return
             startGame(label)
         elif data['typo'] == 'Vote':
-            if votingTime == 1:
-                votingDictionary[data['handle']] = data['message']
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
             return
         elif data['typo'] == 'posion':
