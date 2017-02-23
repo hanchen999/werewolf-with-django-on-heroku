@@ -204,11 +204,10 @@ def ws_receive(message):
             player = room.players.filter(position=data['handle']).first()
         except ValueError:
             log.debug("something is wrong")
-            return
         if player is not None:
             if player.address != message.reply_channel.name:
                 log.debug("this room's position has been occupied by another guy")
-                return
+                sendMessage(room.label, message.reply_channel.name, "this room's position has been occupied by another guy", 'error')
         else:
             room.players.create(position=data['handle'],address=message.reply_channel.name)
         log.debug('chat message room=%s handle=%s message=%s', 
@@ -216,33 +215,25 @@ def ws_receive(message):
         if data['typo'] == 'startGame':
             if room.currentNumber < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, noEnoughPeople, 'error')
-                return
             if room.gameStart == 1:
                 sendMessage(room.label, message.reply_channel.name, gameHasStarted, 'error')
-                return
             if room.players.all().count() < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, notReady, 'error')
-                return
             startGame(label)
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
-            return
         elif data['typo'] == 'posion':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
-                return
         elif data['typo'] == 'heal':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
-                return
         elif data['typo'] == 'guard':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
-                return
         elif data['typo'] == 'bloom':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
-                return
 
 
 
