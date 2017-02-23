@@ -13,7 +13,7 @@ class Room(models.Model):
     roleList = models.TextField(default='')
     voteList = models.TextField(default='')
     jinghui = models.IntegerField(default=1)
-    daystatus = models.TextField(default='')
+    daystatus = models.IntegerField(default=0)
     def __unicode__(self):
         return self.label
 
