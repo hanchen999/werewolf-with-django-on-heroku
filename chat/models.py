@@ -26,7 +26,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 
     def __unicode__(self):
-        return '[{timestamp}] {handle}: {message} {typo}'.format(**self.as_dict())
+        return '[{timestamp}] {handle}: {message}'.format(**self.as_dict())
 
     @property
     def formatted_timestamp(self):
