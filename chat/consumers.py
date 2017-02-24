@@ -1,3 +1,5 @@
+#coding=utf-8
+
 import re
 import json
 import logging
@@ -20,6 +22,15 @@ notRightPerson = 'You are not the right person to vote'
 voteInfo = 'You vote '
 dayerror = 'This is in the day'
 nighterror = 'This is in the night'
+identification = 'Your identification is '
+
+identificationDict = dict()
+identificationDict[0] = 'cunmin'
+identificationDict[1] = 'langren'
+identificationDict[2] = 'yuyanjia'
+identificationDict[3] = 'nvwu'
+identificationDict[4] = 'lieren'
+identificationDict[5] = 'shouwei'
 
 def sendMessage(label, name, messageInfo, typo):
     message = dict()
@@ -80,6 +91,42 @@ def judgementView(label, name):
         log.debug('ws room does not exist label=%s', label)
         sendMessage(label, name, 'room does not exist!', 'error')
         return
+    cunmin = ''
+    langren = ''
+    yuyanjia = ''
+    nvwu = ''
+    shouwei = ''
+    lieren = ''
+    for player in room.players.all():
+        if player.identification == 0:
+            cunmin = cunmin + player.position + ' '
+        elif player.identification == 1:
+            langren = langren + player.position + ' '
+        elif player.identification == 2:
+            yuyanjia = yuyanjia + player.position + ' '
+        elif player.identification == 3:
+            lieren = lieren + player.position + ' '
+        elif player.identification == 4:
+            nvwu = nvwu + player.position + ' '
+        elif player.identification == 5:
+            shouwei = shouwei + player.position + ' '
+    Info = 'Identification list \ '
+    if cunmin.len() > 0:
+        Info = Info + 'cunmin: ' + cunmin + '\ '
+    if langren.len() > 0:
+        Info = Info + 'langren: ' + langren + '\ '
+    if yuyanjia.len() > 0:
+        Info = Info + 'yuyanjia: ' + yuyanjia + '\ '
+    if lieren.len() > 0:
+        Info = Info + 'lieren: ' + lieren + '\ '
+    if nvwu.len() > 0:
+        Info = Info + 'nvwu: ' + nvwu + '\ '
+    if shouwei.len() > 0:
+        Info = Info + 'shouwei: ' + shouwei + '\ '
+    sendMessage(label, name, Info, 'message')
+
+
+
 
 def room_status(label, number, gameStatus):
     try:
@@ -228,12 +275,24 @@ def ws_receive(message):
         elif data['typo'] == 'heal':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
-        elif data['typo'] == 'guard':
-            if room.gameStart == 0:
-                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
         elif data['typo'] == 'bloom':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+        elif data['typo'] == 'identification':
+            if room.gameStart == 0:
+                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+            else:
+                player = room.players.filter(position=data['handle']).first()
+                sendMessage(room.label, message.reply_channel.name, identification + identificationDict[player.identification], 'message')
+        elif data['typo'] == 'judgement':
+            if room.gameStart == 0:
+                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+            else:
+                player = room.players.filter(position=data['handle']).first()
+                judgementView(label, player.address)
+                
+
+
 
 
 
