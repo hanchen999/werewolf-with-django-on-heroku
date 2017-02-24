@@ -174,6 +174,7 @@ def startGame(label):
         player = room.players.filter(position=i).first()
         player.identification = playerList[i - 1]
         player.save()
+    sendGroupMessage(label, 'identification is ready!', 'message')
 
 
 
@@ -269,6 +270,7 @@ def ws_receive(message):
             elif room.players.all().count() < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, notReady, 'error')
             else:
+                sendGroupMessage(room.label, 'Game Starts!', 'message')
                 startGame(label)
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
