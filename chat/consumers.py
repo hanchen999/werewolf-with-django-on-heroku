@@ -293,8 +293,7 @@ def ws_receive(message):
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
             else:
-                player = room.players.filter(position=data['handle']).first()
-                judgementView(label, player.address)
+                judgementView(room.label, message.reply_channel.name)
                 
 
 
