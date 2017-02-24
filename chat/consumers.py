@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 noEnoughPeople = 'not enough people in the room'
 gameHasStarted = 'game has started'
-gameNotStart = 'game does not start'
+gameNotStarted = 'game does not start'
 notReady = 'someone is not ready'
 notRightPerson = 'You are not the right person to vote'
 voteInfo = 'You vote '
@@ -147,23 +147,23 @@ def startGame(label):
     gameStatus = []
     gameStatus.append(0)
     gameStatus.append(1)
-    for i in range(0, roleList[0]):
+    for i in range(0, int(roleList[0])):
         playerList.append(0)
-    for i in range(0, roleList[1]):
+    for i in range(0, int(roleList[1])):
         playerList.append(1)
-    for i in range(0, roleList[2]):
+    for i in range(0, int(roleList[2])):
         playerList.append(2)
     if roleList[2] is not 0:
         gameStatus.append(2)
-    for i in range(0, roleList[3]):
+    for i in range(0, int(roleList[3])):
         playerList.append(3)
     if roleList[3] is not 0:
         gameStatus.append(3)
-    for i in range(0, roleList[4]):
+    for i in range(0, int(roleList[4])):
         playerList.append(4)
     if roleList[4] is not 0:
         gameStatus.append(4)
-    for i in range(0, roleList[5]):
+    for i in range(0, int(roleList[5])):
         playerList.append(5)
     if roleList[5] is not 0:
         gameStatus.append(5)
@@ -262,11 +262,12 @@ def ws_receive(message):
         if data['typo'] == 'startGame':
             if room.currentNumber < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, noEnoughPeople, 'error')
-            if room.gameStart == 1:
+            elif room.gameStart == 1:
                 sendMessage(room.label, message.reply_channel.name, gameHasStarted, 'error')
-            if room.players.all().count() < room.playerNumber:
+            elif room.players.all().count() < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, notReady, 'error')
-            startGame(label)
+            else:
+                startGame(label)
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
         elif data['typo'] == 'posion':
