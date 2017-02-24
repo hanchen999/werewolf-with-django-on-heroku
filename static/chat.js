@@ -56,7 +56,7 @@ $(function() {
         var message = {
             handle: $('#handle').val(),
             message: 'vote',
-            typo: 'jugdement'
+            typo: 'judgement'
         }
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();
