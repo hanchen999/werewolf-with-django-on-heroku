@@ -14,7 +14,7 @@ from .models import Player
 log = logging.getLogger(__name__)
 
 
-noEnoughPeople = 'not enough people in the room'
+noEnoughPeople = '房间人数不足'
 gameHasStarted = 'game has started'
 gameNotStarted = 'game does not start'
 notReady = 'someone is not ready'
