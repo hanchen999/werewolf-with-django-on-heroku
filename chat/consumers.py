@@ -56,7 +56,7 @@ def sendGroupMessage(label, message, typo):
         log.debug('ws room does not exist label=%s', label)
         return
     m = room.messages.create(**message)
-    CGroup('chat-'+label).send({'text': json.dumps(m.as_dict())})
+    Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
 
 
 def judgement(label):
