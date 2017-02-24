@@ -42,4 +42,24 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
+    $("#identification").on("submit", function(event) {
+        var message = {
+            handle: $('#handle').val(),
+            message: 'vote',
+            typo: 'identification'
+        }
+        chatsock.send(JSON.stringify(message));
+        $("#message").val('').focus();
+        return false;
+    });
+    $("#jugdementView").on("submit", function(event) {
+        var message = {
+            handle: $('#handle').val(),
+            message: 'vote',
+            typo: 'jugdement'
+        }
+        chatsock.send(JSON.stringify(message));
+        $("#message").val('').focus();
+        return false;
+    });
 });
