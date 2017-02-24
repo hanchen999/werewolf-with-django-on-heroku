@@ -45,11 +45,11 @@ def sendMessage(label, name, messageInfo, typo):
     m = room.messages.create(**message)
     Channel(name).send({'text': json.dumps(m.as_dict())})
 
-def sendGroupMessage(label, message, typo):
+def sendGroupMessage(label, messageInfo, typo):
     message = dict()
     message['handle'] = 'system'
     message['typo'] = typo
-    message['message'] = message
+    message['message'] = messageInfo
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
