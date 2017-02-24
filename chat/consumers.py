@@ -142,6 +142,8 @@ def startGame(label):
         log.debug('ws room does not exist label=%s', label)
         sendGroupMessage(label, 'room does not exist!', 'error')
         return
+    room.gameStatus = 1
+    room.save()
     roleList = room.roleList.split(",")
     playerList = []
     gameStatus = []
