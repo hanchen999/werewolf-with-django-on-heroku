@@ -110,19 +110,19 @@ def judgementView(label, name):
             nvwu = nvwu + player.position + ' '
         elif player.identification == 5:
             shouwei = shouwei + player.position + ' '
-    Info = 'Identification list \ '
+    Info = 'Identification list \n '
     if len(cunmin) > 0:
-        Info = Info + 'cunmin: ' + cunmin + '\ '
+        Info = Info + 'cunmin: ' + cunmin + '\n '
     if len(langren) > 0:
-        Info = Info + 'langren: ' + langren + '\ '
+        Info = Info + 'langren: ' + langren + '\n '
     if len(yuyanjia) > 0:
-        Info = Info + 'yuyanjia: ' + yuyanjia + '\ '
+        Info = Info + 'yuyanjia: ' + yuyanjia + '\n '
     if len(lieren) > 0:
-        Info = Info + 'lieren: ' + lieren + '\ '
+        Info = Info + 'lieren: ' + lieren + '\n '
     if len(nvwu) > 0:
-        Info = Info + 'nvwu: ' + nvwu + '\ '
+        Info = Info + 'nvwu: ' + nvwu + '\n '
     if len(shouwei) > 0:
-        Info = Info + 'shouwei: ' + shouwei + '\ '
+        Info = Info + 'shouwei: ' + shouwei + '\n '
     sendMessage(label, name, Info, 'message')
 
 
