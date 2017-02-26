@@ -20,10 +20,10 @@ gameHasStarted = '游戏已经开始'
 gameNotStarted = '游戏尚未开始'
 notReady = '有人没准备好'
 notRightPerson = '您本轮无法投票'
-voteInfo = "您投的人是 "
+voteInfo = 'You Vote '
 dayerror = '时间是白天'
 nighterror = '时间是夜晚'
-identification = '您的身份是 '
+identification = 'Your identification is '
 
 identificationDict = dict()
 identificationDict[0] = '村民'
