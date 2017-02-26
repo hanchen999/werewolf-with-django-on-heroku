@@ -1,4 +1,4 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 
 import re
 import json
@@ -6,7 +6,6 @@ import logging
 import random
 import time
 import operator
-import sys
 from channels import Group
 from channels import Channel
 from channels.sessions import channel_session
