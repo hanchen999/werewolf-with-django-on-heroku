@@ -13,8 +13,6 @@ from channels.sessions import channel_session
 from .models import Room
 from .models import Player
 
-sys.setdefaultencoding("utf-8")
-
 log = logging.getLogger(__name__)
 
 
@@ -371,7 +369,7 @@ def ws_receive(message):
                 sendGroupMessage(room.label, 'Game Starts!', 'message')
                 startGame(label)
         elif data['typo'] == 'Vote':
-                sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
+                sendMessage(room.label, message.reply_channel.name, (voteInfo + data['message']).decode('utf-8'), 'message')
         elif data['typo'] == 'posion':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
