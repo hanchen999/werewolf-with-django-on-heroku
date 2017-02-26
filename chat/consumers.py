@@ -220,6 +220,7 @@ def room_status(label, number, gameStatus):
                 if player.identification == 2:
                     sendMessage(label,player.address,systemInfo,'message')
     elif number == 4:
+        return -1
 
 
 
