@@ -182,32 +182,32 @@ def room_status(label, number, gameStatus):
         log.debug('ws room does not exist label=%s', label)
         return -2
     if number == 1:
-        sendGroupMessage(label，'天黑请闭眼！', 'message')
+        sendGroupMessage(label, '天黑请闭眼！', 'message')
         return 2
     elif number == 2:
         time.sleep(10)
-        sendGroupMessage(label，'狼人请睁眼！', 'message')
+        sendGroupMessage(label, '狼人请睁眼！', 'message')
         if room.jinghui == 1:
-            sendGroupMessage(label，'狼人请确认同伴！', 'message')
+            sendGroupMessage(label, '狼人请确认同伴！', 'message')
             time.sleep(10)
         time.sleep(5)
         room.voteList = ''
         room.save()
-        sendGroupMessage(label，'狼人请确认击杀目标！', 'message')
+        sendGroupMessage(label, '狼人请确认击杀目标！', 'message')
         time.sleep(30)
         deadman, systemInfo = processVote(label)
         room.deadman = deadman
         room.voteList = ''
         room.save()
-        sendGroupMessage(label，'狼人请闭眼！', 'message')
+        sendGroupMessage(label, '狼人请闭眼！', 'message')
         time.sleep(10)
     elif number == 3:
         time.sleep(10)
-        sendGroupMessage(label，'预言家请睁眼！', 'message')
+        sendGroupMessage(label, '预言家请睁眼！', 'message')
         time.sleep(5)
         room.voteList = ''
         room.save()
-        sendGroupMessage(label，'预言家请验人！', 'message')
+        sendGroupMessage(label, '预言家请验人！', 'message')
         time.sleep(30)
         if 2 in gameStatus:
             deadman, systemInfo = processVote(label)
