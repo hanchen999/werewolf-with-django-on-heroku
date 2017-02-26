@@ -4,6 +4,9 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 from channels import Channel
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 class Room(models.Model):
     name = models.TextField()

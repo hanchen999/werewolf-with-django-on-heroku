@@ -55,7 +55,10 @@ TEMPLATES = (
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default="postgres:///channels-example", conn_max_age=500)
+    'default': dj_database_url.config(default="postgres:///channels-example", conn_max_age=500),
+    'OPTIONS': {
+                    'charset': 'latin1',
+                    'use_unicode': True, },
 }
 
 AUTH_PASSWORD_VALIDATORS = (
