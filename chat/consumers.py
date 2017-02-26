@@ -274,7 +274,7 @@ def startGame(label):
     sendGroupMessage(label, '身份已经准备就绪!', 'message')
     roomStatus = 0
     while judgement(label) is 0:
-        log.debug('房间现在的状态是%d'，roomStatus)
+        log.debug('房间现在的状态是%d',roomStatus)
         roomStatus = room_status(label, roomStatus, gameStatus)
         if roomStatus is -1:
             sendGroupMessage(label, '错误发生，或者测试结束！', 'message')
