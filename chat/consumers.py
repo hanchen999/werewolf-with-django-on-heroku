@@ -146,7 +146,7 @@ def processVote(label):
         elif voter in vote:
             continue
         else:
-            if room.players.filter(position=voter).alive === 0:
+            if room.players.filter(position=voter).alive is 0:
                 continue
             vote[voter] = target
             if target not in info:
@@ -154,7 +154,7 @@ def processVote(label):
             else:
                 info[target] = '' + voter
             weight = 1
-            if room.players.filter(position=voter).jingzhang == 1:
+            if room.players.filter(position=voter).jingzhang is 1:
                 weight = 1.5
             if target in count:
                 count[target] = count[target] + weight
