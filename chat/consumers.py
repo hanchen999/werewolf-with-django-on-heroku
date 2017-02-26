@@ -70,9 +70,9 @@ def judgement(label):
         log.debug('ws room does not exist label=%s', label)
         return -1
     roleList = room.roleList.split(",")
-    cunMin = roleList[0]
-    langRen = roleList[1]
-    shenMin = room.playerNumber - cunMin - langRen
+    cunMin = int(roleList[0])
+    langRen = int(roleList[1])
+    shenMin = int(room.playerNumber) - cunMin - langRen
     for player in room.players.all():
         if player.alive == 0:
             if player.identification == 0:
@@ -81,11 +81,14 @@ def judgement(label):
                 langRen = langRen - 1
             else:
                 shenMin = shenMin - 1
-    if cunMin == 0 or shenMin == 0 or langRen >= cunMin + shenMin:
+    if cunMin == 0 or shenMin == 0 or langRen >= (cunMin + shenMin):
+        log.debug('判决胜负1')
         return 1
     elif langRen == 0:
+        log.debug('判决胜负2')
         return 2
     else:
+        log.debug('判决胜负0')
         return 0
 
 def judgementView(label, name):
@@ -270,10 +273,12 @@ def startGame(label):
         player.save()
     sendGroupMessage(label, '身份已经准备就绪!', 'message')
     status = 0
-    while judgement(label) != 0:
+    while judgement(label) is not 0:
+        log.debug('房间现在的状态是 %d'，status)
         status = room_status(label, status, gameStatus)
         if status is -1:
             sendGroupMessage(label, '错误发生，或者测试结束！', 'message')
+            break
     if judgement(label) == 1:
         sendGroupMessage(label, '狼人获胜！', 'message')
     else:
