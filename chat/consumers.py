@@ -20,7 +20,7 @@ gameHasStarted = '游戏已经开始'
 gameNotStarted = '游戏尚未开始'
 notReady = '有人没准备好'
 notRightPerson = '您本轮无法投票'
-voteInfo = 'You Vote '
+voteInfo = '您投票给 '
 dayerror = '时间是白天'
 nighterror = '时间是夜晚'
 identification = 'Your identification is '
@@ -368,7 +368,8 @@ def ws_receive(message):
                 sendGroupMessage(room.label, 'Game Starts!', 'message')
                 startGame(label)
         elif data['typo'] == 'Vote':
-                sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'], 'message')
+
+                sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
         elif data['typo'] == 'posion':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
