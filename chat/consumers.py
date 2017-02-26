@@ -272,11 +272,11 @@ def startGame(label):
         player.identification = playerList[i - 1]
         player.save()
     sendGroupMessage(label, '身份已经准备就绪!', 'message')
-    status = 0
-    while judgement(label) is not 0:
-        log.debug('房间现在的状态是 %d'，status)
-        status = room_status(label, status, gameStatus)
-        if status is -1:
+    roomStatus = 0
+    while judgement(label) is 0:
+        log.debug('房间现在的状态是%d'，roomStatus)
+        roomStatus = room_status(label, roomStatus, gameStatus)
+        if roomStatus is -1:
             sendGroupMessage(label, '错误发生，或者测试结束！', 'message')
             break
     if judgement(label) == 1:
