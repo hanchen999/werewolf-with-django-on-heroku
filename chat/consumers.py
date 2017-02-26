@@ -16,7 +16,7 @@ from .models import Player
 log = logging.getLogger(__name__)
 
 
-noEnoughPeople = '房间人数不足'.encode('utf-8')
+noEnoughPeople = "房间人数不足".encode('utf-8')
 gameHasStarted = '游戏已经开始'.encode('utf-8')
 gameNotStarted = '游戏尚未开始'.encode('utf-8')
 notReady = '有人没准备好'.encode('utf-8')
