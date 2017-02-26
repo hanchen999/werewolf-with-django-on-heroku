@@ -24,7 +24,7 @@ notRightPerson = '您本轮无法投票'
 voteInfo = '您投票给 '
 dayerror = '时间是白天'
 nighterror = '时间是夜晚'
-identification = '您的身份是 '
+identification = 'Your identification is '
 
 identificationDict = dict()
 identificationDict[0] = '村民'
