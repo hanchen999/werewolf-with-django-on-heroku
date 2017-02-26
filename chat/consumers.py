@@ -183,10 +183,10 @@ def room_status(label, number, gameStatus):
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return -2
-    if number == 1:
+    if number == 0:
         sendGroupMessage(label, '天黑请闭眼！', 'message')
-        return 2
-    elif number == 2:
+        return 1
+    elif number == 1:
         time.sleep(10)
         sendGroupMessage(label, '狼人请睁眼！', 'message')
         if room.jinghui == 1:
@@ -203,7 +203,8 @@ def room_status(label, number, gameStatus):
         room.save()
         sendGroupMessage(label, '狼人请闭眼！', 'message')
         time.sleep(10)
-    elif number == 3:
+        return 2
+    elif number == 2:
         time.sleep(10)
         sendGroupMessage(label, '预言家请睁眼！', 'message')
         time.sleep(5)
@@ -221,7 +222,9 @@ def room_status(label, number, gameStatus):
                 player = room.players.filter(position=i).first()
                 if player.identification == 2:
                     sendMessage(label,player.address,systemInfo,'message')
-    elif number == 4:
+        time.sleep(10)
+        return 3
+    elif number == 3:
         return -1
 
 
@@ -269,6 +272,8 @@ def startGame(label):
     status = 0
     while judgement(label) != 0:
         status = room_status(label, status, gameStatus)
+        if status is -1:
+            sendGroupMessage(label, '错误发生，或者测试结束！', 'message')
     if judgement(label) == 1:
         sendGroupMessage(label, '狼人获胜！', 'message')
     else:
@@ -368,7 +373,7 @@ def ws_receive(message):
             elif room.players.all().count() < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, notReady, 'error')
             else:
-                sendGroupMessage(room.label, 'Game Starts!', 'message')
+                sendGroupMessage(room.label, '游戏开始!', 'message')
                 startGame(label)
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
@@ -398,7 +403,7 @@ def ws_receive(message):
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
             else:
-                player = room.players.filter(position=data['handle']).first
+                player = room.players.filter(position=data['handle']).first()
                 if player.alive is 1:
                     sendMessage(room.label, message.reply_channel.name, '您在游戏中的角色还活着，无法成为法官', 'error')
                 else:
