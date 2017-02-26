@@ -392,7 +392,7 @@ def ws_receive(message):
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
             else:
                 player = room.players.filter(position=data['handle']).first
-                if palyer.alive = 1:
+                if player.alive is 1:
                     sendMessage(room.label, message.reply_channel.name, '您在游戏中的角色还活着，无法成为法官', 'error')
                 else:
                     judgementView(room.label, message.reply_channel.name)
