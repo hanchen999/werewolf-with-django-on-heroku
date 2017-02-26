@@ -4,6 +4,8 @@ import re
 import json
 import logging
 import random
+import time
+import operator
 from channels import Group
 from channels import Channel
 from channels.sessions import channel_session
@@ -15,26 +17,26 @@ log = logging.getLogger(__name__)
 
 
 noEnoughPeople = '房间人数不足'
-gameHasStarted = 'game has started'
-gameNotStarted = 'game does not start'
-notReady = 'someone is not ready'
-notRightPerson = 'You are not the right person to vote'
-voteInfo = 'You vote '
-dayerror = 'This is in the day'
-nighterror = 'This is in the night'
-identification = 'Your identification is '
+gameHasStarted = '游戏已经开始'
+gameNotStarted = '游戏尚未开始'
+notReady = '有人没准备好'
+notRightPerson = '您本轮无法投票'
+voteInfo = '您投票给 '
+dayerror = '时间是白天'
+nighterror = '时间是夜晚'
+identification = '您的身份是 '
 
 identificationDict = dict()
-identificationDict[0] = 'cunmin'
-identificationDict[1] = 'langren'
-identificationDict[2] = 'yuyanjia'
-identificationDict[3] = 'nvwu'
-identificationDict[4] = 'lieren'
-identificationDict[5] = 'shouwei'
+identificationDict[0] = '村民'
+identificationDict[1] = '狼人'
+identificationDict[2] = '预言家'
+identificationDict[3] = '女巫'
+identificationDict[4] = '猎人'
+identificationDict[5] = '守卫'
 
 def sendMessage(label, name, messageInfo, typo):
     message = dict()
-    message['handle'] = 'system'
+    message['handle'] = '系统信息'
     message['typo'] = typo
     message['message'] = messageInfo
     try:
@@ -47,7 +49,7 @@ def sendMessage(label, name, messageInfo, typo):
 
 def sendGroupMessage(label, messageInfo, typo):
     message = dict()
-    message['handle'] = 'system'
+    message['handle'] = '系统信息'
     message['typo'] = typo
     message['message'] = messageInfo
     try:
@@ -82,14 +84,14 @@ def judgement(label):
     elif langRen == 0:
         return 2
     else:
-        return 3
+        return 0
 
 def judgementView(label, name):
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
-        sendMessage(label, name, 'room does not exist!', 'error')
+        sendMessage(label, name, '房间不存在!', 'error')
         return
     cunmin = ''
     langren = ''
@@ -112,18 +114,63 @@ def judgementView(label, name):
             shouwei = shouwei + player.position + ' '
     Info = 'Identification list \n '
     if len(cunmin) > 0:
-        Info = Info + 'cunmin: ' + cunmin + '\n '
+        Info = Info + '村民: ' + cunmin + '\n '
     if len(langren) > 0:
-        Info = Info + 'langren: ' + langren + '\n '
+        Info = Info + '狼人: ' + langren + '\n '
     if len(yuyanjia) > 0:
-        Info = Info + 'yuyanjia: ' + yuyanjia + '\n '
+        Info = Info + '预言家: ' + yuyanjia + '\n '
     if len(lieren) > 0:
-        Info = Info + 'lieren: ' + lieren + '\n '
+        Info = Info + '猎人: ' + lieren + '\n '
     if len(nvwu) > 0:
-        Info = Info + 'nvwu: ' + nvwu + '\n '
+        Info = Info + '女巫: ' + nvwu + '\n '
     if len(shouwei) > 0:
-        Info = Info + 'shouwei: ' + shouwei + '\n '
+        Info = Info + '守卫: ' + shouwei + '\n '
     sendMessage(label, name, Info, 'message')
+
+
+def processVote(label):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return -1, 'ws room does not exist label=' + label
+    count = dict()
+    info = dict()
+    vote = dict()
+    voteList = room.voteList.split(',')
+    for i in xrange(0,len(voteList),2):
+        voter = voteList[i]
+        target = voteList[i + 1]
+        if int(target) < 1 or int(target) > room.playerNumber:
+            continue
+        elif voter in vote:
+            continue
+        else:
+            if room.players.filter(position=voter).alive === 0:
+                continue
+            vote[voter] = target
+            if target not in info:
+                info[target] = info[target] + ',' + voter
+            else:
+                info[target] = '' + voter
+            weight = 1
+            if room.players.filter(position=voter).jingzhang == 1:
+                weight = 1.5
+            if target in count:
+                count[target] = count[target] + weight
+            else:
+                count[target] = weight
+    deadman = max(count.iteritems(), key=operator.itemgetter(1))[0]
+    systemInfo = '本轮被投的人是： ' + deadman + '\n'
+    for key, val in info.iteritems():
+        systemInfo = systemInfo + '投' + key + '的人有：' + val + '\n'
+    return deadman, systemInfo
+
+
+
+
+
+
 
 
 
@@ -134,6 +181,47 @@ def room_status(label, number, gameStatus):
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return -2
+    if number == 1:
+        sendGroupMessage(label，'天黑请闭眼！', 'message')
+        return 2
+    elif number == 2:
+        time.sleep(10)
+        sendGroupMessage(label，'狼人请睁眼！', 'message')
+        if room.jinghui == 1:
+            sendGroupMessage(label，'狼人请确认同伴！', 'message')
+            time.sleep(10)
+        time.sleep(5)
+        room.voteList = ''
+        room.save()
+        sendGroupMessage(label，'狼人请确认击杀目标！', 'message')
+        time.sleep(30)
+        deadman, systemInfo = processVote(label)
+        room.deadman = deadman
+        room.voteList = ''
+        room.save()
+        sendGroupMessage(label，'狼人请闭眼！', 'message')
+        time.sleep(10)
+    elif number == 3:
+        time.sleep(10)
+        sendGroupMessage(label，'预言家请睁眼！', 'message')
+        time.sleep(5)
+        room.voteList = ''
+        room.save()
+        sendGroupMessage(label，'预言家请验人！', 'message')
+        time.sleep(30)
+        if 2 in gameStatus:
+            deadman, systemInfo = processVote(label)
+            if room.players.filter(position=deadman).identification == 1:
+                systemInfo = '您验得人是狼人！'
+            else:
+                systemInfo = '您验得人是好人！'
+            for i in range(1, room.playerNumber + 1):
+                player = room.players.filter(position=i).first()
+                if player.identification == 2:
+                    sendMessage(label,player.address,systemInfo,'message')
+    elif number == 4:
+
+
 
 def startGame(label):
     try:
@@ -174,7 +262,14 @@ def startGame(label):
         player = room.players.filter(position=i).first()
         player.identification = playerList[i - 1]
         player.save()
-    sendGroupMessage(label, 'identification is ready!', 'message')
+    sendGroupMessage(label, '身份已经准备就绪!', 'message')
+    status = 0
+    while judgement(label) != 0:
+        status = room_status(label, status, gameStatus)
+    if judgement(label) == 1:
+        sendGroupMessage(label, '狼人获胜！', 'message')
+    else:
+        sendGroupMessage(label, '好人获胜！', 'message')
 
 
 
@@ -214,7 +309,7 @@ def ws_connect(message):
         log.debug('room is full')
         return
     if room.gameStart == 1:
-        log.debug('game has been started!')
+        log.debug('游戏开始!')
         return
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
@@ -283,6 +378,8 @@ def ws_receive(message):
         elif data['typo'] == 'bloom':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+            elif room.dayStatus == 0:
+                sendMessage(room.label, message.reply_channel.name, nighterror, 'error')
         elif data['typo'] == 'identification':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
@@ -293,7 +390,12 @@ def ws_receive(message):
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
             else:
-                judgementView(room.label, message.reply_channel.name)
+                player = room.players.filter(position=data['handle']).first
+                if palyer.alive = 1:
+                    sendMessage(room.label, message.reply_channel.name, '您在游戏中的角色还活着，无法成为法官', 'error')
+                else:
+                    judgementView(room.label, message.reply_channel.name)
+
                 
 
 

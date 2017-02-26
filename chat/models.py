@@ -14,6 +14,9 @@ class Room(models.Model):
     voteList = models.TextField(default='')
     jinghui = models.IntegerField(default=1)
     daystatus = models.IntegerField(default=0)
+    duyao = models.IntegerField(default=1)
+    jieyao = models.IntegerField(default=1)
+    deadman = models.IntegerField(default=0)
     def __unicode__(self):
         return self.label
 

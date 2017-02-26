@@ -38,6 +38,9 @@ class Migration(migrations.Migration):
                 ('voteList', models.TextField(default='')),
                 ('jinghui', models.IntegerField(default=1)),
                 ('daystatus', models.IntegerField(default=0)),
+                ('jieyao', models.IntegerField(default=0)),
+                ('duyao', models.IntegerField(default=0)),
+                ('deadman', models.IntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
