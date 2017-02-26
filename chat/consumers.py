@@ -144,6 +144,7 @@ def processVote(label):
     vote = dict()
     voteList = room.voteList.split(',')
     for i in xrange(0,len(voteList),2):
+        log.debug('现在i的大小是=%d', i)
         voter = voteList[i]
         target = voteList[i + 1]
         if int(target) < 1 or int(target) > room.playerNumber:
@@ -270,6 +271,18 @@ def startGame(label):
     for i in range(1, room.playerNumber + 1):
         player = room.players.filter(position=i).first()
         player.identification = playerList[i - 1]
+        if player.identification = 0:
+            sendMessage(label,player.address,'您的身份是村民！','message')
+        if player.identification = 1:
+            sendMessage(label,player.address,'您的身份是狼人！','message')
+        if player.identification = 2:
+            sendMessage(label,player.address,'您的身份是预言家！','message')
+        if player.identification = 3:
+            sendMessage(label,player.address,'您的身份是猎人！','message')
+        if player.identification = 4:
+            sendMessage(label,player.address,'您的身份是女巫！','message')
+        if player.identification = 5:
+            sendMessage(label,player.address,'您的身份是守卫！','message')
         player.save()
     sendGroupMessage(label, '身份已经准备就绪!', 'message')
     roomStatus = 0
