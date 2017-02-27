@@ -306,19 +306,6 @@ def startGame(label):
 
 
 
-def voting_list():
-    t = threading.currentThread()
-    while getattr(t, "do_run", True):
-        print ("working on %s" % arg)
-    print("Stopping as you wish.")
-
-
-
-
-
-
-
-
 @channel_session
 def ws_connect(message):
     # Extract the room from the message. This expects message.path to be of the
@@ -408,6 +395,13 @@ def ws_receive(message):
                 t.start()
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
+                voteList = room.voteList
+                if len(voteList) is 0:
+                    room.voteList = room.voteList + voter + ',' + target
+                    room.save()
+                else:
+                    room.voteList = room.voteList + ',' + voter + ',' + target
+                    room.save()
         elif data['typo'] == 'posion':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
