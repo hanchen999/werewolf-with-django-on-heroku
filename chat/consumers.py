@@ -216,7 +216,6 @@ def room_status(label, number, gameStatus):
         time.sleep(10)
         return 2
     elif number == 2:
-        time.sleep(10)
         sendGroupMessage(label, '预言家请睁眼！', 'message')
         time.sleep(5)
         room.voteList = ''
