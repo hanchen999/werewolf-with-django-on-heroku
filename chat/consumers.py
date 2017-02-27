@@ -160,7 +160,7 @@ def processVote(label):
         elif voter in vote:
             continue
         else:
-            if room.players.filter(position=voter).alive is 0:
+            if room.players.filter(position=voter).first().alive is 0:
                 continue
             vote[voter] = target
             if target not in info:
@@ -168,7 +168,7 @@ def processVote(label):
             else:
                 info[target] = '' + voter
             weight = 1
-            if room.players.filter(position=voter).jingzhang is 1:
+            if room.players.filter(position=voter).first().jingzhang is 1:
                 weight = 1.5
             if target in count:
                 count[target] = count[target] + weight
@@ -225,7 +225,7 @@ def room_status(label, number, gameStatus):
         time.sleep(30)
         if 2 in gameStatus:
             deadman, systemInfo = processVote(label)
-            if room.players.filter(position=deadman).identification == 1:
+            if room.players.filter(position=deadman).first().identification == 1:
                 systemInfo = '您验得人是狼人！'
             else:
                 systemInfo = '您验得人是好人！'
