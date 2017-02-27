@@ -37,7 +37,7 @@ identificationDict[3] = '女巫'
 identificationDict[4] = '猎人'
 identificationDict[5] = '守卫'
 
-def timecounter(length, arg):
+def timecounter():
     t = threading.currentThread()
     t.status = True
     time.sleep(length)
@@ -199,9 +199,6 @@ def room_status(label, number, gameStatus):
         sendGroupMessage(label, '天黑请闭眼！', 'message')
         return 1
     elif number == 1:
-        t = threading.Thread(target=timecounter, args=(10,"task"))
-        t.start()
-        t.join()
         sendGroupMessage(label, '狼人请睁眼！', 'message')
         if room.jinghui == 1:
             sendGroupMessage(label, '狼人请确认同伴！', 'message')
@@ -210,7 +207,7 @@ def room_status(label, number, gameStatus):
         room.voteList = ''
         room.save()
         sendGroupMessage(label, '狼人请确认击杀目标！', 'message')
-        time.sleep(30)
+        time.sleep(10)
         deadman, systemInfo = processVote(label)
         room.deadman = deadman
         room.voteList = ''
@@ -406,7 +403,9 @@ def ws_receive(message):
                 sendMessage(room.label, message.reply_channel.name, notReady, 'error')
             else:
                 sendGroupMessage(room.label, '游戏开始!', 'message')
-                startGame(label)
+                # startGame(label)
+                t = threading.Thread(target=startGame, args=(label,))
+                t.start()
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
         elif data['typo'] == 'posion':
