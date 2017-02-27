@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^create_room/$', views.create_room, name='create_room'),
     url(r'^join_room/$', views.join_room, name='join_room'),
     url(r'^(?P<label>[\w-]{,50})/$', views.chat_room, name='chat_room'),
+    url(r'^vote/$', views.vote, name='vote_room'),
 ]
