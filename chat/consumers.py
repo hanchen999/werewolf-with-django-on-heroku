@@ -163,7 +163,7 @@ def processVote(label):
             if room.players.filter(position=voter).first().alive is 0:
                 continue
             vote[voter] = target
-            if target not in info:
+            if target in info:
                 info[target] = info[target] + ',' + voter
             else:
                 info[target] = '' + voter
