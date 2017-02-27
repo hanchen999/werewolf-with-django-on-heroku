@@ -207,7 +207,7 @@ def room_status(label, number, gameStatus):
         room.voteList = ''
         room.save()
         sendGroupMessage(label, '狼人请确认击杀目标！', 'message')
-        time.sleep(10)
+        time.sleep(20)
         deadman, systemInfo = processVote(label)
         room.deadman = deadman
         room.voteList = ''
