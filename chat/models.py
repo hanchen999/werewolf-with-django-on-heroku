@@ -21,7 +21,6 @@ class Room(models.Model):
     duyao = models.IntegerField(default=1)
     jieyao = models.IntegerField(default=1)
     deadman = models.IntegerField(default=0)
-    status = models.IntegerField(default=0)
     def __unicode__(self):
         return self.label
 
