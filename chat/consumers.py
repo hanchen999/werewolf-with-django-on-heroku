@@ -6,6 +6,7 @@ import logging
 import random
 import time
 import operator
+import threading
 from channels import Group
 from channels import Channel
 from channels.sessions import channel_session
@@ -142,6 +143,7 @@ def processVote(label):
     count = dict()
     info = dict()
     vote = dict()
+    log.debug('投票列表现在是=%s', room.voteList)
     voteList = room.voteList.split(',')
     for i in xrange(0,len(voteList),2):
         log.debug('现在i的大小是=%d', i)
@@ -299,7 +301,11 @@ def startGame(label):
 
 
 
-
+def voting_list():
+    t = threading.currentThread()
+    while getattr(t, "do_run", True):
+        print ("working on %s" % arg)
+    print("Stopping as you wish.")
 
 
 
@@ -398,8 +404,10 @@ def ws_receive(message):
                 voteList = room.voteList
                 if len(voteList) is 0:
                     room.voteList = room.voteList + data['handle'] + ',' + data['message']
+                    room.save()
                 else:
                     room.voteList = room.voteList + ',' + data['handle'] + ',' + data['message']
+                    room.save()
         elif data['typo'] == 'posion':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')

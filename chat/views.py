@@ -70,6 +70,17 @@ def join_room(request):
     label = request.POST['label']
     return redirect(chat_room, label=label)
 
+# def vote_room(request):
+#     label = request.POST['label']
+#     try:
+#         room = Room.objects.get(label=label)
+#     except Room.DoesNotExist:
+#         log.debug('ws room does not exist label=%s', label)
+#         return
+#     voter = request.POST['handle']
+#     target = request.POST['voteinfo']
+
+
 def chat_room(request, label):
     """
     Room view - show the room, with latest messages.

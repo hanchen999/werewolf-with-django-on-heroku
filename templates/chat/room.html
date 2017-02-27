@@ -41,6 +41,20 @@
       </tfoot>
     </table>
   </form>
+  <form id="voteform" action="{% url 'vote_room' %}" method="post">
+    <table id="votetable">
+      <tfoot>
+      <tr>
+        <td>Vote:</td>
+        <td colspan=2>
+          <input id="voteinfo" type="text" placeholder="" name="voteinfo">
+          <input type="hiden" value={{room.label}} name="label">
+          <button type="submit" id="vote">Vote</button>
+        </td>
+      </tfoot>
+    </table>
+  </form>
+
 {% endblock content %}
 
 {% block afterbody %}
