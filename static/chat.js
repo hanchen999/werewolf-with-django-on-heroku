@@ -21,6 +21,8 @@ $(function() {
         chat.append(ele)
     };
 
+    $('table').scrollTableBody();
+
     $("#chatform").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
@@ -76,6 +78,16 @@ $(function() {
         var message = {
             handle: $('#handle').val(),
             message: $('#message').val(),
+            typo: 'save'
+        }
+        chatsock.send(JSON.stringify(message));
+        $("#message").val('').focus();
+        return false;
+    });
+    $("#bloom").on("submit", function(event) {
+        var message = {
+            handle: $('#handle').val(),
+            message: 'vote',
             typo: 'save'
         }
         chatsock.send(JSON.stringify(message));

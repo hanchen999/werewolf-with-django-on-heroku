@@ -140,7 +140,7 @@ def judgementView(label, name):
     sendMessage(label, name, Info, 'message')
 
 
-def processVote(label):
+def processVote(label, handle):
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
@@ -154,6 +154,9 @@ def processVote(label):
     for i in xrange(0,len(voteList),2):
         log.debug('现在i的大小是=%d', i)
         voter = voteList[i]
+        if args is not 0:
+            if voter is not args:
+                continue
         target = voteList[i + 1]
         if int(target) < 1 or int(target) > room.playerNumber:
             continue
@@ -174,7 +177,15 @@ def processVote(label):
                 count[target] = count[target] + weight
             else:
                 count[target] = weight
-    deadman = max(count.iteritems(), key=operator.itemgetter(1))[0]
+    # deadman = max(count.iteritems(), key=operator.itemgetter(1))[0]
+    deadman = ''
+    currentMax = 0
+    for key,val in count.iteritems():
+        if val > currentMax:
+            deadman = '' + key
+            currentMax = val
+        elif val == currentMax:
+            deadman = deadman + ',' + key 
     systemInfo = '本轮被投的人是： ' + deadman + '\n'
     for key, val in info.iteritems():
         systemInfo = systemInfo + '投' + key + '的人有：' + val + '\n'
@@ -194,10 +205,13 @@ def room_status(label, number, gameStatus):
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
-        return -2
-    if number == 0:
+        return -1
+    # 天黑请闭眼
+    if number == 0:   
         sendGroupMessage(label, '天黑请闭眼！', 'message')
+        time.sleep(10)
         return 1
+    # 狼人杀人
     elif number == 1:
         sendGroupMessage(label, '狼人请睁眼！', 'message')
         if room.jinghui == 1:
@@ -208,14 +222,22 @@ def room_status(label, number, gameStatus):
         room.save()
         sendGroupMessage(label, '狼人请确认击杀目标！', 'message')
         time.sleep(20)
-        deadman, systemInfo = processVote(label)
-        room.deadman = deadman
+        deadman, systemInfo = processVote(label, 0)
+        temp = deadman.split(',')
+        if len(temp) > 1:
+            deadman = 0
+        else:
+            deadman = int(deadman)
+        room.deadman = '' + deadman
         room.voteList = ''
         room.save()
         sendGroupMessage(label, '狼人请闭眼！', 'message')
         time.sleep(10)
         return 2
+    # 预言家验人
     elif number == 2:
+        if 2 is not in gameStatus:
+            return 3
         sendGroupMessage(label, '预言家请睁眼！', 'message')
         time.sleep(5)
         room.voteList = ''
@@ -223,19 +245,221 @@ def room_status(label, number, gameStatus):
         sendGroupMessage(label, '预言家请验人！', 'message')
         time.sleep(30)
         if 2 in gameStatus:
-            deadman, systemInfo = processVote(label)
-            if room.players.filter(position=deadman).first().identification == 1:
+            number = 0
+            for i in range(1, room.playerNumber + 1):
+                player = room.players.filter(position=i).first()
+                if player.identification == 2:
+                    number = i
+                    break
+            deadman, systemInfo = processVote(label,number)
+            if room.players.filter(position=int(deadman)).first().identification == 1:
                 systemInfo = '您验得人是狼人！'
             else:
                 systemInfo = '您验得人是好人！'
             for i in range(1, room.playerNumber + 1):
                 player = room.players.filter(position=i).first()
-                if player.identification == 2:
+                if player.identification == 2 and player.alive is 1:
                     sendMessage(label,player.address,systemInfo,'message')
+                    break
         time.sleep(10)
-        return 3
-    elif number == 3:
-        return -1
+        return 4
+    # 女巫救人
+    elif number == 4:
+        if 4 is not in gameStatus:
+            return 6
+        sendGroupMessage(label, '女巫请睁眼！', 'message')
+        room.voteList = ''
+        room.save()
+        if room.jieyao is not 0:
+            room.sleep(15)
+            return 5
+        nvwu = ''
+        number = 0
+        for i in range(1, room.playerNumber + 1):
+            player = room.players.filter(position=i).first()
+            if player.identification == 4 and player.alive is 1:
+               nvwu = player.address
+               number = i
+               break
+        if len(nvwu) > 0:
+            sendMessage(label,nvwu,'今天晚上被杀死的人是' + room.deadman + '如果使用解药，请输入死者的id','message')
+            time.sleep(15)
+            jieyao, systemInfo = processVote(label, number)
+            if len(jieyao) > 1:
+                room.jieyao = room.deadman
+                room.voteList = ''
+                room.save()
+                time.sleep(15)
+                return 6
+            else:
+                room.voteList = ''
+                room.save()
+                return 5
+        else:
+            room.sleep(15)
+            return 5
+    # 女巫毒人
+    elif number == 5:
+        if 4 is not in gameStatus:
+            return 6
+        room.voteList = ''
+        room.save()
+        if room.duyao is not 0:
+            room.sleep(15)
+            return 6
+        nvwu = ''
+        number = 0
+        for i in range(1, room.playerNumber + 1):
+            player = room.players.filter(position=i).first()
+            if player.identification == 4 and player.alive is 1:
+               nvwu = player.address
+               number = i
+               break
+        if len(nvwu) > 0:
+            sendMessage(label,nvwu,'女巫可以选择使用毒药！请输入您想毒死的人的id！','message')
+            time.sleep(15)
+            duyao, systemInfo = processVote(label,number)
+            if len(duyao) > 1:
+                room.duyao = int(duyao)
+                room.voteList = ''
+                room.save()
+                return 6
+            else:
+                room.voteList = ''
+                room.save()
+                return 6
+        else:
+            room.sleep(15)
+            return 6
+    #守卫护人
+    elif number == 6:
+        if 5 is not in gameStatus:
+            return 7
+        sendGroupMessage(label, '护卫可以选择您今晚想守卫的对象，注意两晚不能同守一个人！', 'message')
+        room.voteList = ''
+        room.save()
+        huwei = ''
+        number = 0
+        for i in range(1, room.playerNumber + 1):
+            player = room.players.filter(position=i).first()
+            if player.identification == 5 and player.alive is 1:
+               huwei = player.address
+               number = i
+               break
+        if len(huwei) > 0:
+            time.sleep(15)
+            sendMessage(label,huwei,'请选择您今晚想守护的人！','message')
+            huwei, systemInfo = processVote(label,number)
+            if len(huwei) > 1:
+                if room.huwei == int(huwei):
+                    room.huwei = 0
+                else:
+                    room.huwei = huwei
+                room.voteList = ''
+                room.save()
+                return 7
+            else:
+                room.voteList = ''
+                room.save()
+                return 7
+        else:
+            room.sleep(15)
+            return 7
+    # 处理昨晚死亡数据，并调整房间状态
+    elif number == 7:
+        systemInfo = '昨天晚上死的人有：'
+        deadList = ''
+        deadman = int(room.deadman)
+        if deadman is not 0:
+            if room.jieyao == deadman and room.shouwei == deadman:
+                if len(deadList) is 0:
+                    deadList = '' + deadman
+                else:
+                    deadList = deadList + ',' + deadman
+                player = room.players.filter(position=int(deadman)).first()
+                player.alive = 0
+                player.save()
+                room.save()
+            elif room.jieyao == deadman or room.shouwei == deadman:
+                room.deadman = 0
+                room.save()
+            else:
+                deadList = deadList + deadman + ' '
+                player = room.players.filter(position=int(deadman)).first()
+                player.alive = 0
+                player.save()
+                room.save()
+        if room.duyao is not 0:
+            player = room.players.filter(position=int(room.duyao)).first()
+            if player.alive == 1:
+                player.alive = 0
+                player.save()
+                if len(deadList) is 0:
+                    deadList = '' + room.duyao
+                else:
+                    deadList = deadList + ',' + room.duyao
+        systemInfo = systemInfo + deadList
+        room.deadman = deadList
+        room.dayStatus = 1
+        room.save()
+        sendGroupMessage(label, '天亮了！', 'message')
+        time.sleep(10)
+        sendGroupMessage(label, systemInfo, 'message')
+        time.sleep(10)
+        return 8
+    # 死人中有猎人或者警长，可以传警徽或者发动技能
+    elif number == 8:
+        if room.jinghui == 1:
+            return 9
+        deadList = room.deadman
+        if len(deadList) is 0:
+            return 10
+        else:
+            temp = deadList.split(',')
+            room.deadman = ''
+            for i in temp:
+                player = room.players.filter(position=i).first()
+                if player.jingzhang is 1:
+                    room.voteList = ''
+                    room.save()
+                    sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
+                    time.sleep(20)
+                    jinghuiList, systemInfo = processVote(label,i)
+                    jinghui = jinghuiList.split(',')
+                    for j in jinghui:
+                        jiren = room.players.filter(position=j).first()
+                        if jiren.alive is 1:
+                            jiren.jingzhang = 1
+                            jiren.save()
+                            sendGroupMessage(label,j + '号玩家成为警长','message')
+                            break
+                room.voteList = ''
+                room.save()
+                sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
+                time.sleep(20)
+                target, systemInfo = processVote(label,i)
+                if player.identification is 3:
+                    if int(target) > 0:
+                        x = room.players.filter(position=int(target)).first()
+                        x.alive = 0
+                        x.save()
+                        sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
+                        room.voteList = ''
+                        room.save()
+            return 10
+    elif number== 9:
+        room.voteList = ''
+        room.save()
+        sendGroupMessage(label,'有三十秒钟竞选警长','message')
+
+
+
+
+
+
+
+
+
 
 
 
@@ -401,12 +625,6 @@ def ws_receive(message):
                 else:
                     room.voteList = room.voteList + ',' + data['handle'] + ',' + data['message']
                     room.save()
-        elif data['typo'] == 'posion':
-            if room.gameStart == 0:
-                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
-        elif data['typo'] == 'heal':
-            if room.gameStart == 0:
-                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
         elif data['typo'] == 'bloom':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
