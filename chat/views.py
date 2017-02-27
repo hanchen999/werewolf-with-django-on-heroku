@@ -70,15 +70,22 @@ def join_room(request):
     label = request.POST['label']
     return redirect(chat_room, label=label)
 
-# def vote_room(request):
-#     label = request.POST['label']
-#     try:
-#         room = Room.objects.get(label=label)
-#     except Room.DoesNotExist:
-#         log.debug('ws room does not exist label=%s', label)
-#         return
-#     voter = request.POST['handle']
-#     target = request.POST['voteinfo']
+def vote_room(request):
+    label = request.POST['label']
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return
+    voter = request.POST['handle']
+    target = request.POST['voteinfo']
+    voteList = room.voteList
+    if len(voteList) is 0:
+        room.voteList = room.voteList + voter + ',' + target
+        room.save()
+    else:
+        room.voteList = room.voteList + ',' + voter + ',' + target
+        room.save()
 
 
 def chat_room(request, label):

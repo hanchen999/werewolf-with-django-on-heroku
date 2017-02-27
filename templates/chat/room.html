@@ -42,6 +42,20 @@
     </table>
   </form>
 
+  <form id="voteform">
+    <table id="votetable">
+      <tfoot>
+      <tr>
+        <td>Vote:</td>
+        <td colspan=2>
+          <input id="voteinfo" type="text" placeholder="" name="voteinfo">
+          <input id="label" type="hidden" value={{room.label}} name="label">
+          <button type="submit" id="go">Vote</button>
+        </td>
+      </tfoot>
+    </table>
+  </form>
+
 {% endblock content %}
 
 {% block afterbody %}
