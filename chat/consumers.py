@@ -397,10 +397,10 @@ def ws_receive(message):
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
                 voteList = room.voteList
                 if len(voteList) is 0:
-                    room.voteList = room.voteList + voter + ',' + target
+                    room.voteList = room.voteList + data['handle'] + ',' + data['message']
                     room.save()
                 else:
-                    room.voteList = room.voteList + ',' + voter + ',' + target
+                    room.voteList = room.voteList + ',' + data['handle'] + ',' + data['message']
                     room.save()
         elif data['typo'] == 'posion':
             if room.gameStart == 0:
