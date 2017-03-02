@@ -777,7 +777,7 @@ def ws_receive(message):
         log.debug("ws message unexpected format data=%s", data)
         return
 
-    if data and data['handle'] is not 'keepalive':
+    if data:
         player = None
         try:
             player = room.players.filter(position=data['handle']).first()
@@ -787,7 +787,7 @@ def ws_receive(message):
             if player.address != message.reply_channel.name:
                 log.debug("this room's position has been occupied by another guy")
                 sendMessage(room.label, message.reply_channel.name, "this room's position has been occupied by another guy", 'error')
-        else:
+        elif data['handle'] is not 'keepalive':
             room.players.create(position=data['handle'],address=message.reply_channel.name)
         log.debug('chat message room=%s handle=%s message=%s', 
             room.label, data['handle'], data['message'])
