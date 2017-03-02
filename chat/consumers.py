@@ -145,6 +145,8 @@ def processVote(label, args):
     vote = dict()
     log.debug('投票列表现在是=%s', room.voteList)
     voteList = room.voteList.split(',')
+    if len(voteList) is 1:
+        return '', '无人投票'
     for i in xrange(0,len(voteList),2):
         log.debug('现在i的大小是=%d', i)
         voter = voteList[i]
