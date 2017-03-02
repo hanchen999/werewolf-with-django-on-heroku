@@ -7,7 +7,7 @@ $(function() {
     var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);    
     chatsock.onmessage = function(message) {
         var messageKeeplive = {
-            handle: 'keepalive',
+            handle: 0,
             message: 'vote',
             typo: 'keepalive'
         }

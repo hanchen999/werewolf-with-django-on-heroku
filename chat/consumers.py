@@ -787,7 +787,7 @@ def ws_receive(message):
             if player.address != message.reply_channel.name:
                 log.debug("this room's position has been occupied by another guy")
                 sendMessage(room.label, message.reply_channel.name, "this room's position has been occupied by another guy", 'error')
-        elif data['handle'] is not 'keepalive':
+        elif data['handle'] != 0:
             room.players.create(position=data['handle'],address=message.reply_channel.name)
         log.debug('chat message room=%s handle=%s message=%s', 
             room.label, data['handle'], data['message'])
