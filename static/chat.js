@@ -16,8 +16,7 @@ $(function() {
         )
         ele.append(
             $("<td></td>").text(data.message)
-        )
-        
+        ) 
         chat.append(ele)
     };
 
@@ -42,6 +41,7 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
+
     $("#identification").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
@@ -52,6 +52,7 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
+
     $("#jugdementView").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
@@ -72,6 +73,7 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
+
     $("#save").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
@@ -82,6 +84,7 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
+
     $("#bloom").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
@@ -92,6 +95,7 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
+    
     $("#bloom").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
