@@ -52,7 +52,7 @@ def sendMessageThread(label, name, messageInfo, typo):
         m = room.messages.create(**message)
         Channel(name).send({'text': json.dumps(m.as_dict())})
         count = count + 1
-        time.sleep(20)
+        time.sleep(200)
 
 
 
