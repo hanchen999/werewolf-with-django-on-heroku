@@ -309,7 +309,7 @@ def room_status(label, number, gameStatus):
         return 2
     # 预言家验人
     elif number == 2:
-        if 2 is not in gameStatus:
+        if 2 not in gameStatus:
             return 3
         sendGroupMessage(label, '预言家请睁眼！', 'message')
         time.sleep(5)
@@ -338,7 +338,7 @@ def room_status(label, number, gameStatus):
         return 4
     # 女巫救人
     elif number == 4:
-        if 4 is not in gameStatus:
+        if 4 not in gameStatus:
             return 6
         sendGroupMessage(label, '女巫请睁眼！', 'message')
         room.voteList = ''
@@ -373,7 +373,7 @@ def room_status(label, number, gameStatus):
             return 5
     # 女巫毒人
     elif number == 5:
-        if 4 is not in gameStatus:
+        if 4 not in gameStatus:
             return 6
         room.voteList = ''
         room.save()
@@ -406,7 +406,7 @@ def room_status(label, number, gameStatus):
             return 6
     #守卫护人
     elif number == 6:
-        if 5 is not in gameStatus:
+        if 5 not in gameStatus:
             return 7
         sendGroupMessage(label, '护卫可以选择您今晚想守卫的对象，注意两晚不能同守一个人！', 'message')
         room.voteList = ''
