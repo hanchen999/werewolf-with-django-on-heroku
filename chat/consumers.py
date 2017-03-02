@@ -321,11 +321,11 @@ def room_status(label, number, gameStatus):
         time.sleep(30)
         if 2 in gameStatus:
             number = 0
-            for i in range(1, room.playerNumber + 1):
-                player = room.players.filter(position=i).first()
-                if player.identification == 2:
-                    number = i
-                    break
+            # for i in range(1, room.playerNumber + 1):
+            #     player = room.players.filter(position=i).first()
+            #     if player.identification == 2:
+            #         number = i
+            #         break
             deadman, systemInfo = processVote(label,number)
             if room.players.filter(position=int(deadman)).first().identification == 1:
                 systemInfo = '您验得人是狼人！'
