@@ -126,7 +126,7 @@ console.log('hello world');
         $("#message").val('').focus();
         console.log(1);
     } catch err {
-        setTimeout( my_func, 10);
+        setTimeout( my_func, 30);
     }
-        setTimeout( my_func, 10);
+        setTimeout( my_func, 30);
      })();
