@@ -303,7 +303,7 @@ def room_status(label, number, gameStatus):
             deadman = 0
         else:
             deadman = int(deadman)
-        room.deadman = '' + deadman
+        room.deadman = '' + str(deadman)
         room.voteList = ''
         room.save()
         sendGroupMessage(label, '狼人请闭眼！', 'message')
