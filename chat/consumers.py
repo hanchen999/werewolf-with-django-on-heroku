@@ -49,10 +49,12 @@ def sendMessageThread(label, name, messageInfo, typo):
         return
     count = 0
     while count < 11:
+        player = room.players.filter(position=1).first()
+        name = player.address
         m = room.messages.create(**message)
         Channel(name).send({'text': json.dumps(m.as_dict())})
         count = count + 1
-        time.sleep(200)
+        time.sleep(120)
 
 
 
