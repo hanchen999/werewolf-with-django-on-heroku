@@ -599,19 +599,19 @@ def room_status(label, number, gameStatus):
                     player.save()
             player = rooms.players.filter(position=int(nameList[0])).first()
             if player.jingzhang is 1:
-                    room.voteList = ''
-                    room.save()
-                    sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
-                    time.sleep(20)
-                    jinghuiList, systemInfo = processVote(label,i)
-                    jinghui = jinghuiList.split(',')
-                    for j in jinghui:
-                        jiren = room.players.filter(position=j).first()
-                        if jiren.alive is 1:
-                            jiren.jingzhang = 1
-                            jiren.save()
-                            sendGroupMessage(label,j + '号玩家成为警长','message')
-                            break
+                room.voteList = ''
+                room.save()
+                sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
+                time.sleep(20)
+                jinghuiList, systemInfo = processVote(label,i)
+                jinghui = jinghuiList.split(',')
+                for j in jinghui:
+                    jiren = room.players.filter(position=j).first()
+                    if jiren.alive is 1:
+                        jiren.jingzhang = 1
+                        jiren.save()
+                        sendGroupMessage(label,j + '号玩家成为警长','message')
+                        break
                 room.voteList = ''
                 room.save()
                 sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
