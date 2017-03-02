@@ -37,6 +37,25 @@ identificationDict[3] = '女巫'
 identificationDict[4] = '猎人'
 identificationDict[5] = '守卫'
 
+def sendMessageThread(label, name, messageInfo, typo):
+    message = dict()
+    message['handle'] = '系统信息'
+    message['typo'] = typo
+    message['message'] = messageInfo
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return
+    count = 0
+    while count < 11:
+        m = room.messages.create(**message)
+        Channel(name).send({'text': json.dumps(m.as_dict())})
+        count = count + 1
+        time.sleep(20)
+
+
+
 def sendMessage(label, name, messageInfo, typo):
     message = dict()
     message['handle'] = '系统信息'
@@ -327,7 +346,8 @@ def room_status(label, number, gameStatus):
             #         number = i
             #         break
             deadman, systemInfo = processVote(label,number)
-            if room.players.filter(position=int(deadman)).first().identification == 1:
+            deadman = deadman.split(',')
+            if room.players.filter(position=int(deadman[0])).first().identification == 1:
                 systemInfo = '您验得人是狼人！'
             else:
                 systemInfo = '您验得人是好人！'
@@ -788,6 +808,8 @@ def ws_receive(message):
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
                 voteList = room.voteList
+                t = threading.Thread(target=sendMessageThread, args=(label,message.reply_channel.name,'测试超时','message'))
+                t.start()
                 if len(voteList) is 0:
                     room.voteList = room.voteList + data['handle'] + ',' + data['message']
                     room.save()
@@ -845,9 +867,9 @@ def ws_disconnect(message):
         label = message.channel_session['room']
         room = Room.objects.get(label=label)
         Group('chat-'+label).discard(message.reply_channel)
-        player = room.players.filter(address=message.reply_channel.name).first()
-        if player is not None:
-            Room.objects.filter(label=label).update(currentNumber=room.currentNumber - 1)
-            room.players.filter(address=message.reply_channel.name).delete()
+        # player = room.players.filter(address=message.reply_channel.name).first()
+        # if player is not None:
+        #     Room.objects.filter(label=label).update(currentNumber=room.currentNumber - 1)
+        #     room.players.filter(address=message.reply_channel.name).delete()
     except (KeyError, Room.DoesNotExist):
         pass
