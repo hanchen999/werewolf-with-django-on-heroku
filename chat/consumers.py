@@ -261,7 +261,7 @@ def pkVote(label, nameList, count):
     else:
         room.voteList = ''
         room.save()
-        status = 0:
+        status = 0
         while status is 0:
             status = pkStatus(label)
         sendGroupMessage(label,'PK台投票开始','message')

@@ -20,7 +20,7 @@ class Room(models.Model):
     daystatus = models.IntegerField(default=0)
     duyao = models.IntegerField(default=0)
     jieyao = models.IntegerField(default=0)
-    deadman = models.IntegerField(default=0)
+    deadman = models.TextField(default='')
     shou = models.IntegerField(default=0)
     def __unicode__(self):
         return self.label
