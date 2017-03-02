@@ -112,7 +112,7 @@ $(function() {
 
 console.log('hello world');
 
-$(function my_func() {
+(function my_func() {
     // your code
     var message = {
             handle: 'keepalive',
