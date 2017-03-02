@@ -45,7 +45,7 @@ class Message(models.Model):
 
 class Player(models.Model):
     room = models.ForeignKey(Room, related_name='players')
-    position = models.SlugField(unique=True)
+    position = models.SlugField()
     address = models.TextField()
     jingzhang = models.IntegerField(default=0)
     identification = models.IntegerField(default=-1)
