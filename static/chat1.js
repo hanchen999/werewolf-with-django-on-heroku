@@ -124,5 +124,5 @@ $(function my_func() {
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();
         console.log(1);
-        setTimeout( my_func, 30);
+        setTimeout( my_func, 20);
      })();
