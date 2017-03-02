@@ -37,12 +37,6 @@ identificationDict[3] = '女巫'
 identificationDict[4] = '猎人'
 identificationDict[5] = '守卫'
 
-def timecounter():
-    t = threading.currentThread()
-    t.status = True
-    time.sleep(length)
-    t.status = False
-
 def sendMessage(label, name, messageInfo, typo):
     message = dict()
     message['handle'] = '系统信息'
@@ -140,7 +134,7 @@ def judgementView(label, name):
     sendMessage(label, name, Info, 'message')
 
 
-def processVote(label, handle):
+def processVote(label, args):
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
@@ -192,13 +186,92 @@ def processVote(label, handle):
     return deadman, systemInfo
 
 
+def processName(label):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return ''
+    nameList = []
+    voteList = room.voteList.split(',')
+    for i in xrange(0,len(voteList),2):
+        if voteList[i] in nameList:
+            continue
+        else:
+            nameList.append(voteList[i]) 
+    room.voteList = ''
+    room.save()
+    return nameList
 
+def checkStatus(label, nameList):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return -1
+    voteList = room.voteList.split(',')
+    for i in xrange(0,len(voteList),2):
+        voter = voteList[i]
+        target = voteList[i + 1]
+        if target is 'bloom':
+            player = room.players.filter(position=vote).first()
+            player.alive = 0
+            player.save()
+            if room.jinghui is 1:
+                sendGroupMessage(label,'昨天晚上死亡的人是'+room.deadman,'message')
+            room.jinghui = 0
+            room.dayStatus = 0
+            room.voteList = ''
+            room.deadman = ''
+            room.save()
+            return 1
+        elif target is 'tuishui':
+            if voter in nameList:
+                nameList.remove(voter)
+        elif target is 'startVote':
+            room.voteList = ''
+            room.save()
+            return 2
+    return 0
 
+def pkStatus(label):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return -1
+    voteList = room.voteList.split(',')
+    for i in xrange(0,len(voteList),2):
+        voter = voteList[i]
+        target = voteList[i + 1]
+        if target is 'startVote':
+            room.voteList = ''
+            room.save()
+            return 1
+    return 0
 
-
-
-
-
+def pkVote(label, nameList, count):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return [] 
+    if count is 2:
+        return []
+    else:
+        room.voteList = ''
+        room.save()
+        status = 0:
+        while status is 0:
+            status = pkStatus(label)
+        sendGroupMessage(label,'PK台投票开始','message')
+        sendGroupMessage(label,'现在在台上的玩家是:','message')
+        sendGroupMessage(label,''.join(nameList),'message')
+        sendGroupMessage(label,'开始20s的投票','message')
+        time.sleep(20)
+        target, systemInfo = processVote(label,0)
+        sendGroupMessage(label,systemInfo,'message')
+        return target
 
 def room_status(label, number, gameStatus):
     try:
@@ -447,20 +520,114 @@ def room_status(label, number, gameStatus):
                         room.voteList = ''
                         room.save()
             return 10
+    #j]警长竞选
     elif number== 9:
         room.voteList = ''
         room.save()
-        sendGroupMessage(label,'有三十秒钟竞选警长','message')
-
-
-
-
-
-
-
-
-
-
+        sendGroupMessage(label,'有二十秒钟竞选警长','message')
+        time.sleep(20)
+        nameList = processName(label)
+        status = checkStatus(label)
+        while status is 0:
+            status, nameList = checkStatus(label, nameList)
+            time.sleep(5)
+        if status is -1:
+            return -1
+        elif status is 1:
+            return 0
+        elif status is 2:
+            room.voteList = ''
+            room.save()
+            sendGroupMessage(label,'开始20s投票','message')
+            time.sleep(20)
+            output, systemInfo = processVote(label, 0)
+            sendGroupMessage(label,systemInfo,'message')
+            nameList = output.split(',')
+            if len(nameList) is 1:
+                room.jinghui = 0
+                player = rooms.players.filter(position=int(nameList[0])).first()
+                player.jinghui = 1
+                player.save()
+                room.save()
+                return 8
+            else:
+                count = 0
+                while len(nameList) > 1 or len(nameList) is 0:
+                    nameList = pkVote(label, nameList, count)
+                    count = count + 1
+                if len(nameList) is 0:
+                    room.jinghui = 0
+                    room.save()
+                else:
+                    room.jinghui = 0
+                    player = rooms.players.filter(position=int(nameList[0])).first()
+                    player.jinghui = 1
+                    player.save()
+                    room.save()
+                return 8
+    #发言并投票:
+    elif number == 10:
+        status = 0
+        while status is 0:
+            status = checkStatus(label)
+        if status is -1:
+            return -1
+        elif status is 1:
+            return 0
+        elif status is 2:
+            room.voteList = ''
+            room.save()
+            sendGroupMessage(label,'开始20s投票','message')
+            time.sleep(20)
+            output, systemInfo = processVote(label, 0)
+            sendGroupMessage(label,systemInfo,'message')
+            nameList = output.split(',')
+            if len(nameList) is 1:
+                player = rooms.players.filter(position=int(nameList[0])).first()
+                player.alive = 0
+                player.save()
+            else:
+                count = 0
+                while len(nameList) > 1 or len(nameList) is 0:
+                    nameList = pkVote(label, nameList, count)
+                    count = count + 1
+                if len(nameList) is 0:
+                    return 0
+                else:
+                    player = rooms.players.filter(position=int(nameList[0])).first()
+                    player.alive = 0
+                    player.save()
+            player = rooms.players.filter(position=int(nameList[0])).first()
+            if player.jingzhang is 1:
+                    room.voteList = ''
+                    room.save()
+                    sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
+                    time.sleep(20)
+                    jinghuiList, systemInfo = processVote(label,i)
+                    jinghui = jinghuiList.split(',')
+                    for j in jinghui:
+                        jiren = room.players.filter(position=j).first()
+                        if jiren.alive is 1:
+                            jiren.jingzhang = 1
+                            jiren.save()
+                            sendGroupMessage(label,j + '号玩家成为警长','message')
+                            break
+                room.voteList = ''
+                room.save()
+                sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
+                time.sleep(20)
+                target, systemInfo = processVote(label,i)
+                if player.identification is 3:
+                    if int(target) > 0:
+                        x = room.players.filter(position=int(target)).first()
+                        x.alive = 0
+                        x.save()
+                        sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
+                        room.voteList = ''
+                        room.save()
+                room.dayStatus = 0
+                room.save()
+                return 0
 
 
 def startGame(label):
@@ -630,6 +797,13 @@ def ws_receive(message):
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
             elif room.dayStatus == 0:
                 sendMessage(room.label, message.reply_channel.name, nighterror, 'error')
+            else:
+                if len(room.voteList) is 0:
+                    room.voteList = room.voteList + data['handle'] + ',' + 'bloom'
+                    room.save()
+                else:
+                    room.voteList = room.voteList + ',' + data['handle'] + ',' + 'bloom'
+                    room.save()
         elif data['typo'] == 'identification':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
@@ -645,12 +819,18 @@ def ws_receive(message):
                     sendMessage(room.label, message.reply_channel.name, '您在游戏中的角色还活着，无法成为法官', 'error')
                 else:
                     judgementView(room.label, message.reply_channel.name)
+        elif data['typo'] == 'startVote':
+            if room.gameStart == 0:
+                sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
+            else:
+                if len(room.voteList) is 0:
+                    room.voteList = room.voteList + data['handle'] + ',' + 'startVote'
+                    room.save()
+                else:
+                    room.voteList = room.voteList + ',' + data['handle'] + ',' + 'startVote'
+                    room.save()
 
                 
-
-
-
-
 
         #m = room.messages.create(**data)
 
