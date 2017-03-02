@@ -389,7 +389,7 @@ def room_status(label, number, gameStatus):
                 room.save()
                 return 5
         else:
-            room.sleep(15)
+            time.sleep(15)
             return 5
     # 女巫毒人
     elif number == 5:
