@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             name='Player',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('position', models.SlugField()),
+                ('position', models.SlugField(unique=True)),
                 ('address', models.TextField()),
                 ('jingzhang', models.IntegerField(default=0)),
                 ('identification', models.IntegerField(default=-1)),
