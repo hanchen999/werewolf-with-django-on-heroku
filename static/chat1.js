@@ -27,7 +27,8 @@ $(function() {
         ele.append(
             $("<td></td>").text(data.message)
         ) 
-        chat.append(ele)
+        if (data.handle != 'keepalive')
+            chat.append(ele)
     };
 
     $("#chatform").on("submit", function(event) {

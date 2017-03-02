@@ -56,6 +56,23 @@ def sendMessageThread(label, name, messageInfo, typo):
         count = count + 1
         time.sleep(60)
 
+def keepalive(label, name, messageInfo, typo):
+    message = dict()
+    message['handle'] = 'keepalive'
+    message['typo'] = typo
+    message['message'] = messageInfo
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return
+    while 1:
+        player = room.players.filter(position=144).first()
+        name = player.address
+        m = room.messages.create(**message)
+        Channel(name).send({'text': json.dumps(m.as_dict())})
+        time.sleep(20)
+
 
 
 def sendMessage(label, name, messageInfo, typo):
@@ -811,7 +828,9 @@ def ws_receive(message):
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
                 voteList = room.voteList
                 t = threading.Thread(target=sendMessageThread, args=(label,message.reply_channel.name,'测试超时','message'))
+                m = threading.Thread(target=keepalive, args=(label,message.reply_channel.name,'保持连接','message'))
                 t.start()
+                m.start()
                 if len(voteList) is 0:
                     room.voteList = room.voteList + data['handle'] + ',' + data['message']
                     room.save()
