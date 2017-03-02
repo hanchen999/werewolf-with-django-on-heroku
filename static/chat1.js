@@ -114,7 +114,7 @@ console.log('hello world');
 
 (function my_func() {
     // your code
-    setTimeout( my_func, 10);
+    try {
     var message = {
             handle: 'keepalive',
             message: 'vote',
@@ -125,5 +125,8 @@ console.log('hello world');
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();
         console.log(1);
+    } catch err {
+        setTimeout( my_func, 10);
+    }
         setTimeout( my_func, 10);
      })();
