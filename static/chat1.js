@@ -1,8 +1,10 @@
+var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
+
 $(function() {
     // When we're using HTTPS, use WSS too.
-    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
-    
+    //var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    //var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);    
     chatsock.onmessage = function(message) {
         var data = JSON.parse(message.data);
         var chat = $("#chat")
@@ -95,7 +97,7 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
-    
+
     $("#bloom").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
@@ -107,3 +109,20 @@ $(function() {
         return false;
     });
 });
+
+consloe.log('hello world');
+
+$(function my_func() {
+    // your code
+    var message = {
+            handle: 'keepalive',
+            message: 'vote',
+            typo: 'keepalive'
+        }
+        //var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        //var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);   
+        chatsock.send(JSON.stringify(message));
+        $("#message").val('').focus();
+        console.log(1);
+        setTimeout( my_func, 30);
+     })();
