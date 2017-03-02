@@ -21,8 +21,6 @@ $(function() {
         chat.append(ele)
     };
 
-    $('table').scrollTableBody();
-
     $("#chatform").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
