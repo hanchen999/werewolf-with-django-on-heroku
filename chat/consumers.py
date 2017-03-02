@@ -777,7 +777,7 @@ def ws_receive(message):
         log.debug("ws message unexpected format data=%s", data)
         return
 
-    if data:
+    if data and data['handle'] is not 'keepalive':
         player = None
         try:
             player = room.players.filter(position=data['handle']).first()
