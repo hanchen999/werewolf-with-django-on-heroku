@@ -12,7 +12,7 @@ $(function() {
         }
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();
-        return false;
+        console.log(1)
         setTimeout( my_func, 30);
      })();
 
