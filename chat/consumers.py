@@ -336,7 +336,7 @@ def room_status(label, number, gameStatus):
     # 预言家验人
     elif number == 2:
         if 2 not in gameStatus:
-            return 3
+            return 4
         sendGroupMessage(label, '预言家请睁眼！', 'message')
         time.sleep(5)
         room.voteList = ''
@@ -385,7 +385,8 @@ def room_status(label, number, gameStatus):
             sendMessage(label,nvwu,'今天晚上被杀死的人是' + room.deadman + '如果使用解药，请输入死者的id','message')
             time.sleep(15)
             jieyao, systemInfo = processVote(label, number)
-            if len(jieyao) > 1:
+            log.debug('jieyao is %d', int(jieyao))
+            if len(jieyao) > 0:
                 room.jieyao = room.deadman
                 room.voteList = ''
                 room.save()
@@ -419,7 +420,7 @@ def room_status(label, number, gameStatus):
             sendMessage(label,nvwu,'女巫可以选择使用毒药！请输入您想毒死的人的id！','message')
             time.sleep(15)
             duyao, systemInfo = processVote(label,number)
-            if len(duyao) > 1:
+            if len(duyao) > 0:
                 room.duyao = int(duyao)
                 room.voteList = ''
                 room.save()
@@ -450,7 +451,7 @@ def room_status(label, number, gameStatus):
             time.sleep(15)
             sendMessage(label,huwei,'请选择您今晚想守护的人！','message')
             huwei, systemInfo = processVote(label,number)
-            if len(huwei) > 1:
+            if len(huwei) > 0:
                 if room.huwei == int(huwei):
                     room.huwei = 0
                 else:
