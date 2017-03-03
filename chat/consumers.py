@@ -709,6 +709,7 @@ def startGame(label):
             sendMessage(label,player.address,'您的身份是守卫！','message')
         player.save()
     sendGroupMessage(label, '身份已经准备就绪!', 'message')
+    log.debug('Game Status is %s', gameStatus[0:])
     roomStatus = 0
     while judgement(label) is 0:
         log.debug('房间现在的状态是%d',roomStatus)
