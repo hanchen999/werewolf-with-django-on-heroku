@@ -385,8 +385,8 @@ def room_status(label, number, gameStatus):
             sendMessage(label,nvwu,'今天晚上被杀死的人是' + room.deadman + '号玩家，如果使用解药，请输入死者的id','message')
             time.sleep(15)
             jieyao, systemInfo = processVote(label, number)
+            log.debug('jieyao is %s', jieyao)
             jieyaoList = jieyao.split(',')
-            log.debug('jieyao is %d', int(jieyaoList[0]))
             if len(jieyao) > 0:
                 room.jieyao = int(jieyaoList[0])
                 room.voteList = ''
