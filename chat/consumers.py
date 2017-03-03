@@ -84,7 +84,7 @@ def sendGroupMessage(label, messageInfo, typo):
         return
     m = room.messages.create(**message)
     for i in range(1, room.playerNumber + 1):
-        name = room.player.filter(position=i).first().address
+        name = room.players.filter(position=i).first().address
         Channel(name).send({'text': json.dumps(m.as_dict())})
 
 
