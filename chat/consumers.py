@@ -37,8 +37,10 @@ identificationDict[3] = '女巫'
 identificationDict[4] = '猎人'
 identificationDict[5] = '守卫'
 
+thread_pool = dict()
 
-def keepalive(label, messageInfo, typo):
+
+def keepalive(label, name, messageInfo, typo):
     message = dict()
     message['handle'] = 'keepalive'
     message['typo'] = typo
@@ -48,13 +50,12 @@ def keepalive(label, messageInfo, typo):
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return
-    while room.gameStart is 1:
-        try:
-            room = Room.objects.get(label=label)
-        except Room.DoesNotExist:
-            break
+    while 1:
         m = room.messages.create(**message)
-        Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
+        player = room.players.filter(address=name).first()
+        if player is not None:
+            log.debug('保持连接=%s', player.identification)
+        Channel(name).send({'text': json.dumps(m.as_dict())})
         time.sleep(20)
 
 
@@ -806,9 +807,14 @@ def ws_receive(message):
                 sendGroupMessage(room.label, '游戏开始!', 'message')
                 # startGame(label)
                 t = threading.Thread(target=startGame, args=(label,))
-                m = threading.Thread(target=keepalive, args=(label,'保持连接','message'))
+                m = threading.Thread(target=keepalive, args=(label,message.reply_channel.name,'保持连接','message'))
                 t.start()
-                m.start()
+                thread_name = str(room.label) + '-' + str(data['handle'])
+                if thread_name not in thread_pool:
+                    m.start()
+                else:
+                    thread_pool[thread_name] = m
+                    m.start
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
                 voteList = room.voteList
