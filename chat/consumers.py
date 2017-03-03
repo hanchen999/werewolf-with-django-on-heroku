@@ -50,7 +50,7 @@ def keepalive(label, messageInfo, typo):
         return
     while 1:
         m = room.messages.create(**message)
-        Group(label).send({'text': json.dumps(m.as_dict())})
+        Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
         time.sleep(20)
 
 
