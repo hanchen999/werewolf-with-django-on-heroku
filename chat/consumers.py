@@ -677,19 +677,19 @@ def startGame(label):
         playerList.append(1)
     for i in range(0, int(roleList[2])):
         playerList.append(2)
-    if roleList[2] is not 0:
+    if int(roleList[2]) is not 0:
         gameStatus.append(2)
     for i in range(0, int(roleList[3])):
         playerList.append(3)
-    if roleList[3] is not 0:
+    if int(roleList[3]) is not 0:
         gameStatus.append(3)
     for i in range(0, int(roleList[4])):
         playerList.append(4)
-    if roleList[4] is not 0:
+    if int(roleList[4]) is not 0:
         gameStatus.append(4)
     for i in range(0, int(roleList[5])):
         playerList.append(5)
-    if roleList[5] is not 0:
+    if int(roleList[5]) is not 0:
         gameStatus.append(5)
     random.shuffle(playerList)
     for i in range(1, room.playerNumber + 1):
