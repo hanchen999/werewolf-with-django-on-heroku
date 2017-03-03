@@ -576,7 +576,7 @@ def room_status(label, number, gameStatus):
         sendGroupMessage(label,'有二十秒钟竞选警长','message')
         time.sleep(20)
         nameList = processName(label)
-        sendGroupMessage(label,'参选警长的有: ' + nameList[0:],'message')
+        sendGroupMessage(label,'参选警长的有: ' + str(nameList[0:]),'message')
         status = checkStatus(label, nameList)
         while status is 0:
             status, nameList = checkStatus(label, nameList)
@@ -588,7 +588,7 @@ def room_status(label, number, gameStatus):
         elif status is 2:
             room.voteList = ''
             room.save()
-            sendGroupMessage(label,'仍然在警上的有: ' + nameList[0:],'message')
+            sendGroupMessage(label,'仍然在警上的有: ' + str(nameList[0:]),'message')
             sendGroupMessage(label,'开始20s投票','message')
             time.sleep(20)
             output, systemInfo = processVote(label, 0)
