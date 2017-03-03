@@ -83,7 +83,9 @@ def sendGroupMessage(label, messageInfo, typo):
         log.debug('ws room does not exist label=%s', label)
         return
     m = room.messages.create(**message)
-    Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
+    for i in range(1, room.playerNumber + 1):
+        name = room.player.filter(position=i).first().address
+        Channel(name).send({'text': json.dumps(m.as_dict())})
 
 
 def judgement(label):
