@@ -807,14 +807,12 @@ def ws_receive(message):
                 sendGroupMessage(room.label, '游戏开始!', 'message')
                 # startGame(label)
                 t = threading.Thread(target=startGame, args=(label,))
+                t.start()
         elif data['typo'] == 'Vote':
                 sendMessage(room.label, message.reply_channel.name, voteInfo + data['message'].decode('utf8'), 'message')
                 m = threading.Thread(target=keepalive, args=(label,message.reply_channel.name,'保持连接','message'))
-                t.start()
                 thread_name = str(room.label) + '-' + str(data['handle'])
                 if thread_name not in thread_pool:
-                    m.start()
-                else:
                     thread_pool[thread_name] = m
                     m.start()
                 voteList = room.voteList
