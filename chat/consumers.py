@@ -48,7 +48,11 @@ def keepalive(label, messageInfo, typo):
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return
-    while 1:
+    while room.gameStart is 1:
+        try:
+            room = Room.objects.get(label=label)
+        except Room.DoesNotExist:
+            break
         m = room.messages.create(**message)
         Group('chat-'+label).send({'text': json.dumps(m.as_dict())})
         time.sleep(20)
