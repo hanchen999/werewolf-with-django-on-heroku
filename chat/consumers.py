@@ -471,7 +471,7 @@ def room_status(label, number, gameStatus):
             return 7
     # 处理昨晚死亡数据，并调整房间状态
     elif number == 7:
-        systemInfo = '昨天晚上死的人有：'
+        systemInfo = '昨天晚上死的人有:'
         deadList = ''
         deadman = int(room.deadman)
         if deadman is not 0:
@@ -507,14 +507,14 @@ def room_status(label, number, gameStatus):
         room.dayStatus = 1
         room.save()
         sendGroupMessage(label, '天亮了！', 'message')
+        if room.jinghui is 1:
+            room_status(label, 9, gameStatus)
         time.sleep(10)
         sendGroupMessage(label, systemInfo, 'message')
         time.sleep(10)
         return 8
     # 死人中有猎人或者警长，可以传警徽或者发动技能
     elif number == 8:
-        if room.jinghui == 1:
-            return 9
         deadList = room.deadman
         if len(deadList) is 0:
             return 10
@@ -551,14 +551,15 @@ def room_status(label, number, gameStatus):
                         room.voteList = ''
                         room.save()
             return 10
-    #j]警长竞选
+    #警长竞选
     elif number== 9:
         room.voteList = ''
         room.save()
         sendGroupMessage(label,'有二十秒钟竞选警长','message')
         time.sleep(20)
         nameList = processName(label)
-        status = checkStatus(label)
+        sendGroupMessage(label,'参选警长的有: ' + nameList[0:],'message')
+        status = checkStatus(label, nameList)
         while status is 0:
             status, nameList = checkStatus(label, nameList)
             time.sleep(5)
@@ -569,6 +570,7 @@ def room_status(label, number, gameStatus):
         elif status is 2:
             room.voteList = ''
             room.save()
+            sendGroupMessage(label,'仍然在警上的有: ' + nameList[0:],'message')
             sendGroupMessage(label,'开始20s投票','message')
             time.sleep(20)
             output, systemInfo = processVote(label, 0)
