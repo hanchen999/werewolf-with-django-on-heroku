@@ -508,7 +508,7 @@ def room_status(label, number, gameStatus):
                 player.alive = 0
                 player.save()
                 room.save()
-            elif room.jieyao == deadman or room.shouwei == deadman:
+            elif room.jieyao == deadman or room.shou == deadman:
                 room.deadman = 0
                 room.save()
             else:
