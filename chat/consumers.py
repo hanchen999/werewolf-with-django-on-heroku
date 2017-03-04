@@ -243,6 +243,7 @@ def checkStatus(label, nameList):
     for i in xrange(0,len(voteList),2):
         voter = voteList[i]
         target = voteList[i + 1]
+        log.debug('Here is the target :%s',target)
         if target is 'bloom':
             player = room.players.filter(position=vote).first()
             player.alive = 0
