@@ -235,6 +235,9 @@ def checkStatus(label, nameList):
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return -1
+    log.debug('ws room does not exist label=%s', voteList)
+    if len(voteList) is 0:
+        return 0
     voteList = room.voteList.split(',')
     for i in xrange(0,len(voteList),2):
         voter = voteList[i]
