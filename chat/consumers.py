@@ -237,7 +237,8 @@ def checkStatus(label, nameList):
         return -1
     log.debug('Here is the room list =%s', room.voteList)
     if len(room.voteList) is 0:
-        return 0
+        return 0, nameList
+    log.debug('还在等待着进行投票')
     voteList = room.voteList.split(',')
     for i in xrange(0,len(voteList),2):
         voter = voteList[i]
@@ -253,16 +254,16 @@ def checkStatus(label, nameList):
             room.voteList = ''
             room.deadman = ''
             room.save()
-            return 1
+            return 1, nameList
         elif target is 'tuishui':
             if voter in nameList:
                 nameList.remove(voter)
         elif target is 'startVote':
             room.voteList = ''
             room.save()
-            return 2
+            return 2, nameList
     log.debug('还在等待着进行投票')
-    return 0
+    return 0, nameList
 
 def pkStatus(label):
     try:
@@ -581,7 +582,7 @@ def room_status(label, number, gameStatus):
         time.sleep(20)
         nameList = processName(label)
         sendGroupMessage(label,'参选警长的有: ' + str(nameList[0:]),'message')
-        status = checkStatus(label, nameList)
+        status = 0
         while status is 0:
             status, nameList = checkStatus(label, nameList)
             time.sleep(5)
@@ -624,7 +625,7 @@ def room_status(label, number, gameStatus):
     elif number == 10:
         status = 0
         while status is 0:
-            status = checkStatus(label)
+            status, test = checkStatus(label, '')
         if status is -1:
             return -1
         elif status is 1:
