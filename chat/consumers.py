@@ -235,7 +235,7 @@ def checkStatus(label, nameList):
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return -1
-    log.debug('ws room does not exist label=%s', room.voteList)
+    log.debug('Here is the room list =%s', room.voteList)
     if len(room.voteList) is 0:
         return 0
     voteList = room.voteList.split(',')
@@ -261,6 +261,7 @@ def checkStatus(label, nameList):
             room.voteList = ''
             room.save()
             return 2
+    log.debug('还在等待着进行投票')
     return 0
 
 def pkStatus(label):
