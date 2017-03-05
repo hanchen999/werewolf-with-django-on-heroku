@@ -506,7 +506,7 @@ def room_status(label, number, gameStatus):
         if deadman is not 0:
             if room.jieyao == deadman and room.shou == deadman:
                 if len(deadList) is 0:
-                    deadList = '' + deadman
+                    deadList = '' + str(deadman)
                 else:
                     deadList = deadList + ',' + deadman
                 player = room.players.filter(position=int(deadman)).first()
@@ -517,7 +517,10 @@ def room_status(label, number, gameStatus):
                 room.deadman = 0
                 room.save()
             else:
-                deadList = deadList + str(deadman) + ' '
+                if len(deadList) is 0:
+                    deadList = '' + str(deadman)
+                else:
+                    deadList = deadList + ',' + deadman
                 player = room.players.filter(position=int(deadman)).first()
                 player.alive = 0
                 player.save()
