@@ -554,7 +554,7 @@ def room_status(label, number, gameStatus):
                     sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
                     time.sleep(20)
                     jinghuiList, systemInfo = processVote(label,0)
-                    log.debug('jiren is %s', jiren)
+                    log.debug('jiren is %s', jinghuiList)
                     if len(jinghuiList) > 0:
                         jiren = room.players.filter(position=int(jinghuiList)).first()
                         if jiren.alive is 1:
