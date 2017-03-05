@@ -176,6 +176,7 @@ def processVote(label, args):
             if voter is not args:
                 continue
         target = voteList[i + 1]
+
         if int(target) < 1 or int(target) > room.playerNumber:
             continue
         elif voter in vote:
@@ -195,10 +196,15 @@ def processVote(label, args):
                 count[target] = count[target] + weight
             else:
                 count[target] = weight
+            log.debug('现在的权重是%s',str(count[target]))
+            log.debug('现在的目标是%s',str(target))
+            log.debug('现在的投票人是%s',str(voter))
     # deadman = max(count.iteritems(), key=operator.itemgetter(1))[0]
     deadman = ''
-    currentMax = 0
+    currentMax = 0.0
     for key,val in count.iteritems():
+        log.debug('现在的key是%s',str(key))
+        log.debug('现在的val是%s',str(val))
         if val > currentMax:
             deadman = '' + key
             currentMax = val
