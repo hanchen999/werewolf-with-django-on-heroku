@@ -53,8 +53,6 @@ def keepalive(label, name, messageInfo, typo):
     while 1:
         m = room.messages.create(**message)
         player = room.players.filter(address=name).first()
-        if player is not None:
-            log.debug('保持连接=%s', player.identification)
         Channel(name).send({'text': json.dumps(m.as_dict())})
         time.sleep(20)
 
@@ -238,7 +236,6 @@ def checkStatus(label, nameList):
     log.debug('Here is the room list =%s', room.voteList)
     if len(room.voteList) is 0:
         return 0, nameList
-    log.debug('还在等待着进行投票')
     voteList = room.voteList.split(',')
     for i in xrange(0,len(voteList),2):
         voter = voteList[i]
@@ -263,7 +260,6 @@ def checkStatus(label, nameList):
             room.voteList = ''
             room.save()
             return 2, nameList
-    log.debug('还在等待着进行投票')
     return 0, nameList
 
 def pkStatus(label):
