@@ -244,7 +244,7 @@ def checkStatus(label, nameList):
         voter = voteList[i]
         target = voteList[i + 1]
         log.debug('Here is the target :%s',target)
-        if target is 'bloom':
+        if target == 'bloom':
             player = room.players.filter(position=vote).first()
             player.alive = 0
             player.save()
@@ -256,10 +256,10 @@ def checkStatus(label, nameList):
             room.deadman = ''
             room.save()
             return 1, nameList
-        elif target is 'tuishui':
+        elif target == 'tuishui':
             if voter in nameList:
                 nameList.remove(voter)
-        elif target is 'startVote':
+        elif target == 'startVote':
             room.voteList = ''
             room.save()
             return 2, nameList
