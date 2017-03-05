@@ -553,15 +553,16 @@ def room_status(label, number, gameStatus):
                     room.save()
                     sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
                     time.sleep(20)
-                    jinghuiList, systemInfo = processVote(label,i)
-                    jinghui = jinghuiList.split(',')
-                    for j in jinghui:
-                        jiren = room.players.filter(position=int(j)).first()
-                        if jiren.alive is 1:
-                            jiren.jingzhang = 1
-                            jiren.save()
-                            sendGroupMessage(label,j + '号玩家成为警长','message')
-                            break
+                    jinghuiList, systemInfo = processVote(label,0)
+                    if jinghuiList is not '':
+                        jinghui = jinghuiList.split(',')
+                        for j in jinghui:
+                            jiren = room.players.filter(position=int(j)).first()
+                            if jiren.alive is 1:
+                                jiren.jingzhang = 1
+                                jiren.save()
+                                sendGroupMessage(label,j + '号玩家成为警长','message')
+                                break
                 room.voteList = ''
                 room.save()
                 sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
@@ -667,14 +668,15 @@ def room_status(label, number, gameStatus):
                 sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
                 time.sleep(20)
                 jinghuiList, systemInfo = processVote(label,0)
-                jinghui = jinghuiList.split(',')
-                for j in jinghui:
-                    jiren = room.players.filter(position=int(j)).first()
-                    if jiren.alive is 1:
-                        jiren.jingzhang = 1
-                        jiren.save()
-                        sendGroupMessage(label,j + '号玩家成为警长','message')
-                        break
+                if jinghuiList is not '':
+                    jinghui = jinghuiList.split(',')
+                    for j in jinghui:
+                        jiren = room.players.filter(position=int(j)).first()
+                        if jiren.alive is 1:
+                            jiren.jingzhang = 1
+                            jiren.save()
+                            sendGroupMessage(label,j + '号玩家成为警长','message')
+                            break
                 room.voteList = ''
                 room.save()
             sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
