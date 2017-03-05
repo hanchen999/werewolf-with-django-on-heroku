@@ -344,7 +344,7 @@ def room_status(label, number, gameStatus):
         room.voteList = ''
         room.save()
         sendGroupMessage(label, '预言家请验人！', 'message')
-        time.sleep(30)
+        time.sleep(20)
         if 2 in gameStatus:
             number = 0
             # for i in range(1, room.playerNumber + 1):
@@ -610,6 +610,7 @@ def room_status(label, number, gameStatus):
                 player.jingzhang = 1
                 player.save()
                 room.save()
+                sendGroupMessage(label,'当选警长的人是： ' + str(nameList[0]),'message')
                 return 8
             else:
                 count = 0
@@ -624,6 +625,7 @@ def room_status(label, number, gameStatus):
                     player = rooms.players.filter(position=int(nameList[0])).first()
                     player.jingzhang = 1
                     player.save()
+                    sendGroupMessage(label,'当选警长的人是： ' + str(nameList[0]),'message')
                     room.save()
                 return 8
     #发言并投票:
