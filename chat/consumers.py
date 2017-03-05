@@ -546,7 +546,8 @@ def room_status(label, number, gameStatus):
             temp = deadList.split(',')
             room.deadman = ''
             for i in temp:
-                player = room.players.filter(position=i).first()
+                log.debug('here is the i number:%s',i)
+                player = room.players.filter(position=int(i)).first()
                 if player.jingzhang is 1:
                     room.voteList = ''
                     room.save()
@@ -555,7 +556,7 @@ def room_status(label, number, gameStatus):
                     jinghuiList, systemInfo = processVote(label,i)
                     jinghui = jinghuiList.split(',')
                     for j in jinghui:
-                        jiren = room.players.filter(position=j).first()
+                        jiren = room.players.filter(position=int(j)).first()
                         if jiren.alive is 1:
                             jiren.jingzhang = 1
                             jiren.save()
@@ -565,7 +566,7 @@ def room_status(label, number, gameStatus):
                 room.save()
                 sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
                 time.sleep(20)
-                target, systemInfo = processVote(label,i)
+                target, systemInfo = processVote(label,0)
                 if player.identification is 3:
                     if int(target) > 0:
                         x = room.players.filter(position=int(target)).first()
@@ -665,10 +666,10 @@ def room_status(label, number, gameStatus):
                 room.save()
                 sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
                 time.sleep(20)
-                jinghuiList, systemInfo = processVote(label,i)
+                jinghuiList, systemInfo = processVote(label,0)
                 jinghui = jinghuiList.split(',')
                 for j in jinghui:
-                    jiren = room.players.filter(position=j).first()
+                    jiren = room.players.filter(position=int(j)).first()
                     if jiren.alive is 1:
                         jiren.jingzhang = 1
                         jiren.save()
