@@ -665,7 +665,7 @@ def room_status(label, number, gameStatus):
             time.sleep(20)
             output, systemInfo = processVote(label, 0)
             sendGroupMessage(label,systemInfo,'message')
-            if output is ''
+            if len(output) is 0 
                 sendGroupMessage(label,'开始下一晚' + target,'message')
                 return 0
             nameList = output.split(',')
