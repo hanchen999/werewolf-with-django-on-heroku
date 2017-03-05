@@ -600,9 +600,9 @@ def room_status(label, number, gameStatus):
             output, systemInfo = processVote(label, 0)
             sendGroupMessage(label,systemInfo,'message')
             nameList = output.split(',')
-            if len(nameList) is 1:
+            if output is not '' and len(nameList) is 1:
                 room.jinghui = 0
-                player = rooms.players.filter(position=int(nameList[0])).first()
+                player = room.players.filter(position=int(nameList[0])).first()
                 player.jinghui = 1
                 player.save()
                 room.save()
