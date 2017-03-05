@@ -188,8 +188,9 @@ def processVote(label, args):
                 log.debug('找不到player')
                 continue
             if player.alive is 0:
-                log.debug('player并没有存活')
-                continue
+                if player.identification != 3 and player.jingzhang != 1:
+                    log.debug('player并没有存活')
+                    continue
             vote[voter] = target
             if target in info:
                 info[target] = info[target] + ',' + voter
@@ -203,15 +204,10 @@ def processVote(label, args):
                 count[target] = count[target] + weight
             else:
                 count[target] = weight
-            log.debug('现在的权重是%s',str(count[target]))
-            log.debug('现在的目标是%s',str(target))
-            log.debug('现在的投票人是%s',str(voter))
     # deadman = max(count.iteritems(), key=operator.itemgetter(1))[0]
     deadman = ''
     currentMax = 0.0
     for key,val in count.iteritems():
-        log.debug('现在的key是%s',str(key))
-        log.debug('现在的val是%s',str(val))
         if val > currentMax:
             deadman = '' + key
             currentMax = val
