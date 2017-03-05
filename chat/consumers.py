@@ -554,6 +554,7 @@ def room_status(label, number, gameStatus):
                     sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
                     time.sleep(20)
                     jinghuiList, systemInfo = processVote(label,0)
+                    log.debug('jiren is %s', jiren)
                     if len(jinghuiList) > 0:
                         jiren = room.players.filter(position=int(jinghuiList)).first()
                         if jiren.alive is 1:
@@ -565,6 +566,7 @@ def room_status(label, number, gameStatus):
                 sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
                 time.sleep(20)
                 target, systemInfo = processVote(label,0)
+                log.debug('target is %s', target)
                 if player.identification is 3:
                     if target is not '' and int(target) > 0:
                         x = room.players.filter(position=int(target)).first()
@@ -672,8 +674,8 @@ def room_status(label, number, gameStatus):
                         jiren.jingzhang = 1
                         jiren.save()
                         sendGroupMessage(label,j + '号玩家成为警长','message')
-                room.voteList = ''
-                room.save()
+            room.voteList = ''
+            room.save()
             sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
             time.sleep(20)
             target, systemInfo = processVote(label,0)
