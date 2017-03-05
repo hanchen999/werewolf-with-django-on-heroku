@@ -577,6 +577,7 @@ def room_status(label, number, gameStatus):
             yiyan = 0
             while yiyan is 0:
                 yiyan, yiyan_test = checkStatus(room.label, '')
+                time.sleep(20)
             return 10
     #警长竞选
     elif number== 9:
