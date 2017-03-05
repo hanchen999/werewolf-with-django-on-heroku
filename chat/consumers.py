@@ -574,6 +574,10 @@ def room_status(label, number, gameStatus):
                         sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
                         room.voteList = ''
                         room.save()
+            sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
+            yiyan = 0
+            while yiyan is 0:
+                yiyan, yiyan_test = checkStatus(room.label, '')
             return 10
     #警长竞选
     elif number== 9:
@@ -603,7 +607,7 @@ def room_status(label, number, gameStatus):
             if output is not '' and len(nameList) is 1:
                 room.jinghui = 0
                 player = room.players.filter(position=int(nameList[0])).first()
-                player.jinghui = 1
+                player.jingzhang = 1
                 player.save()
                 room.save()
                 return 8
@@ -618,7 +622,7 @@ def room_status(label, number, gameStatus):
                 else:
                     room.jinghui = 0
                     player = rooms.players.filter(position=int(nameList[0])).first()
-                    player.jinghui = 1
+                    player.jingzhang = 1
                     player.save()
                     room.save()
                 return 8
@@ -630,6 +634,7 @@ def room_status(label, number, gameStatus):
         if status is -1:
             return -1
         elif status is 1:
+            sendGroupMessage(label,'开始下一晚' + target,'message')
             return 0
         elif status is 2:
             room.voteList = ''
@@ -671,20 +676,25 @@ def room_status(label, number, gameStatus):
                         break
                 room.voteList = ''
                 room.save()
-                sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
-                time.sleep(20)
-                target, systemInfo = processVote(label,i)
-                if player.identification is 3:
-                    if int(target) > 0:
-                        x = room.players.filter(position=int(target)).first()
-                        x.alive = 0
-                        x.save()
-                        sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
-                        room.voteList = ''
-                        room.save()
-                room.dayStatus = 0
-                room.save()
-                return 0
+            sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
+            time.sleep(20)
+            target, systemInfo = processVote(label,i)
+            if player.identification is 3:
+                if int(target) > 0:
+                    x = room.players.filter(position=int(target)).first()
+                    x.alive = 0
+                    x.save()
+                    sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
+                    room.voteList = ''
+                    room.save()
+            room.dayStatus = 0
+            room.save()
+            sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
+            yiyan = 0
+            while yiyan is 0:
+                yiyan, yiyan_test = checkStatus(room.label, '')
+            sendGroupMessage(label,'开始下一晚' + target,'message')
+            return 0
 
 
 def startGame(label):
