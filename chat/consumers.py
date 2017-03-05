@@ -172,17 +172,21 @@ def processVote(label, args):
     for i in xrange(0,len(voteList),2):
         log.debug('现在i的大小是=%d', i)
         voter = voteList[i]
-        if args is not 0:
-            if voter is not args:
-                continue
+        # if args is not 0:
+        #     if voter is not args:
+        #         continue
         target = voteList[i + 1]
-
+        log.debug('现在voter的大小是=%s', voter)
+        log.debug('现在target的大小是=%s', target)
         if int(target) < 1 or int(target) > room.playerNumber:
             continue
         elif voter in vote:
             continue
         else:
-            if room.players.filter(position=voter).first().alive is 0:
+            player = room.players.filter(position=voter).first()
+            if player is None:
+                continue
+            if player.alive is 0:
                 continue
             vote[voter] = target
             if target in info:
@@ -190,7 +194,7 @@ def processVote(label, args):
             else:
                 info[target] = '' + voter
             weight = 1
-            if room.players.filter(position=voter).first().jingzhang is 1:
+            if player.jingzhang is 1:
                 weight = 1.5
             if target in count:
                 count[target] = count[target] + weight
@@ -541,6 +545,8 @@ def room_status(label, number, gameStatus):
         return 8
     # 死人中有猎人或者警长，可以传警徽或者发动技能
     elif number == 8:
+        room.voteList = ''
+        room.save()
         deadList = room.deadman
         if len(deadList) is 0:
             return 10
@@ -668,6 +674,8 @@ def room_status(label, number, gameStatus):
                     player.alive = 0
                     player.save()
             player = rooms.players.filter(position=int(nameList[0])).first()
+            room.voteList = ''
+            room.save()
             if player.jingzhang is 1:
                 room.voteList = ''
                 room.save()
