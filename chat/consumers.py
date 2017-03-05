@@ -701,7 +701,7 @@ def room_status(label, number, gameStatus):
                         sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
             room.voteList = ''
             room.save()
-            sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
+            sendGroupMessage(label,str(player.position) +'号玩家有20s时间可以发动技能','message')
             time.sleep(20)
             target, systemInfo = processVote(label,0)
             if player.identification is 3:
@@ -718,6 +718,7 @@ def room_status(label, number, gameStatus):
             yiyan = 0
             while yiyan is 0:
                 yiyan, yiyan_test = checkStatus(room.label, '')
+                time.sleep(20)
             sendGroupMessage(label,'开始下一晚' + target,'message')
             return 0
 
