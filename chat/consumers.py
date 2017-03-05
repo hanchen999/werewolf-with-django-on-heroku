@@ -185,8 +185,10 @@ def processVote(label, args):
         else:
             player = room.players.filter(position=voter).first()
             if player is None:
+                log.debug('找不到player')
                 continue
             if player.alive is 0:
+                log.debug('player并没有存活')
                 continue
             vote[voter] = target
             if target in info:
@@ -196,6 +198,7 @@ def processVote(label, args):
             weight = 1
             if player.jingzhang is 1:
                 weight = 1.5
+            log.debug('现在的weight是：%s',weight)
             if target in count:
                 count[target] = count[target] + weight
             else:
