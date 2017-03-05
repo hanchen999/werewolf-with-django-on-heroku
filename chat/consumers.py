@@ -293,6 +293,11 @@ def pkVote(label, nameList, count):
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return [] 
+    sendGroupMessage(label,'现在进入PK台，现在是第' + str(count + 1) + '轮','message')
+    if count is 0:
+        sendGroupMessage(label,'请在PK台上的人发言！','message')
+    elif count is 1:
+        sendGroupMessage(label,'请在PK台下的人发言！','message')
     if count is 2:
         return []
     else:
@@ -301,6 +306,7 @@ def pkVote(label, nameList, count):
         status = 0
         while status is 0:
             status = pkStatus(label)
+            time.sleep(20)
         sendGroupMessage(label,'PK台投票开始','message')
         sendGroupMessage(label,'现在在台上的玩家是:','message')
         sendGroupMessage(label,''.join(nameList),'message')
@@ -598,7 +604,7 @@ def room_status(label, number, gameStatus):
         sendGroupMessage(label,'有二十秒钟竞选警长','message')
         time.sleep(20)
         nameList = processName(label)
-        sendGroupMessage(label,'参选警长的有: ' + str(nameList[0:]),'message')
+        sendGroupMessage(label,'参选警长的有: ' + ''.join(nameList),'message')
         status = 0
         while status is 0:
             status, nameList = checkStatus(label, nameList)
@@ -610,7 +616,7 @@ def room_status(label, number, gameStatus):
         elif status is 2:
             room.voteList = ''
             room.save()
-            sendGroupMessage(label,'仍然在警上的有: ' + str(nameList[0:]),'message')
+            sendGroupMessage(label,'仍然在警上的有: ' + ''.join(nameList),'message')
             sendGroupMessage(label,'开始20s投票','message')
             time.sleep(20)
             output, systemInfo = processVote(label, 0)
@@ -634,7 +640,7 @@ def room_status(label, number, gameStatus):
                     room.save()
                 else:
                     room.jinghui = 0
-                    player = rooms.players.filter(position=int(nameList[0])).first()
+                    player = room.players.filter(position=int(nameList[0])).first()
                     player.jingzhang = 1
                     player.save()
                     sendGroupMessage(label,'当选警长的人是： ' + str(nameList[0]),'message')
@@ -643,8 +649,10 @@ def room_status(label, number, gameStatus):
     #发言并投票:
     elif number == 10:
         status = 0
+        sendGroupMessage(label,'请进行白天的流程，输入startVote进行投票出人环节！','message')
         while status is 0:
             status, test = checkStatus(label, '')
+            time.sleep(20)
         if status is -1:
             return -1
         elif status is 1:
@@ -657,9 +665,12 @@ def room_status(label, number, gameStatus):
             time.sleep(20)
             output, systemInfo = processVote(label, 0)
             sendGroupMessage(label,systemInfo,'message')
+            if output is ''
+                sendGroupMessage(label,'开始下一晚' + target,'message')
+                return 0
             nameList = output.split(',')
             if len(nameList) is 1:
-                player = rooms.players.filter(position=int(nameList[0])).first()
+                player = room.players.filter(position=int(nameList[0])).first()
                 player.alive = 0
                 player.save()
             else:
@@ -670,10 +681,10 @@ def room_status(label, number, gameStatus):
                 if len(nameList) is 0:
                     return 0
                 else:
-                    player = rooms.players.filter(position=int(nameList[0])).first()
+                    player = room.players.filter(position=int(nameList[0])).first()
                     player.alive = 0
                     player.save()
-            player = rooms.players.filter(position=int(nameList[0])).first()
+            player = room.players.filter(position=int(nameList[0])).first()
             room.voteList = ''
             room.save()
             if player.jingzhang is 1:
@@ -763,7 +774,7 @@ def startGame(label):
             sendMessage(label,player.address,'您的身份是守卫！','message')
         player.save()
     sendGroupMessage(label, '身份已经准备就绪!', 'message')
-    log.debug('Game Status is %s', gameStatus[0:])
+    log.debug('Game Status is %s', ''.join(gameStatus))
     roomStatus = 0
     while judgement(label) is 0:
         log.debug('房间现在的状态是%d',roomStatus)
