@@ -120,7 +120,7 @@ $(function() {
 
     console.log(1);
 
-    var audio = new Audio({{MEDIA_URL}} + '柯南主題song - 柯南主題song.mp3');
+    var audio = new Audio('/MP3/柯南主題song - 柯南主題song.mp3');
     audio.play();
     console.log(2);
 });
