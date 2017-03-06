@@ -118,6 +118,9 @@ $(function() {
         return false;
     });
 
-    var audio = new Audio('{{MEDIA_ROOT}}柯南主題song - 柯南主題song.mp3');
+    console.log(1)
+
+    var audio = new Audio('{{MEDIA_URL}}柯南主題song - 柯南主題song.mp3');
     audio.play();
+    console.log(2)
 });
