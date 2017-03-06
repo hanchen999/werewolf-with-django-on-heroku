@@ -393,7 +393,7 @@ def room_status(label, number, gameStatus):
         room.voteList = ''
         room.save()
         if room.jieyao is not 0:
-            room.sleep(15)
+            time.sleep(15)
             return 5
         nvwu = ''
         number = 0
@@ -431,7 +431,7 @@ def room_status(label, number, gameStatus):
         room.voteList = ''
         room.save()
         if room.duyao is not 0:
-            room.sleep(15)
+            time.sleep(15)
             sendGroupMessage(label, '女巫请闭眼！', 'message')
             time.sleep(5)
             return 6
@@ -462,7 +462,7 @@ def room_status(label, number, gameStatus):
                 time.sleep(5)
                 return 6
         else:
-            room.sleep(15)
+            time.sleep(15)
             sendGroupMessage(label, '女巫请闭眼！', 'message')
             time.sleep(5)
             return 6
@@ -504,7 +504,7 @@ def room_status(label, number, gameStatus):
                 time.sleep(5)
                 return 7
         else:
-            room.sleep(15)
+            time.sleep(15)
             sendGroupMessage(label, '护卫请闭眼！', 'message')
             time.sleep(5)
             return 7
