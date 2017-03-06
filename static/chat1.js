@@ -118,7 +118,6 @@ $(function() {
         return false;
     });
 
-    var audioElement = document.createElement('audio');
-     audioElement.setAttribute('src', 'MP3/柯南主題song - 柯南主題song.mp3');
-     audioElement.play();
+    var audio = new Audio('MP3/柯南主題song - 柯南主題song.mp3');
+    audio.play();
 });
