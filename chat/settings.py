@@ -96,7 +96,8 @@ ALLOWED_HOSTS = ['*']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-# Media files (CSS, JavaScript, Images)
+# Media files 
+MEDIA_ROOT = os.path.join(BASE_DIR, '/MP3/')
 MEDIA_URL = '/MP3/'
 
 # Extra places for collectstatic to find static files.
