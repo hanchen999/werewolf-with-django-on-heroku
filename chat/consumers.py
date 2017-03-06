@@ -368,6 +368,10 @@ def room_status(label, number, gameStatus):
             #         number = i
             #         break
             deadman, systemInfo = processVote(label,number)
+            if len(deadman) is 0:
+                sendGroupMessage(label, '预言家请闭眼！', 'message')
+                time.sleep(10)
+                return 4
             deadman = deadman.split(',')
             if room.players.filter(position=int(deadman[0])).first().identification == 1:
                 systemInfo = '您验得人是狼人！'
