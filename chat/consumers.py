@@ -543,6 +543,8 @@ def room_status(label, number, gameStatus):
         systemInfo = systemInfo + deadList
         room.deadman = deadList
         room.dayStatus = 1
+        if room.jieyao is not 0:
+            room.jieyao = -1
         room.save()
         sendGroupMessage(label, '天亮了！', 'message')
         if room.jinghui is 1:
