@@ -69,6 +69,7 @@ $(function() {
         if (data.typo === 'message10') {
             var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A5%B3%E5%B7%AB%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
             audio.play();
+        }
     };
 
     $("#chatform").on("submit", function(event) {
