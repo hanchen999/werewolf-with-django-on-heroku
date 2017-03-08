@@ -324,12 +324,12 @@ def room_status(label, number, gameStatus):
         return -1
     # 天黑请闭眼
     if number == 0:   
-        sendGroupMessage(label, '天黑请闭眼！', 'message')
+        sendGroupMessage(label, '天黑请闭眼！', 'message1')
         time.sleep(10)
         return 1
     # 狼人杀人
     elif number == 1:
-        sendGroupMessage(label, '狼人请睁眼！', 'message')
+        sendGroupMessage(label, '狼人请睁眼！', 'message3')
         if room.jinghui == 1:
             sendGroupMessage(label, '狼人请确认同伴！', 'message')
             time.sleep(10)
@@ -347,14 +347,14 @@ def room_status(label, number, gameStatus):
         room.deadman = '' + str(deadman)
         room.voteList = ''
         room.save()
-        sendGroupMessage(label, '狼人请闭眼！', 'message')
+        sendGroupMessage(label, '狼人请闭眼！', 'message4')
         time.sleep(10)
         return 2
     # 预言家验人
     elif number == 2:
         if 2 not in gameStatus:
             return 4
-        sendGroupMessage(label, '预言家请睁眼！', 'message')
+        sendGroupMessage(label, '预言家请睁眼！', 'message5')
         time.sleep(5)
         room.voteList = ''
         room.save()
@@ -369,7 +369,7 @@ def room_status(label, number, gameStatus):
             #         break
             deadman, systemInfo = processVote(label,number)
             if len(deadman) is 0:
-                sendGroupMessage(label, '预言家请闭眼！', 'message')
+                sendGroupMessage(label, '预言家请闭眼！', 'message6')
                 time.sleep(10)
                 return 4
             deadman = deadman.split(',')
@@ -382,14 +382,14 @@ def room_status(label, number, gameStatus):
                 if player.identification == 2 and player.alive is 1:
                     sendMessage(label,player.address,systemInfo,'message')
                     break
-        sendGroupMessage(label, '预言家请闭眼！', 'message')
+        sendGroupMessage(label, '预言家请闭眼！', 'message6')
         time.sleep(10)
         return 4
     # 女巫救人
     elif number == 4:
         if 4 not in gameStatus:
             return 6
-        sendGroupMessage(label, '女巫请睁眼！', 'message')
+        sendGroupMessage(label, '女巫请睁眼！', 'message7')
         room.voteList = ''
         room.save()
         if room.jieyao is not 0:
@@ -414,7 +414,7 @@ def room_status(label, number, gameStatus):
                 room.voteList = ''
                 room.save()
                 time.sleep(15)
-                sendGroupMessage(label, '女巫请闭眼！', 'message')
+                sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
                 return 6
             else:
@@ -432,7 +432,7 @@ def room_status(label, number, gameStatus):
         room.save()
         if room.duyao is not 0:
             time.sleep(15)
-            sendGroupMessage(label, '女巫请闭眼！', 'message')
+            sendGroupMessage(label, '女巫请闭眼！', 'message8')
             time.sleep(5)
             return 6
         nvwu = ''
@@ -452,25 +452,25 @@ def room_status(label, number, gameStatus):
                 room.duyao = int(duyaolist[0])
                 room.voteList = ''
                 room.save()
-                sendGroupMessage(label, '女巫请闭眼！', 'message')
+                sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
                 return 6
             else:
                 room.voteList = ''
                 room.save()
-                sendGroupMessage(label, '女巫请闭眼！', 'message')
+                sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
                 return 6
         else:
             time.sleep(15)
-            sendGroupMessage(label, '女巫请闭眼！', 'message')
+            sendGroupMessage(label, '女巫请闭眼！', 'message8')
             time.sleep(5)
             return 6
     #守卫护人
     elif number == 6:
         if 5 not in gameStatus:
             return 7
-        sendGroupMessage(label, '护卫请睁眼', 'message')
+        sendGroupMessage(label, '护卫请睁眼', 'message9')
         sendGroupMessage(label, '护卫可以选择您今晚想守卫的对象，注意两晚不能同守一个人！', 'message')
         room.voteList = ''
         room.save()
@@ -494,18 +494,18 @@ def room_status(label, number, gameStatus):
                     room.shou = int(huweiList[0])
                 room.voteList = ''
                 room.save()
-                sendGroupMessage(label, '护卫请闭眼！', 'message')
+                sendGroupMessage(label, '护卫请闭眼！', 'message10')
                 time.sleep(5)
                 return 7
             else:
                 room.voteList = ''
                 room.save()
-                sendGroupMessage(label, '护卫请闭眼！', 'message')
+                sendGroupMessage(label, '护卫请闭眼！', 'message10')
                 time.sleep(5)
                 return 7
         else:
             time.sleep(15)
-            sendGroupMessage(label, '护卫请闭眼！', 'message')
+            sendGroupMessage(label, '护卫请闭眼！', 'message10')
             time.sleep(5)
             return 7
     # 处理昨晚死亡数据，并调整房间状态
@@ -550,7 +550,7 @@ def room_status(label, number, gameStatus):
         if room.jieyao is not 0:
             room.jieyao = -1
         room.save()
-        sendGroupMessage(label, '天亮了！', 'message')
+        sendGroupMessage(label, '天亮了！', 'message2')
         if room.jinghui is 1:
             room_status(label, 9, gameStatus)
         time.sleep(10)
