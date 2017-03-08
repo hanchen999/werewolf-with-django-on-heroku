@@ -29,6 +29,46 @@ $(function() {
         ) 
         if (data.handle != 'keepalive')
             chat.append(ele)
+        if (data.message == '天黑请闭眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A4%A9%E9%BB%91%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '天亮请睁眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A4%A9%E4%BA%AE%E8%AF%B7%E7%9D%81%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '狼人请睁眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E7%8B%BC%E4%BA%BA%E8%AF%B7%E7%9D%81%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '狼人请闭眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E7%8B%BC%E4%BA%BA%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '女巫请睁眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A5%B3%E5%B7%AB%E8%AF%B7%E7%9D%81%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '女巫请闭眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A5%B3%E5%B7%AB%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '预言家请睁眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E9%A2%84%E8%A8%80%E5%AE%B6%E8%AF%B7%E7%9D%81%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '预言家请闭眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E9%A2%84%E8%A8%80%E5%AE%B6%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '守卫请睁眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%AE%88%E5%8D%AB%E8%AF%B7%E7%9D%81%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.message == '守卫请闭眼') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A5%B3%E5%B7%AB%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
+            audio.play();
+        }
     };
 
     $("#chatform").on("submit", function(event) {
@@ -118,9 +158,7 @@ $(function() {
         return false;
     });
 
-    console.log(1);
 
     var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E6%9F%AF%E5%8D%97%E4%B8%BB%E9%A1%8Csong+-+%E6%9F%AF%E5%8D%97%E4%B8%BB%E9%A1%8Csong.mp3');
     audio.play();
-    console.log(2);
 });
