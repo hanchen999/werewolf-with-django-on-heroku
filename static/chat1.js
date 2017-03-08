@@ -30,6 +30,7 @@ $(function() {
         if (data.handle != 'keepalive')
             chat.append(ele)
         if (data.message == '天黑请闭眼') {
+            console.log('天黑请闭眼')
             var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A4%A9%E9%BB%91%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
             audio.play();
         }
