@@ -34,7 +34,13 @@ def create_room(request):
     else:
         label = request.POST['id']
         if Room.objects.filter(label=label).exists():
-            return render(request, "chat/error.html", {'messages' : 'this name has been used'})
+            room = Room.objects.filter(label=label).first()
+            if int(room.currentNumber) > 0:
+                return render(request, "chat/error.html", {'messages' : 'this name has been used'})
+            else:
+                Room.objects.all().delete()
+                room.messages.all().delete()
+                room.players.all().delete()
         playNumber = 0
         roleList = request.POST['cunmin'] + ',' + request.POST['langren']
         playNumber = playNumber + int(request.POST['cunmin']) + int(request.POST['langren'])
@@ -68,24 +74,14 @@ def join_room(request):
     if request.method == 'GET':
         return render(request, "chat/join_room.html", {})
     label = request.POST['label']
-    return redirect(chat_room, label=label)
-
-def vote_room(request):
-    label = request.POST['label']
     try:
-        room = Room.objects.get(label=label)
+        room = Room.objects.filter(label=label).first()
+        if int(room.playerNumber) === int(room.currentNumber):
+            return render(request, "chat/error.html", {'messages' : 'this room is full'})
+        return redirect(chat_room, label=label)
     except Room.DoesNotExist:
-        log.debug('ws room does not exist label=%s', label)
-        return
-    voter = request.POST['handle']
-    target = request.POST['voteinfo']
-    voteList = room.voteList
-    if len(voteList) is 0:
-        room.voteList = room.voteList + voter + ',' + target
-        room.save()
-    else:
-        room.voteList = room.voteList + ',' + voter + ',' + target
-        room.save()
+        return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
+
 
 
 def chat_room(request, label):
