@@ -423,6 +423,10 @@ def room_status(label, number, gameStatus):
             time.sleep(15)
             jieyao, systemInfo = processVote(label, 0)
             log.debug('jieyao is %s', jieyao)
+            if len(jieyao) is 0:
+                sendMessage(label,nvwu,'你今晚没有使用解药','message')
+                time.sleep(5)
+                return 5
             jieyaoList = jieyao.split(',')
             if len(jieyao) > 0:
                 room.jieyao = int(jieyaoList[0])
@@ -433,10 +437,6 @@ def room_status(label, number, gameStatus):
                 sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
                 return 6
-            else:
-                room.voteList = ''
-                room.save()
-                return 5
         else:
             time.sleep(15)
             return 5
@@ -463,18 +463,16 @@ def room_status(label, number, gameStatus):
             sendMessage(label,nvwu,'女巫可以选择使用毒药！请输入您想毒死的人的id！','message')
             time.sleep(15)
             duyao, systemInfo = processVote(label,0)
+            if len(duyao) is 0:
+                sendMessage(label,nvwu,'你今晚没有使用毒药','message')
+                time.sleep(5)
+                return 6
             duyaoList = duyao.split(',')
             if len(duyao) > 0:
-                room.duyao = int(duyaolist[0])
+                room.duyao = int(duyaoList[0])
                 room.voteList = ''
                 room.save()
                 sendMessage(label,nvwu,'你对' + str(room.duyao) + '号玩家使用毒药','message')
-                sendGroupMessage(label, '女巫请闭眼！', 'message8')
-                time.sleep(5)
-                return 6
-            else:
-                room.voteList = ''
-                room.save()
                 sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
                 return 6
@@ -503,6 +501,10 @@ def room_status(label, number, gameStatus):
             sendMessage(label,huwei,'请选择您今晚想守护的人！','message')
             time.sleep(20)
             huwei, systemInfo = processVote(label,0)
+            if len(huwei) is 0:
+                sendMessage(label,huwei,'你今晚没有守人','message')
+                time.sleep(5)
+                return 7
             huweiList = huwei.split(',')
             if len(huwei) > 0:
                 if room.shou == int(huweiList[0]):

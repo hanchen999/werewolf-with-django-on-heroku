@@ -115,44 +115,12 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
-    $("#poison").on("submit", function(event) {
-        var message = {
-            handle: $('#handle').val(),
-            message: $('#message').val(),
-            typo: 'poison'
-        }
-        chatsock.send(JSON.stringify(message));
-        $("#message").val('').focus();
-        return false;
-    });
-
-    $("#save").on("submit", function(event) {
-        var message = {
-            handle: $('#handle').val(),
-            message: $('#message').val(),
-            typo: 'save'
-        }
-        chatsock.send(JSON.stringify(message));
-        $("#message").val('').focus();
-        return false;
-    });
 
     $("#bloom").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
             message: 'vote',
-            typo: 'save'
-        }
-        chatsock.send(JSON.stringify(message));
-        $("#message").val('').focus();
-        return false;
-    });
-
-    $("#bloom").on("submit", function(event) {
-        var message = {
-            handle: $('#handle').val(),
-            message: 'vote',
-            typo: 'save'
+            typo: 'bloom'
         }
         chatsock.send(JSON.stringify(message));
         $("#message").val('').focus();
