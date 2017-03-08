@@ -416,10 +416,10 @@ def room_status(label, number, gameStatus):
         if len(nvwu) > 0:
             sendMessage(label,nvwu,'今天晚上被杀死的人是' + room.deadman + '号玩家，如果使用解药，请输入死者的id','message')
             player_nvwu = room.players.filter(address=nvwu).first()
-                if int(room.deadman) is player_nvwu.position and room.jinghui is 0:
-                    sendMessage(label,nvwu,'你无法对自己使用解药','message')
-                    time.sleep(5)
-                    return 5
+            if int(room.deadman) is player_nvwu.position and room.jinghui is 0:
+                sendMessage(label,nvwu,'你无法对自己使用解药','message')
+                time.sleep(5)
+                return 5
             time.sleep(15)
             jieyao, systemInfo = processVote(label, 0)
             log.debug('jieyao is %s', jieyao)
