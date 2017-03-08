@@ -31,7 +31,7 @@ $(function() {
             chat.append(ele)
         }
         if (data.typo === 'message') {
-            console.log(test);
+            console.log('test');
         }
     };
 
