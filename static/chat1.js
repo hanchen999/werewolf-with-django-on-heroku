@@ -157,8 +157,4 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
-
-
-    var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E6%9F%AF%E5%8D%97%E4%B8%BB%E9%A1%8Csong+-+%E6%9F%AF%E5%8D%97%E4%B8%BB%E9%A1%8Csong.mp3');
-    audio.play();
 });
