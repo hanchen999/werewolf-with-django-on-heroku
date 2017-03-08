@@ -151,8 +151,14 @@ def judgementView(label, name):
         Info = Info + '猎人: ' + lieren + '\n '
     if len(nvwu) > 0:
         Info = Info + '女巫: ' + nvwu + '\n '
+        if room.jieyao != 0:
+            Info = Info + '女巫解药已经使用！' + '\n '
+        if room.duyao != 0:
+            Info = Info + '女巫毒药已经使用！对象是: ' + str(room.duyao) + '\n '
     if len(shouwei) > 0:
         Info = Info + '守卫: ' + shouwei + '\n '
+        if room.shou != 0:
+            Info = Info + '守卫昨天晚上守卫的人是: ' + str(room.shou) + '\n '
     sendMessage(label, name, Info, 'message')
 
 
@@ -339,6 +345,10 @@ def room_status(label, number, gameStatus):
         sendGroupMessage(label, '狼人请确认击杀目标！', 'message')
         time.sleep(20)
         deadman, systemInfo = processVote(label, 0)
+        if len(deadman) is 0:
+            sendGroupMessage(label, '狼人请闭眼！', 'message4')
+            time.sleep(10)
+            return 2
         temp = deadman.split(',')
         if len(temp) > 1:
             deadman = 0
@@ -405,6 +415,11 @@ def room_status(label, number, gameStatus):
                break
         if len(nvwu) > 0:
             sendMessage(label,nvwu,'今天晚上被杀死的人是' + room.deadman + '号玩家，如果使用解药，请输入死者的id','message')
+            player_nvwu = room.players.filter(address=nvwu).first()
+                if int(room.deadman) is player_nvwu.position and room.jinghui is 0:
+                    sendMessage(label,nvwu,'你无法对自己使用解药','message')
+                    time.sleep(5)
+                    return 5
             time.sleep(15)
             jieyao, systemInfo = processVote(label, 0)
             log.debug('jieyao is %s', jieyao)
@@ -413,6 +428,7 @@ def room_status(label, number, gameStatus):
                 room.jieyao = int(jieyaoList[0])
                 room.voteList = ''
                 room.save()
+                sendMessage(label,nvwu,'你对' + str(room.jieyao) + '号玩家使用解药','message')
                 time.sleep(15)
                 sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
@@ -452,6 +468,7 @@ def room_status(label, number, gameStatus):
                 room.duyao = int(duyaolist[0])
                 room.voteList = ''
                 room.save()
+                sendMessage(label,nvwu,'你对' + str(room.duyao) + '号玩家使用毒药','message')
                 sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
                 return 6
@@ -483,8 +500,8 @@ def room_status(label, number, gameStatus):
                number = i
                break
         if len(huwei) > 0:
-            time.sleep(15)
             sendMessage(label,huwei,'请选择您今晚想守护的人！','message')
+            time.sleep(20)
             huwei, systemInfo = processVote(label,0)
             huweiList = huwei.split(',')
             if len(huwei) > 0:
@@ -494,6 +511,7 @@ def room_status(label, number, gameStatus):
                     room.shou = int(huweiList[0])
                 room.voteList = ''
                 room.save()
+                sendMessage(label,huwei,'你守护' + str(room.shou) + '号玩家','message')
                 sendGroupMessage(label, '护卫请闭眼！', 'message10')
                 time.sleep(5)
                 return 7
