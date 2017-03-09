@@ -947,6 +947,9 @@ def ws_receive(message):
         log.debug('chat message room=%s handle=%s message=%s', 
             room.label, data['handle'], data['message'])
         if data['typo'] == 'startGame':
+            players = room.players.all()
+            room.currentNumber = len(players)
+            room.save()
             if room.currentNumber < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, noEnoughPeople, 'error')
             elif room.gameStart == 1:

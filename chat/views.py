@@ -77,7 +77,9 @@ def join_room(request):
     label = request.POST['label']
     try:
         room = Room.objects.filter(label=label).first()
-        if int(room.playerNumber) is int(room.currentNumber):
+        players = room.players.all()
+        count = len(players)
+        if int(room.playerNumber) is count:
             return render(request, "chat/error.html", {'messages' : 'this room is full'})
         return redirect(chat_room, label=label)
     except Room.DoesNotExist:
