@@ -257,17 +257,21 @@ def checkStatus(label, nameList):
         target = voteList[i + 1]
         log.debug('Here is the target :%s',target)
         if target == 'bloom':
-            player = room.players.filter(position=vote).first()
-            player.alive = 0
-            player.save()
-            if room.jinghui is 1:
-                sendGroupMessage(label,'昨天晚上死亡的人是'+room.deadman,'message')
-            room.jinghui = 0
-            room.daystatus = 0
-            room.voteList = ''
-            room.deadman = ''
-            room.save()
-            return 1, nameList
+            player = room.players.filter(position=voter).first()
+            if player.identification is 1:
+                player.alive = 0
+                player.save()
+                sendGroupMessage(label,'狼人' + str(voter) + '号玩家自爆！','message')
+                if room.jinghui is 1:
+                    sendGroupMessage(label,'昨天晚上死亡的人是'+room.deadman,'message')
+                room.jinghui = 0
+                room.daystatus = 0
+                room.voteList = ''
+                room.deadman = ''
+                room.save()
+                return 1, nameList
+            else:
+                sendMessage(label,player.address,'您不是狼人，无法自爆','message')
         elif target == 'tuishui':
             if voter in nameList:
                 nameList.remove(voter)
