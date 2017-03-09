@@ -642,7 +642,7 @@ def room_status(label, number, gameStatus):
             yiyan = 0
             while yiyan is 0:
                 yiyan, yiyan_test = checkStatus(room.label, '')
-                time.sleep(20)
+                time.sleep(10)
             return 10
     #警长竞选
     elif number== 9:
@@ -707,7 +707,7 @@ def room_status(label, number, gameStatus):
         if status is -1:
             return -1
         elif status is 1:
-            sendGroupMessage(label,'开始下一晚' + target,'message')
+            sendGroupMessage(label,'开始下一晚','message')
             return 0
         elif status is 2:
             room.voteList = ''
