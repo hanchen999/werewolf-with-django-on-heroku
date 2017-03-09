@@ -263,7 +263,7 @@ def checkStatus(label, nameList):
             if room.jinghui is 1:
                 sendGroupMessage(label,'昨天晚上死亡的人是'+room.deadman,'message')
             room.jinghui = 0
-            room.dayStatus = 0
+            room.daystatus = 0
             room.voteList = ''
             room.deadman = ''
             room.save()
@@ -531,6 +531,8 @@ def room_status(label, number, gameStatus):
     # 处理昨晚死亡数据，并调整房间状态
     elif number == 7:
         sendGroupMessage(label, '天亮了！', 'message2')
+        room.daystatus = 1
+        room.save()
         if room.jinghui is 1:
             room_status(label, 9, gameStatus)
         systemInfo = '昨天晚上死的人有:'
@@ -569,7 +571,6 @@ def room_status(label, number, gameStatus):
                     deadList = deadList + ',' + str(room.duyao)
         systemInfo = systemInfo + deadList
         room.deadman = deadList
-        room.dayStatus = 1
         if room.jieyao is not 0:
             room.jieyao = -1
         room.save()
@@ -602,6 +603,8 @@ def room_status(label, number, gameStatus):
                             jiren.jingzhang = 1
                             jiren.save()
                             sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
+                    else:
+                        sendGroupMessage(label,'警长撕掉警徽','message')
                 room.voteList = ''
                 room.save()
                 sendGroupMessage(label,i +'玩家有20s时间可以发动技能','message')
@@ -614,6 +617,21 @@ def room_status(label, number, gameStatus):
                         x.alive = 0
                         x.save()
                         sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
+                        room.voteList = ''
+                        room.save()
+                        if x.jingzhang == 1:
+                            sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
+                            time.sleep(20)
+                            jinghuiList, systemInfo = processVote(label,0)
+                            log.debug('jiren is %s', jinghuiList)
+                            if len(jinghuiList) > 0:
+                                jiren = room.players.filter(position=int(jinghuiList)).first()
+                                if jiren.alive is 1:
+                                    jiren.jingzhang = 1
+                                    jiren.save()
+                                    sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
+                            else:
+                                sendGroupMessage(label,'警长撕掉警徽','message')
                         room.voteList = ''
                         room.save()
             sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
@@ -738,13 +756,28 @@ def room_status(label, number, gameStatus):
                     sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
                     room.voteList = ''
                     room.save()
-            room.dayStatus = 0
+                    if x.jingzhang == 1:
+                        sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
+                        time.sleep(20)
+                        jinghuiList, systemInfo = processVote(label,0)
+                        log.debug('jiren is %s', jinghuiList)
+                        if len(jinghuiList) > 0:
+                            jiren = room.players.filter(position=int(jinghuiList)).first()
+                            if jiren.alive is 1:
+                                jiren.jingzhang = 1
+                                jiren.save()
+                                sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
+                        else:
+                            sendGroupMessage(label,'警长撕掉警徽','message')
+                    room.voteList = ''
+                    room.save()
+            room.daystatus = 0
             room.save()
             sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
             yiyan = 0
             while yiyan is 0:
                 yiyan, yiyan_test = checkStatus(room.label, '')
-                time.sleep(20)
+                time.sleep(10)
             sendGroupMessage(label,'开始下一晚' + target,'message')
             return 0
 
