@@ -669,6 +669,9 @@ def room_status(label, number, gameStatus):
             time.sleep(20)
             output, systemInfo = processVote(label, 0)
             sendGroupMessage(label,systemInfo,'message')
+            if len(output) is 0:
+                sendGroupMessage(label,'因无人投票，警徽流掉！','message')
+                return 8
             nameList = output.split(',')
             if output is not '' and len(nameList) is 1:
                 room.jinghui = 0
