@@ -288,6 +288,8 @@ def pkStatus(label):
         log.debug('ws room does not exist label=%s', label)
         return -1
     voteList = room.voteList.split(',')
+    if len(room.voteList) is 0:
+        return 0 
     for i in xrange(0,len(voteList),2):
         voter = voteList[i]
         target = voteList[i + 1]
@@ -304,10 +306,13 @@ def pkVote(label, nameList, count):
         log.debug('ws room does not exist label=%s', label)
         return [] 
     sendGroupMessage(label,'现在进入PK台，现在是第' + str(count + 1) + '轮','message')
+    sendGroupMessage(label,'现在在台上的玩家是:','message')
+    sendGroupMessage(label,str(nameList[0:]),'message')
     if count is 0:
         sendGroupMessage(label,'请在PK台上的人发言！','message')
     elif count is 1:
         sendGroupMessage(label,'请在PK台下的人发言！','message')
+    sendGroupMessage(label,'输入startVote开始进行投票！','message')
     if count is 2:
         return []
     else:
@@ -316,7 +321,7 @@ def pkVote(label, nameList, count):
         status = 0
         while status is 0:
             status = pkStatus(label)
-            time.sleep(20)
+            time.sleep(10)
         sendGroupMessage(label,'PK台投票开始','message')
         sendGroupMessage(label,'现在在台上的玩家是:','message')
         sendGroupMessage(label,str(nameList[0:]),'message')
