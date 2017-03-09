@@ -288,11 +288,13 @@ def pkStatus(label):
         log.debug('ws room does not exist label=%s', label)
         return -1
     voteList = room.voteList.split(',')
+    log.debug('now vote list is %s',room.voteList)
     if len(room.voteList) is 0:
         return 0 
     for i in xrange(0,len(voteList),2):
         voter = voteList[i]
         target = voteList[i + 1]
+        log.debug('now vote list is %s',target)
         if target is 'startVote':
             room.voteList = ''
             room.save()
