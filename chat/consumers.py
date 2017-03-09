@@ -920,7 +920,7 @@ def ws_receive(message):
         elif data['typo'] == 'bloom':
             if room.gameStart == 0:
                 sendMessage(room.label, message.reply_channel.name, gameNotStarted, 'error')
-            elif room.dayStatus == 0:
+            elif room.daystatus == 0:
                 sendMessage(room.label, message.reply_channel.name, nighterror, 'error')
             else:
                 if len(room.voteList) is 0:
