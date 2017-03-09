@@ -294,8 +294,8 @@ def pkStatus(label):
     for i in xrange(0,len(voteList),2):
         voter = voteList[i]
         target = voteList[i + 1]
-        log.debug('now vote list is %s',target)
-        if target is 'startVote':
+        log.debug('now target is %s',target)
+        if target == 'startVote':
             room.voteList = ''
             room.save()
             return 1
