@@ -35,7 +35,8 @@ def create_room(request):
         label = request.POST['id']
         if Room.objects.filter(label=label).exists():
             room = Room.objects.filter(label=label).first()
-            if int(room.currentNumber) > 0:
+            players = room.players.filter().all()
+            if len(players) > 0:
                 return render(request, "chat/error.html", {'messages' : 'this name has been used'})
             else:
                 Room.objects.all().delete()

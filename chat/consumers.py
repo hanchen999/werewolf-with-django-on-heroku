@@ -631,6 +631,7 @@ def room_status(label, number, gameStatus):
         time.sleep(20)
         nameList = processName(label)
         sendGroupMessage(label,'参选警长的有: ' + str(nameList[0:]),'message')
+        sendGroupMessage(label,'如果要开始警长投票，请输入startVote','message')
         status = 0
         while status is 0:
             status, nameList = checkStatus(label, nameList)
