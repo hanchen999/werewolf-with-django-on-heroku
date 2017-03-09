@@ -530,6 +530,9 @@ def room_status(label, number, gameStatus):
             return 7
     # 处理昨晚死亡数据，并调整房间状态
     elif number == 7:
+        sendGroupMessage(label, '天亮了！', 'message2')
+        if room.jinghui is 1:
+            room_status(label, 9, gameStatus)
         systemInfo = '昨天晚上死的人有:'
         deadList = ''
         deadman = int(room.deadman)
@@ -570,10 +573,6 @@ def room_status(label, number, gameStatus):
         if room.jieyao is not 0:
             room.jieyao = -1
         room.save()
-        sendGroupMessage(label, '天亮了！', 'message2')
-        if room.jinghui is 1:
-            room_status(label, 9, gameStatus)
-        time.sleep(10)
         sendGroupMessage(label, systemInfo, 'message')
         time.sleep(10)
         return 8

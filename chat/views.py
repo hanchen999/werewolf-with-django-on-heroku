@@ -39,7 +39,6 @@ def create_room(request):
             if len(players) > 0:
                 return render(request, "chat/error.html", {'messages' : 'this name has been used'})
             else:
-                Room.objects.all().delete()
                 room.messages.all().delete()
                 room.players.all().delete()
         playNumber = 0
