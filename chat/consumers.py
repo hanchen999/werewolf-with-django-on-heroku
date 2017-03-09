@@ -846,6 +846,21 @@ def startGame(label):
         sendGroupMessage(label, '狼人获胜！', 'message')
     else:
         sendGroupMessage(label, '好人获胜！', 'message')
+    room.voteList = ''
+    room.duyao = 0
+    room.jieyao = 0
+    room.shou = 0
+    room.jinghui = 1
+    room.daystatus = 0
+    room.deadman = ''
+    room.gameStart = 0
+    room.save()
+    players = room.players.filter().all()
+    for player in players:
+        player.jingzhang = 0
+        player.alive = 1
+        player.identification = -1
+        player.save()
 
 
 
