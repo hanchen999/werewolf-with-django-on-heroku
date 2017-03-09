@@ -41,6 +41,7 @@ def create_room(request):
             else:
                 room.messages.all().delete()
                 room.players.all().delete()
+                room.delete()
         playNumber = 0
         roleList = request.POST['cunmin'] + ',' + request.POST['langren']
         playNumber = playNumber + int(request.POST['cunmin']) + int(request.POST['langren'])
