@@ -83,7 +83,7 @@ def join_room(request):
         if int(room.playerNumber) is count:
             return render(request, "chat/error.html", {'messages' : 'this room is full'})
         player = room.players.filter(position=position).first()
-        if player is not None；
+        if player is not None:
             return render(request, "chat/error.html", {'messages' : 'this position has been occupied'})
         return redirect(chat_room, label=label, position=position)
     except Room.DoesNotExist:
