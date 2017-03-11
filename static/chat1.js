@@ -4,9 +4,9 @@
 $(function() {
     // When we're using HTTPS, use WSS too.
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/" + "{{label}}"); 
+    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/" + {{room.label}}); 
     console.log(window.location.host)   
-    console.log({{label}})
+    console.log({{room.label}})
     chatsock.onmessage = function(message) {
         var messageKeeplive = {
             handle: 0,
