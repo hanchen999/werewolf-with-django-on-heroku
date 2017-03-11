@@ -548,7 +548,10 @@ def room_status(label, number, gameStatus):
             room_status(label, 9, gameStatus)
         systemInfo = '昨天晚上死的人有:'
         deadList = ''
-        deadman = int(room.deadman)
+        if len(room.deadman) is 0:
+            deadman = 0
+        else:
+            deadman = int(room.deadman)
         if deadman is not 0:
             if room.jieyao == deadman and room.shou == deadman:
                 if len(deadList) is 0:

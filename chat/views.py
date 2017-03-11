@@ -75,19 +75,23 @@ def join_room(request):
     if request.method == 'GET':
         return render(request, "chat/join_room.html", {})
     label = request.POST['label']
+    position = request.POST['position']
     try:
         room = Room.objects.filter(label=label).first()
         players = room.players.all()
         count = len(players)
         if int(room.playerNumber) is count:
             return render(request, "chat/error.html", {'messages' : 'this room is full'})
-        return redirect(chat_room, label=label)
+        player = room.players.filter(position=position).first()
+        if player is not None；
+            return render(request, "chat/error.html", {'messages' : 'this position has been occupied'})
+        return redirect(chat_room, label=label, position=position)
     except Room.DoesNotExist:
         return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
 
 
 
-def chat_room(request, label):
+def chat_room(request, label, position):
     """
     Room view - show the room, with latest messages.
 
@@ -103,5 +107,6 @@ def chat_room(request, label):
 
     return render(request, "chat/room.html", {
         'room': room,
+        'position': position
         'messages': '',
     })
