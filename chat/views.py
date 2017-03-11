@@ -107,6 +107,6 @@ def chat_room(request, label, position):
 
     return render(request, "chat/room.html", {
         'room': room,
-        'position': position
+        'position': position,
         'messages': '',
     })
