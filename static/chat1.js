@@ -1,23 +1,14 @@
 // var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 // var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);
-function getParameterByName(name, url) {
-    if (!url) {
-      url = window.location.href;
-    }
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
 
 $(function() {
     // When we're using HTTPS, use WSS too.
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/" + getParameterByName('label')); 
-    console.log(window.location.host)   
-    console.log(getParameterByName('label'))
+    var temp = window.location.pathname;
+    var str = temp.split("/");
+    var position = str[1];
+    console.log(position)
+    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/" + window.location.pathname);  
     chatsock.onmessage = function(message) {
         var messageKeeplive = {
             handle: 0,
