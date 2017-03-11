@@ -8,13 +8,13 @@ $(function() {
     var str = temp.split("/");
     var position = str[1];
     var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/" + position);  
-    chatsock.onopen = function(event) {
+    chatsock.onopen = function() {
         var messageKeeplive = {
             handle: $('#handle').val(),
             message: 'vote',
             typo: 'keepalive'
         }
-        console.log('send message!')
+        console.log('send message!');
         chatsock.send(JSON.stringify(messageKeeplive));
     }
     chatsock.onmessage = function(message) {
