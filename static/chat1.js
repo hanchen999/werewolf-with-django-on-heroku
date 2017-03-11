@@ -7,11 +7,10 @@ $(function() {
     var temp = window.location.pathname;
     var str = temp.split("/");
     var position = str[1];
-    console.log(position)
-    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/" + window.location.pathname);  
+    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/" + position);  
     chatsock.onmessage = function(message) {
         var messageKeeplive = {
-            handle: 0,
+            handle: $('#handle').val(),
             message: 'vote',
             typo: 'keepalive'
         }
@@ -136,5 +135,4 @@ $(function() {
             message: 'verify the socket address',
             typo: 'Vote'
         }
-    chatsock.send(JSON.stringify(message));
 });
