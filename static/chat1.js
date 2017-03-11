@@ -4,7 +4,9 @@
 $(function() {
     // When we're using HTTPS, use WSS too.
     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname);    
+    var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat" + window.location.pathname); 
+    console.log(window.location.host)   
+    console.log(window.location.pathname)
     var message = {
             handle: $('#handle').val(),
             message: 'verify the socket address',
