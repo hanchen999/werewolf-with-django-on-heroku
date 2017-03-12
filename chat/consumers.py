@@ -673,6 +673,12 @@ def room_status(label, number, gameStatus):
         sendGroupMessage(label,'有二十秒钟竞选警长','message')
         time.sleep(20)
         nameList = processName(label)
+        if len(nameList) == 0:
+            sendGroupMessage(label,'无人竞选警长，警徽流掉','message')
+            room.voteList = ''
+            room.jinghui = 0
+            room.save()
+            return 8
         sendGroupMessage(label,'参选警长的有: ' + str(nameList[0:]),'message')
         sendGroupMessage(label,'如果要开始警长投票，请输入startVote','message')
         status = 0
