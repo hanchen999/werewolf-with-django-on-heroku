@@ -232,6 +232,8 @@ def processName(label):
         log.debug('ws room does not exist label=%s', label)
         return ''
     nameList = []
+    if voteList == '':
+        return nameList
     voteList = room.voteList.split(',')
     for i in xrange(0,len(voteList),2):
         if voteList[i] in nameList:
@@ -428,6 +430,10 @@ def room_status(label, number, gameStatus):
                number = i
                break
         if len(nvwu) > 0:
+            if room.deadman != '':
+                sendMessage(label,nvwu,'今天晚上无人被杀','message')
+                time.sleep(5)
+                return 5
             sendMessage(label,nvwu,'今天晚上被杀死的人是' + room.deadman + '号玩家，如果使用解药，请输入死者的id','message')
             player_nvwu = room.players.filter(address=nvwu).first()
             pos = 0
