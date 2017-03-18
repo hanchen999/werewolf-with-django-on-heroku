@@ -232,7 +232,7 @@ def processName(label):
         log.debug('ws room does not exist label=%s', label)
         return ''
     nameList = []
-    if voteList == '':
+    if room.voteList == '':
         return nameList
     voteList = room.voteList.split(',')
     for i in xrange(0,len(voteList),2):
