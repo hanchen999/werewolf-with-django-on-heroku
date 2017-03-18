@@ -430,7 +430,7 @@ def room_status(label, number, gameStatus):
                number = i
                break
         if len(nvwu) > 0:
-            if room.deadman != '':
+            if room.deadman == '':
                 sendMessage(label,nvwu,'今天晚上无人被杀','message')
                 time.sleep(5)
                 return 5
