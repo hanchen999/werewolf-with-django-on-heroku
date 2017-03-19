@@ -96,7 +96,7 @@ $(function() {
     });
 
     $("#startGame").on("submit", function(event) {
-        $("#tbodyid").empty();
+        $('#chat tbody').empty();
         var message = {
             handle: $('#handle').val(),
             message: 'vote',
