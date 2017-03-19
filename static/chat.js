@@ -39,7 +39,7 @@ $(function() {
             $("<td></td>").text(data.message)
         )
         if (data.typo === 'message11') {
-            chat.empty()
+            $("#chat tbody").empty()
         } 
         if (data.handle !== 'keepalive') {
             chat.append(ele)
