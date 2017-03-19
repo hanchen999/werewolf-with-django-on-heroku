@@ -40,6 +40,9 @@ $(function() {
             $("<td></td>").text(data.message)
         ) 
         if (data.handle !== 'keepalive') {
+            console.log('try')
+            chat.empty()
+            console.log('result')
             chat.append(ele)
         }
         if (data.typo === 'message1') {
@@ -96,7 +99,6 @@ $(function() {
     });
 
     $("#startGame").on("submit", function(event) {
-        $('#chat tbody').empty();
         var message = {
             handle: $('#handle').val(),
             message: 'vote',
