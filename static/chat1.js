@@ -14,7 +14,6 @@ $(function() {
             message: 'vote',
             typo: 'keepalive'
         }
-        console.log('send message!');
         chatsock.send(JSON.stringify(messageKeeplive));
     }
     chatsock.onmessage = function(message) {
@@ -39,12 +38,14 @@ $(function() {
         ele.append(
             $("<td></td>").text(data.message)
         ) 
+        console.log('try1')
         if (data.handle !== 'keepalive') {
             console.log('try')
             chat.empty()
             console.log('result')
             chat.append(ele)
         }
+        console.log('result1')
         if (data.typo === 'message1') {
             var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A4%A9%E9%BB%91%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3')
             audio.play()
