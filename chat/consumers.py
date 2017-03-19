@@ -985,7 +985,7 @@ def ws_receive(message):
             elif room.players.all().count() < room.playerNumber:
                 sendMessage(room.label, message.reply_channel.name, notReady, 'error')
             else:
-                sendGroupMessage(room.label, '游戏开始!', 'message')
+                sendGroupMessage(room.label, '游戏开始!', 'message11')
                 # startGame(label)
                 t = threading.Thread(target=startGame, args=(label,))
                 t.start()

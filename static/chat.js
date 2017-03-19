@@ -37,15 +37,13 @@ $(function() {
         )
         ele.append(
             $("<td></td>").text(data.message)
-        ) 
-        console.log('try1')
-        if (data.handle !== 'keepalive') {
-            console.log('try')
+        )
+        if (data.typo === 'message11') {
             chat.empty()
-            console.log('result')
+        } 
+        if (data.handle !== 'keepalive') {
             chat.append(ele)
         }
-        console.log('result1')
         if (data.typo === 'message1') {
             var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A4%A9%E9%BB%91%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3')
             audio.play()
