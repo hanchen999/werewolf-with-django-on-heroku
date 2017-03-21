@@ -366,7 +366,24 @@ def processLink(label):
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
-        return -1
+        return -1, 0
+    voteList = room.voteList
+    if len(voteList) = 0:
+        number1 = random.randint(1,room.playerNumber)
+        number2 = random.randint(1,room.playerNumber)
+        while number2 != number1:
+            number2 = random.randint(1,room.playerNumber)
+        return number1, number2
+    temp = voteList.split(',')
+    number1 = int(temp[1])
+    if len(temp) < 4:
+        number2 = random.randint(1,room.playerNumber)
+        while number2 != number1:
+            number2 = random.randint(1,room.playerNumber)
+        return number1, number2
+    number2 = int(temp[3])
+    return number1, number2
+
 
 
 def room_status(label, number, gameStatus):
