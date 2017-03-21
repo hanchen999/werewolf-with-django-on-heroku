@@ -22,6 +22,10 @@ class Room(models.Model):
     jieyao = models.IntegerField(default=0)
     deadman = models.TextField(default='')
     shou = models.IntegerField(default=0)
+    link = models.TextField(default='')
+    thirdteam = models.IntegerField(default=0)
+    theft = models.IntegerField(default=-1)
+    burycard = models.TextField(default=-1)
     def __unicode__(self):
         return self.label
 
@@ -50,6 +54,7 @@ class Player(models.Model):
     jingzhang = models.IntegerField(default=0)
     identification = models.IntegerField(default=-1)
     alive = models.IntegerField(default=1)
+    link = models.IntegerField(default=-1)
     def __unicode__(self):
         return '{position}: {address}'.format(**self.as_dict())
     def as_dict(self):

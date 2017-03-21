@@ -36,6 +36,11 @@ identificationDict[2] = '预言家'
 identificationDict[3] = '女巫'
 identificationDict[4] = '猎人'
 identificationDict[5] = '守卫'
+identificationDict[6] = '白狼王'
+identificationDict[7] = '丘比特'
+identificationDict[8] = '盗贼'
+
+
 
 thread_pool = dict()
 
@@ -127,6 +132,9 @@ def judgementView(label, name):
     nvwu = ''
     shouwei = ''
     lieren = ''
+    bailangwang = ''
+    qiubite = ''
+    daozei = ''
     for player in room.players.all():
         if player.identification == 0:
             cunmin = cunmin + player.position + ' '
@@ -140,6 +148,10 @@ def judgementView(label, name):
             nvwu = nvwu + player.position + ' '
         elif player.identification == 5:
             shouwei = shouwei + player.position + ' '
+        elif player.identification == 6:
+            bailangwang = bailangwang + player.position + ' '
+        elif player.identification == 7:
+            qiubite = qiubite + player.position + ' '
     Info = 'Identification list \n '
     if len(cunmin) > 0:
         Info = Info + '村民: ' + cunmin + '\n '
@@ -159,6 +171,20 @@ def judgementView(label, name):
         Info = Info + '守卫: ' + shouwei + '\n '
         if room.shou != 0:
             Info = Info + '守卫昨天晚上守卫的人是: ' + str(room.shou) + '\n '
+    if len(bailangwang) > 0:
+        Info = Info + '白狼王: ' + bailangwang + '\n '
+    if len(qiubite) > 0:
+        Info = Info + '丘比特: ' + qiubite + '\n '
+        Info = Info + '丘比特所连的情侣是: ' + room.link + '\n '
+    if room.theft != -1:
+        Info = Info + '盗贼: ' + str(room.theft) + '\n '
+        temp = room.players.filter(position=room.theft).first
+        Info = Info + '盗贼拾取的身份是： ' + str(identificationDict[int(temp.identification)]) + '\n '
+        Info = Info + '盗贼掩埋的身份是: ' + str(identificationDict[int(room.burycard)]) + '\n '
+    if room.thirdteam == 0:
+        Info = Info + '含有第三阵营！' + '\n '
+    else:
+        Info = Info + '不含有第三阵营！' + '\n '
     sendMessage(label, name, Info, 'message')
 
 
@@ -851,7 +877,27 @@ def startGame(label):
         playerList.append(5)
     if int(roleList[5]) is not 0:
         gameStatus.append(5)
+    for i in range(0, int(roleList[6])):
+        playerList.append(6)
+    for i in range(0, int(roleList[7])):
+        playerList.append(7)
+    if int(roleList[7]) is not 0:
+        gameStatus.append(7)
+    for i in range(0, int(roleList[8])):
+        playerList.append(8)
+    if int(roleList[8]) is not 0:
+        gameStatus.append(8)
     random.shuffle(playerList)
+    if int(roleList[8]) is not 0:
+        int length = len(playerList)
+        flag = True
+        while flag:
+            flag1 = (playerList[length - 1] == 1) or (playerList[length - 1] == 6)
+            flag2 = (playerList[length - 2] == 1) or (playerList[length - 2] == 6)
+            if flag1 and flag2:
+                random.shuffle(playerList)
+            else:
+                break
     for i in range(1, room.playerNumber + 1):
         player = room.players.filter(position=i).first()
         player.identification = playerList[i - 1]
@@ -867,6 +913,12 @@ def startGame(label):
             sendMessage(label,player.address,'您的身份是女巫！','message')
         if player.identification is 5:
             sendMessage(label,player.address,'您的身份是守卫！','message')
+        if player.identification is 6:
+            sendMessage(label,player.address,'您的身份是白狼王！','message')
+        if player.identification is 7:
+            sendMessage(label,player.address,'您的身份是丘比特！','message')
+        if player.identification is 8:
+            sendMessage(label,player.address,'您的身份是盗贼！','message')
         player.save()
     sendGroupMessage(label, '身份已经准备就绪!', 'message')
     log.debug('Game Status is %s', str(gameStatus[0:]))
@@ -889,6 +941,10 @@ def startGame(label):
     room.daystatus = 0
     room.deadman = ''
     room.gameStart = 0
+    room.link = ''
+    room.burycard = -1
+    room.theft = -1
+    room.thirdteam = 0
     room.save()
     players = room.players.filter().all()
     for player in players:

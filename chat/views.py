@@ -65,6 +65,21 @@ def create_room(request):
             playNumber = playNumber + 1
         else:
             roleList = roleList + ',' + '0'
+        if request.POST.get('bailangwang', False):
+            roleList = roleList + ',' + '1'
+            playNumber = playNumber + 1
+        else:
+            roleList = roleList + ',' + '0'
+        if request.POST.get('qiubite', False):
+            roleList = roleList + ',' + '1'
+            playNumber = playNumber + 1
+        else:
+            roleList = roleList + ',' + '0'
+        if request.POST.get('daozei', False):
+            roleList = roleList + ',' + '1'
+            playNumber = playNumber - 1
+        else:
+            roleList = roleList + ',' + '0'
         gameStart = 0
         new_room = Room.objects.create(label=label, gameStart=gameStart, playerNumber=playNumber, roleList=roleList)
     return redirect(chat_room, label=label, position=1)
