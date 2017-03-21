@@ -361,6 +361,14 @@ def pkVote(label, nameList, count):
         sendGroupMessage(label,systemInfo,'message')
         return target
 
+def processLink(label):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return -1
+
+
 def room_status(label, number, gameStatus):
     try:
         room = Room.objects.get(label=label)
@@ -371,6 +379,85 @@ def room_status(label, number, gameStatus):
     if number == 0:   
         sendGroupMessage(label, '天黑请闭眼！', 'message1')
         time.sleep(10)
+        if 8 in gameStatus and room.jinghui == 1 and room.theft is -1:
+            sendGroupMessage(label, '盗贼请睁眼！', 'message12')
+            sendGroupMessage(label, '盗贼有两张牌可以选择,狼人牌为必选牌，请输入1和2来决定你选的牌！', 'message')
+            player = room.players.filter(identification=8).first()
+            if player is None:
+                time.sleep(20)
+            daozei = player.address 
+            if playerList[len(playerList) - 1] is 1 or playerList[len(playerList) - 1] is 6:
+                sendMessage(label, daozei, '你可选的牌组中有狼人牌，系统已经自动为您选择狼人牌: ' + identificationDict[playerList[len(playerList) - 1]], 'message')
+                sendMessage(label, daozei, '你埋掉的牌是: ' + identificationDict[playerList[len(playerList) - 2]], 'message')
+                player.identification = playerList[len(playerList) - 1]
+                player.save()
+                room.theft = player.position
+                room.burycard = playerList[len(playerList) - 2]
+                room.voteList = ''
+                room.save()
+                time.sleep(20)
+            elif playerList[len(playerList) - 2] is 1 or playerList[len(playerList) - 2] is 6:
+                sendMessage(label, daozei, '你可选的牌组中有狼人牌，系统已经自动为您选择狼人牌: ' + identificationDict[playerList[len(playerList) - 2]], 'message')
+                sendMessage(label, daozei, '你埋掉的牌是: ' + identificationDict[playerList[len(playerList) - 1]], 'message')
+                player.identification = playerList[len(playerList) - 2]
+                player.save()
+                room.theft = player.position
+                room.burycard = playerList[len(playerList) - 1]
+                room.voteList = ''
+                room.save()
+                time.sleep(20)
+            else:
+                card1 = identificationDict[playerList[len(playerList) - 2]]
+                card2 = identificationDict[playerList[len(playerList) - 1]]
+                sendMessage(label, daozei, '你可选的牌组中为: ' + card1 + ' ' + card2, 'message')
+                time.sleep(10)
+                cardnumber, message = processVote(label,0)
+                if len(cardnumber) is 0:
+                    cardnumber = random.randint(1, 2)
+                if int(cardnumber) is 1:
+                    sendMessage(label, daozei, '你选的牌是: ' + identificationDict[playerList[len(playerList) - 2]], 'message')
+                    sendMessage(label, daozei, '你埋掉的牌是: ' + identificationDict[playerList[len(playerList) - 1]], 'message')
+                    player.identification = playerList[len(playerList) - 2]
+                    player.save()
+                    room.theft = player.position
+                    room.burycard = playerList[len(playerList) - 1]
+                    room.voteList = ''
+                    room.save()
+                    time.sleep(10)
+                else:
+                    sendMessage(label, daozei, '你选的牌是: ' + identificationDict[playerList[len(playerList) - 1]], 'message')
+                    sendMessage(label, daozei, '你埋掉的牌是: ' + identificationDict[playerList[len(playerList) - 2]], 'message')
+                    player.identification = playerList[len(playerList) - 1]
+                    player.save()
+                    room.theft = player.position
+                    room.burycard = playerList[len(playerList) - 2]
+                    room.voteList = ''
+                    room.save()
+                    time.sleep(10)
+            sendGroupMessage(label, '盗贼请闭眼！', 'message13')
+            time.sleep(10)
+        if 7 in gameStatus and room.jinghui == 1 and len(room.link) is 0:
+            sendGroupMessage(label, '丘比特请睁眼！', 'message14')
+            sendGroupMessage(label, '丘比特可以两次输入号码，每次请输入一个号码，这两个号码的玩家被连接为情侣！', 'message')
+            player = room.players.filter(identification=7).first()
+            if player is None:
+                time.sleep(20)
+            qiubite = player.address
+            time.sleep(15)
+            number1, number2 = processLink(label)
+            player1 = room.players.filter(position = number1).first()
+            player1.link = number2
+            player1.save()
+            player2 = room.players.filter(position = number2).first()
+            player2.link = number1
+            player2.save()
+            room.link = str(number1) + ',' + str(number2)
+            room.save()
+            sendMessage(label, qiubite, '您连的两个人是' + str(number1) + ' ' + str(number2), 'message')
+            sendMessage(label, player1.address, '您与' + str(number2) + '号玩家被连成情侣', 'message')
+            sendMessage(label, player2.address, '您与' + str(number1) + '号玩家被连成情侣', 'message')
+            sendGroupMessage(label, '丘比特请闭眼！', 'message15')
+            time.sleep(5)
         return 1
     # 狼人杀人
     elif number == 1:
