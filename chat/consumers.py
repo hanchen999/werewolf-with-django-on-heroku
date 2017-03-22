@@ -114,6 +114,23 @@ def judgement(label):
                 langRen = langRen - 1
             else:
                 shenMin = shenMin - 1
+    if room.thirdteam == 1:
+        count1 = 0
+        count2 = 0
+        for player in room.players.all():
+            if player.link != -1 or player.identification == 7:
+                if player.jingzhang == 1:
+                    count1 = count1 + 1.5
+                else:
+                    count1 = count1 + 1
+            else:
+                if player.jingzhang == 1:
+                    count2 = count2 + 1.5
+                else:
+                    count2 = count2 + 1
+        if count1 >= count2:
+            log.debug('判决胜负3')
+            return 3
     if cunMin == 0 or shenMin == 0 or langRen >= (cunMin + shenMin):
         log.debug('判决胜负1')
         return 1
@@ -519,6 +536,14 @@ def room_status(label, number, gameStatus, playerList):
             player2.link = number1
             player2.save()
             room.link = str(number1) + ',' + str(number2)
+            flag1 = player1.identification == 1 or player1.identification == 6
+            flag2 = player2.identification == 1 or player2.identification == 6
+            if flag1 and flag2:
+                room.thirdteam = 0
+            elif !flag1 and !flag2:
+                room.thirdteam = 0
+            else:
+                room.thirdteam = 1
             room.save()
             sendMessage(label, qiubite, '您连的两个人是' + str(number1) + ' ' + str(number2), 'message')
             sendMessage(label, player1.address, '您与' + str(number2) + '号玩家被连成情侣', 'message')
@@ -1046,8 +1071,10 @@ def startGame(label):
             break
     if judgement(label) == 1:
         sendGroupMessage(label, '狼人获胜！', 'message')
-    else:
+    elif judgement(label) == 2:
         sendGroupMessage(label, '好人获胜！', 'message')
+    else:
+        sendGroupMessage(label, '第三阵营获胜！', 'message')
     room.voteList = ''
     room.duyao = 0
     room.jieyao = 0
@@ -1060,6 +1087,7 @@ def startGame(label):
     room.burycard = -1
     room.theft = -1
     room.thirdteam = 0
+    room.messages.all().delete()
     room.save()
     players = room.players.filter().all()
     for player in players:
