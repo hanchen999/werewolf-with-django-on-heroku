@@ -436,7 +436,7 @@ def processLink(label):
 
 
 
-def room_status(label, number, gameStatus):
+def room_status(label, number, gameStatus, playerList):
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
@@ -737,7 +737,7 @@ def room_status(label, number, gameStatus):
         room.daystatus = 1
         room.save()
         if room.jinghui is 1:
-            room_status(label, 9, gameStatus)
+            room_status(label, 9, gameStatus, playerList)
         systemInfo = '昨天晚上死的人有:'
         deadList = ''
         if len(room.deadman) is 0:
@@ -1040,7 +1040,7 @@ def startGame(label):
     roomStatus = 0
     while judgement(label) is 0:
         log.debug('房间现在的状态是%d',roomStatus)
-        roomStatus = room_status(label, roomStatus, gameStatus)
+        roomStatus = room_status(label, roomStatus, gameStatus, playerList)
         if roomStatus is -1:
             sendGroupMessage(label, '错误发生，或者测试结束！', 'message')
             break
