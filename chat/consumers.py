@@ -540,7 +540,7 @@ def room_status(label, number, gameStatus, playerList):
             flag2 = player2.identification == 1 or player2.identification == 6
             if flag1 and flag2:
                 room.thirdteam = 0
-            elif !flag1 and !flag2:
+            elif not flag1 and not flag2:
                 room.thirdteam = 0
             else:
                 room.thirdteam = 1
