@@ -999,11 +999,11 @@ def startGame(label):
         gameStatus.append(8)
     random.shuffle(playerList)
     if int(roleList[8]) is not 0:
-        indexofplayerList = len(playerList)
         flag = True
         while flag:
+            indexofplayerList = len(playerList)
             flag1 = (playerList[indexofplayerList - 1] == 1) or (playerList[indexofplayerList - 1] == 6)
-            flag2 = (playerList[indexofplayerList - 2] == 1) or (playerList[lindexofplayerList - 2] == 6)
+            flag2 = (playerList[indexofplayerList - 2] == 1) or (playerList[indexofplayerList - 2] == 6)
             if flag1 and flag2:
                 random.shuffle(playerList)
             else:
