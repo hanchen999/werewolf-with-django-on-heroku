@@ -413,7 +413,7 @@ def processLink(label):
         log.debug('ws room does not exist label=%s', label)
         return -1, 0
     voteList = room.voteList
-    if len(voteList) = 0:
+    if len(voteList) == 0:
         number1 = random.randint(1,room.playerNumber)
         number2 = random.randint(1,room.playerNumber)
         while number2 != number1:
