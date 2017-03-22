@@ -100,12 +100,17 @@ def judgement(label):
     roleList = room.roleList.split(",")
     cunMin = int(roleList[0])
     langRen = int(roleList[1])
+    if int(roleList[6]) == 1:
+        langRen = langRen + 1
     shenMin = int(room.playerNumber) - cunMin - langRen
     for player in room.players.all():
+        if player.identification == 8:
+            log.debug('判决胜负0')
+            return 0
         if player.alive == 0:
             if player.identification == 0:
                 cunMin = cunMin - 1
-            elif player.identification == 1:
+            elif player.identification == 1 or player.identification == 6:
                 langRen = langRen - 1
             else:
                 shenMin = shenMin - 1
