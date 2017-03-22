@@ -188,6 +188,51 @@ def judgementView(label, name):
     sendMessage(label, name, Info, 'message')
 
 
+#发动技能，死亡结算
+def skill(label, number):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return 0
+    player = room.players.filter(position=number).first()
+    room.voteList = ''
+    room.save()
+    if player.jingzhang is 1:
+        room.voteList = ''
+        room.save()
+        sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
+        time.sleep(20)
+        jinghuiList, systemInfo = processVote(label,0)
+        if len(jinghuiList) > 0:
+            jiren = room.players.filter(position=int(jinghuiList)).first()
+            if jiren.alive is 1:
+                jiren.jingzhang = 1
+                jiren.save()
+                sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
+        room.voteList = ''
+        room.save()
+        sendGroupMessage(label,str(player.position) +'号玩家有20s时间可以发动技能','message')
+        time.sleep(20)
+        target, systemInfo = processVote(label,0)
+        if player.identification is 3:
+            if target is not '' and int(target) > 0:
+                x = room.players.filter(position=int(target)).first()
+                x.alive = 0
+                x.save()
+                sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
+                room.voteList = ''
+                room.save()
+                skill(label, target)
+        if player.link != -1:
+            qinglv = room.players.filter(position=player.link).first()
+            qinglv.alive = 0
+            qinglv.save()
+            sendGroupMessage(label,'情侣' + str(player.link) + '号玩家死亡','message')
+            skill(label, player.link)
+
+
+
 def processVote(label, args):
     try:
         room = Room.objects.get(label=label)
@@ -703,6 +748,11 @@ def room_status(label, number, gameStatus):
                 player = room.players.filter(position=int(deadman)).first()
                 player.alive = 0
                 player.save()
+                if player.link != -1:
+                    qinglv = room.players.filter(position=player.link).first()
+                    qinglv.alive = 0
+                    qinglv.save()
+                    deadList = deadList + ',' + str(player.link)
                 room.save()
             elif room.jieyao == deadman or room.shou == deadman:
                 room.deadman = 0
@@ -715,6 +765,11 @@ def room_status(label, number, gameStatus):
                 player = room.players.filter(position=int(deadman)).first()
                 player.alive = 0
                 player.save()
+                if player.link != -1:
+                    qinglv = room.players.filter(position=player.link).first()
+                    qinglv.alive = 0
+                    qinglv.save()
+                    deadList = deadList + ',' + str(player.link)
                 room.save()
         if room.duyao is not 0:
             player = room.players.filter(position=int(room.duyao)).first()
@@ -725,6 +780,11 @@ def room_status(label, number, gameStatus):
                     deadList = '' + str(room.duyao)
                 else:
                     deadList = deadList + ',' + str(room.duyao)
+                if player.link != -1:
+                    qinglv = room.players.filter(position=player.link).first()
+                    qinglv.alive = 0
+                    qinglv.save()
+                    deadList = deadList + ',' + str(player.link)
         systemInfo = systemInfo + deadList
         room.deadman = deadList
         if room.jieyao is not 0:
@@ -768,26 +828,12 @@ def room_status(label, number, gameStatus):
                 target, systemInfo = processVote(label,0)
                 log.debug('target is %s', target)
                 if player.identification is 3:
-                    if target is not '' and int(target) > 0:
+                    if target is not '' and int(target) > 0 and int(room.duyao) != player.position:
                         x = room.players.filter(position=int(target)).first()
                         x.alive = 0
                         x.save()
                         sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
-                        room.voteList = ''
-                        room.save()
-                        if x.jingzhang == 1:
-                            sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
-                            time.sleep(20)
-                            jinghuiList, systemInfo = processVote(label,0)
-                            log.debug('jiren is %s', jinghuiList)
-                            if len(jinghuiList) > 0:
-                                jiren = room.players.filter(position=int(jinghuiList)).first()
-                                if jiren.alive is 1:
-                                    jiren.jingzhang = 1
-                                    jiren.save()
-                                    sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
-                            else:
-                                sendGroupMessage(label,'警长撕掉警徽','message')
+                        skill(label, target)
                         room.voteList = ''
                         room.save()
             sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
@@ -893,51 +939,11 @@ def room_status(label, number, gameStatus):
                     player = room.players.filter(position=int(nameList[0])).first()
                     player.alive = 0
                     player.save()
-            player = room.players.filter(position=int(nameList[0])).first()
-            room.voteList = ''
-            room.save()
-            if player.jingzhang is 1:
-                room.voteList = ''
-                room.save()
-                sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
-                time.sleep(20)
-                jinghuiList, systemInfo = processVote(label,0)
-                if len(jinghuiList) > 0:
-                    jiren = room.players.filter(position=int(jinghuiList)).first()
-                    if jiren.alive is 1:
-                        jiren.jingzhang = 1
-                        jiren.save()
-                        sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
-            room.voteList = ''
-            room.save()
-            sendGroupMessage(label,str(player.position) +'号玩家有20s时间可以发动技能','message')
-            time.sleep(20)
-            target, systemInfo = processVote(label,0)
-            if player.identification is 3:
-                if int(target) > 0:
-                    x = room.players.filter(position=int(target)).first()
-                    x.alive = 0
-                    x.save()
-                    sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
-                    room.voteList = ''
-                    room.save()
-                    if x.jingzhang == 1:
-                        sendGroupMessage(label,'警长有20s时间可以传递警徽','message')
-                        time.sleep(20)
-                        jinghuiList, systemInfo = processVote(label,0)
-                        log.debug('jiren is %s', jinghuiList)
-                        if len(jinghuiList) > 0:
-                            jiren = room.players.filter(position=int(jinghuiList)).first()
-                            if jiren.alive is 1:
-                                jiren.jingzhang = 1
-                                jiren.save()
-                                sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
-                        else:
-                            sendGroupMessage(label,'警长撕掉警徽','message')
                     room.voteList = ''
                     room.save()
             room.daystatus = 0
             room.save()
+            skill(label, int(nameList[0]))
             sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
             yiyan = 0
             while yiyan is 0:
