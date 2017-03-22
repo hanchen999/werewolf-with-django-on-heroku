@@ -84,6 +84,23 @@ $(function() {
             var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E5%A5%B3%E5%B7%AB%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
             audio.play();
         }
+        if (data.typo === 'message12') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E7%9B%97%E8%B4%BC%E8%AF%B7%E7%9D%81%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.typo === 'message13') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E7%9B%97%E8%B4%BC%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.typo === 'message14') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E4%B8%98%E6%AF%94%E7%89%B9%E8%AF%B7%E7%9D%81%E7%9C%BC.mp3');
+            audio.play();
+        }
+        if (data.typo === 'message15') {
+            var audio = new Audio('https://s3-us-west-1.amazonaws.com/langrensha-assets/%E4%B8%98%E6%AF%94%E7%89%B9%E8%AF%B7%E9%97%AD%E7%9C%BC.mp3');
+            audio.play();
+        }
+
     };
 
     $("#chatform").on("submit", function(event) {
