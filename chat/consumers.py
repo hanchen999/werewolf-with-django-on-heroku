@@ -384,6 +384,7 @@ def checkStatus(label, nameList):
         elif target == 'tuishui':
             if voter in nameList:
                 nameList.remove(voter)
+                sendGroupMessage(label, str(voter) + '号玩家已经退水', 'message')
         elif target == 'startVote':
             room.voteList = ''
             room.save()
