@@ -354,8 +354,6 @@ def checkStatus(label, nameList):
         if target == 'bloom':
             player = room.players.filter(position=voter).first()
             if player.identification == 1 or player.identification == 6:
-                player.alive = 0
-                player.save()
                 sendGroupMessage(label,'狼人' + str(voter) + '号玩家自爆！','message')
                 if room.jinghui is 1:
                     sendGroupMessage(label,'昨天晚上死亡的人是'+room.deadman,'message')
@@ -373,6 +371,8 @@ def checkStatus(label, nameList):
                         skill(label, int(x))
                     else:
                         sendMessage(label,player.address,'你并没有发动技能！','message')
+                player.alive = 0
+                player.save()
                 room.jinghui = 0
                 room.daystatus = 0
                 room.voteList = ''
