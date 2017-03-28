@@ -60,7 +60,7 @@ def keepalive(label, name, messageInfo, typo):
         	#player = room.players.filter(address=name).first()
         	Channel(name).send({'text': json.dumps(message)})
         	time.sleep(10)
-        except exception:
+        except Exception as e:
         	break;
 
 
@@ -996,7 +996,7 @@ def room_status(label, number, gameStatus, playerList):
             while yiyan is 0:
                 yiyan, yiyan_test = checkStatus(room.label, '')
                 time.sleep(10)
-            sendGroupMessage(label,'开始下一晚' + target,'message')
+            sendGroupMessage(label,'开始下一晚','message')
             return 0
 
 
@@ -1007,112 +1007,135 @@ def startGame(label):
         log.debug('ws room does not exist label=%s', label)
         sendGroupMessage(label, 'room does not exist!', 'error')
         return
-    room.gameStart = 1
-    room.save()
-    roleList = room.roleList.split(",")
-    playerList = []
-    gameStatus = []
-    gameStatus.append(0)
-    gameStatus.append(1)
-    for i in range(0, int(roleList[0])):
-        playerList.append(0)
-    for i in range(0, int(roleList[1])):
-        playerList.append(1)
-    for i in range(0, int(roleList[2])):
-        playerList.append(2)
-    if int(roleList[2]) is not 0:
-        gameStatus.append(2)
-    for i in range(0, int(roleList[3])):
-        playerList.append(3)
-    if int(roleList[3]) is not 0:
-        gameStatus.append(3)
-    for i in range(0, int(roleList[4])):
-        playerList.append(4)
-    if int(roleList[4]) is not 0:
-        gameStatus.append(4)
-    for i in range(0, int(roleList[5])):
-        playerList.append(5)
-    if int(roleList[5]) is not 0:
-        gameStatus.append(5)
-    for i in range(0, int(roleList[6])):
-        playerList.append(6)
-    for i in range(0, int(roleList[7])):
-        playerList.append(7)
-    if int(roleList[7]) is not 0:
-        gameStatus.append(7)
-    for i in range(0, int(roleList[8])):
-        playerList.append(8)
-    if int(roleList[8]) is not 0:
-        gameStatus.append(8)
-    random.shuffle(playerList)
-    if int(roleList[8]) is not 0:
-        flag = True
-        while flag:
-            indexofplayerList = len(playerList)
-            flag1 = (playerList[indexofplayerList - 1] == 1) or (playerList[indexofplayerList - 1] == 6)
-            flag2 = (playerList[indexofplayerList - 2] == 1) or (playerList[indexofplayerList - 2] == 6)
-            if flag1 and flag2:
-                random.shuffle(playerList)
-            else:
+    try:
+        room.gameStart = 1
+        room.save()
+        roleList = room.roleList.split(",")
+        playerList = []
+        gameStatus = []
+        gameStatus.append(0)
+        gameStatus.append(1)
+        for i in range(0, int(roleList[0])):
+            playerList.append(0)
+        for i in range(0, int(roleList[1])):
+            playerList.append(1)
+        for i in range(0, int(roleList[2])):
+            playerList.append(2)
+        if int(roleList[2]) is not 0:
+            gameStatus.append(2)
+        for i in range(0, int(roleList[3])):
+            playerList.append(3)
+        if int(roleList[3]) is not 0:
+            gameStatus.append(3)
+        for i in range(0, int(roleList[4])):
+            playerList.append(4)
+        if int(roleList[4]) is not 0:
+            gameStatus.append(4)
+        for i in range(0, int(roleList[5])):
+            playerList.append(5)
+        if int(roleList[5]) is not 0:
+            gameStatus.append(5)
+        for i in range(0, int(roleList[6])):
+            playerList.append(6)
+        for i in range(0, int(roleList[7])):
+            playerList.append(7)
+        if int(roleList[7]) is not 0:
+            gameStatus.append(7)
+        for i in range(0, int(roleList[8])):
+            playerList.append(8)
+        if int(roleList[8]) is not 0:
+            gameStatus.append(8)
+        random.shuffle(playerList)
+        if int(roleList[8]) is not 0:
+            flag = True
+            while flag:
+                indexofplayerList = len(playerList)
+                flag1 = (playerList[indexofplayerList - 1] == 1) or (playerList[indexofplayerList - 1] == 6)
+                flag2 = (playerList[indexofplayerList - 2] == 1) or (playerList[indexofplayerList - 2] == 6)
+                if flag1 and flag2:
+                    random.shuffle(playerList)
+                else:
+                    break
+        for i in range(1, room.playerNumber + 1):
+            player = room.players.filter(position=i).first()
+            player.identification = playerList[i - 1]
+            if player.identification is 0:
+                sendMessage(label,player.address,'您的身份是村民！','message')
+            if player.identification is 1:
+                sendMessage(label,player.address,'您的身份是狼人！','message')
+            if player.identification is 2:
+                sendMessage(label,player.address,'您的身份是预言家！','message')
+            if player.identification is 3:
+                sendMessage(label,player.address,'您的身份是猎人！','message')
+            if player.identification is 4:
+                sendMessage(label,player.address,'您的身份是女巫！','message')
+            if player.identification is 5:
+                sendMessage(label,player.address,'您的身份是守卫！','message')
+            if player.identification is 6:
+                sendMessage(label,player.address,'您的身份是白狼王！','message')
+            if player.identification is 7:
+                sendMessage(label,player.address,'您的身份是丘比特！','message')
+            if player.identification is 8:
+                sendMessage(label,player.address,'您的身份是盗贼！','message')
+            player.save()
+        sendGroupMessage(label, '身份已经准备就绪!', 'message')
+        log.debug('Game Status is %s', str(gameStatus[0:]))
+        roomStatus = 0
+        while judgement(label) is 0:
+            log.debug('房间现在的状态是%d',roomStatus)
+            roomStatus = room_status(label, roomStatus, gameStatus, playerList)
+            if roomStatus is -1:
+                sendGroupMessage(label, '错误发生，或者测试结束！', 'message')
                 break
-    for i in range(1, room.playerNumber + 1):
-        player = room.players.filter(position=i).first()
-        player.identification = playerList[i - 1]
-        if player.identification is 0:
-            sendMessage(label,player.address,'您的身份是村民！','message')
-        if player.identification is 1:
-            sendMessage(label,player.address,'您的身份是狼人！','message')
-        if player.identification is 2:
-            sendMessage(label,player.address,'您的身份是预言家！','message')
-        if player.identification is 3:
-            sendMessage(label,player.address,'您的身份是猎人！','message')
-        if player.identification is 4:
-            sendMessage(label,player.address,'您的身份是女巫！','message')
-        if player.identification is 5:
-            sendMessage(label,player.address,'您的身份是守卫！','message')
-        if player.identification is 6:
-            sendMessage(label,player.address,'您的身份是白狼王！','message')
-        if player.identification is 7:
-            sendMessage(label,player.address,'您的身份是丘比特！','message')
-        if player.identification is 8:
-            sendMessage(label,player.address,'您的身份是盗贼！','message')
-        player.save()
-    sendGroupMessage(label, '身份已经准备就绪!', 'message')
-    log.debug('Game Status is %s', str(gameStatus[0:]))
-    roomStatus = 0
-    while judgement(label) is 0:
-        log.debug('房间现在的状态是%d',roomStatus)
-        roomStatus = room_status(label, roomStatus, gameStatus, playerList)
-        if roomStatus is -1:
-            sendGroupMessage(label, '错误发生，或者测试结束！', 'message')
-            break
-    if judgement(label) == 1:
-        sendGroupMessage(label, '狼人获胜！', 'message')
-    elif judgement(label) == 2:
-        sendGroupMessage(label, '好人获胜！', 'message')
-    else:
-        sendGroupMessage(label, '第三阵营获胜！', 'message')
-    room.voteList = ''
-    room.duyao = 0
-    room.jieyao = 0
-    room.shou = 0
-    room.jinghui = 1
-    room.daystatus = 0
-    room.deadman = ''
-    room.gameStart = 0
-    room.link = ''
-    room.burycard = -1
-    room.theft = -1
-    room.thirdteam = 0
-    room.messages.all().delete()
-    room.save()
-    players = room.players.filter().all()
-    for player in players:
-        player.jingzhang = 0
-        player.alive = 1
-        player.identification = -1
-        player.save()
-    return
+        if judgement(label) == 1:
+            sendGroupMessage(label, '狼人获胜！', 'message')
+        elif judgement(label) == 2:
+            sendGroupMessage(label, '好人获胜！', 'message')
+        else:
+            sendGroupMessage(label, '第三阵营获胜！', 'message')
+        room.voteList = ''
+        room.duyao = 0
+        room.jieyao = 0
+        room.shou = 0
+        room.jinghui = 1
+        room.daystatus = 0
+        room.deadman = ''
+        room.gameStart = 0
+        room.link = ''
+        room.burycard = -1
+        room.theft = -1
+        room.thirdteam = 0
+        room.messages.all().delete()
+        room.save()
+        players = room.players.filter().all()
+        for player in players:
+            player.jingzhang = 0
+            player.alive = 1
+            player.identification = -1
+            player.save()
+        return
+    except Exception as e:
+        room.voteList = ''
+        room.duyao = 0
+        room.jieyao = 0
+        room.shou = 0
+        room.jinghui = 1
+        room.daystatus = 0
+        room.deadman = ''
+        room.gameStart = 0
+        room.link = ''
+        room.burycard = -1
+        room.theft = -1
+        room.thirdteam = 0
+        room.messages.all().delete()
+        room.save()
+        players = room.players.filter().all()
+        for player in players:
+            player.jingzhang = 0
+            player.alive = 1
+            player.identification = -1
+            player.save()
+        return
 
 
 
