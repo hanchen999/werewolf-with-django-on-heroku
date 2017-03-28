@@ -1299,7 +1299,7 @@ def ws_disconnect(message):
         Group('chat-'+label).discard(message.reply_channel)
         player = room.players.filter(address=message.reply_channel.name).first()
         if player is not None:
-            room.players.filter(address=message.reply_channel.name).connection = False
+            player.connection = False
             player.save()
             name = str(room.label) + '-' + str(player.position)
             thread_pool.pop(name)
