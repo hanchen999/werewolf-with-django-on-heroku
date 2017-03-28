@@ -211,7 +211,7 @@ def judgementView(label, name):
 
 
 #发动技能，死亡结算
-def skill(label, number):
+def skill(label, number, condition):
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
@@ -237,7 +237,7 @@ def skill(label, number):
         sendGroupMessage(label,str(player.position) +'号玩家有20s时间可以发动技能','message')
         time.sleep(20)
         target, systemInfo = processVote(label,0)
-        if player.identification is 3:
+        if player.identification is 3 and condition == 1:
             if target is not '' and int(target) > 0:
                 x = room.players.filter(position=int(target)).first()
                 x.alive = 0
@@ -245,13 +245,13 @@ def skill(label, number):
                 sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
                 room.voteList = ''
                 room.save()
-                skill(label, target)
+                skill(label, target, 1)
         if player.link != -1:
             qinglv = room.players.filter(position=player.link).first()
             qinglv.alive = 0
             qinglv.save()
             sendGroupMessage(label,'情侣' + str(player.link) + '号玩家死亡','message')
-            skill(label, player.link)
+            skill(label, player.link, -1)
 
 
 
@@ -368,7 +368,7 @@ def checkStatus(label, nameList):
                         deadman.alive = 0
                         deadman.save()
                         sendGroupMessage(label,'白狼王带走' + x + '号玩家！','message')
-                        skill(label, int(x))
+                        skill(label, int(x), 1)
                     else:
                         sendMessage(label,player.address,'你并没有发动技能！','message')
                 player.alive = 0
@@ -878,7 +878,7 @@ def room_status(label, number, gameStatus, playerList):
                         x.alive = 0
                         x.save()
                         sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
-                        skill(label, target)
+                        skill(label, target, 1)
                         room.voteList = ''
                         room.save()
             sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
@@ -988,7 +988,7 @@ def room_status(label, number, gameStatus, playerList):
                     room.save()
             room.daystatus = 0
             room.save()
-            skill(label, int(nameList[0]))
+            skill(label, int(nameList[0]), 1)
             sendGroupMessage(label,'遗言阶段，如果结束遗言，可以输入startVote','message')
             yiyan = 0
             while yiyan is 0:
