@@ -50,16 +50,15 @@ def keepalive(label, name, messageInfo, typo):
     message['handle'] = 'keepalive'
     message['typo'] = typo
     message['message'] = messageInfo
-    try:
-        room = Room.objects.get(label=label)
-    except Room.DoesNotExist:
-        log.debug('ws room does not exist label=%s', label)
-        return
+    # try:
+    #     room = Room.objects.get(label=label)
+    # except Room.DoesNotExist:
+    #     log.debug('ws room does not exist label=%s', label)
+    #     return
     while 1:
     	try:
-        	m = room.messages.create(**message)
-        	player = room.players.filter(address=name).first()
-        	Channel(name).send({'text': json.dumps(m.as_dict())})
+        	#player = room.players.filter(address=name).first()
+        	Channel(name).send({'text': json.dumps(message)})
         	time.sleep(10)
         except exception:
         	break;
@@ -1113,6 +1112,7 @@ def startGame(label):
         player.alive = 1
         player.identification = -1
         player.save()
+    return
 
 
 
