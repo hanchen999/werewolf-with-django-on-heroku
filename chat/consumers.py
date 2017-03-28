@@ -75,7 +75,10 @@ def sendMessage(label, name, messageInfo, typo):
         log.debug('ws room does not exist label=%s', label)
         return
     m = room.messages.create(**message)
-    Channel(name).send({'text': json.dumps(m.as_dict())})
+    try:
+        Channel(name).send({'text': json.dumps(m.as_dict())})
+    except Exception as e:
+        log.debug('Can not send message to ' + name)
 
 def sendGroupMessage(label, messageInfo, typo):
     message = dict()
@@ -1206,7 +1209,7 @@ def ws_receive(message):
             if player.address != message.reply_channel.name and player.connection == True:
                 log.debug("this room's position has been occupied by another guy")
                 sendMessage(room.label, message.reply_channel.name, "this room's position has been occupied by another guy", 'error')
-            else:
+            elif player.connection == False:
                 player.address = message.reply_channel.name
                 player.connection = True
                 player.save()
