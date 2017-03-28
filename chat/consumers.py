@@ -1273,6 +1273,7 @@ def ws_disconnect(message):
             Room.objects.filter(label=label).update(currentNumber=room.currentNumber - 1)
             room.players.filter(address=message.reply_channel.name).delete()
             name = str(room.label) + '-' + str(player.position)
+            thread_pool[name].join()
             thread_pool.pop(name)
     except (KeyError, Room.DoesNotExist):
         pass
