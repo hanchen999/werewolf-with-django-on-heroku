@@ -33,7 +33,6 @@ class Migration(migrations.Migration):
                 ('label', models.SlugField(unique=True)),
                 ('gameStart', models.IntegerField(default=0)),
                 ('playerNumber', models.IntegerField(default=0)),
-                ('currentNumber', models.IntegerField(default=0)),
                 ('roleList', models.TextField(default='')),
                 ('voteList', models.TextField(default='')),
                 ('jinghui', models.IntegerField(default=1)),
@@ -58,6 +57,7 @@ class Migration(migrations.Migration):
                 ('identification', models.IntegerField(default=-1)),
                 ('alive', models.IntegerField(default=1)),
                 ('link', models.IntegerField(default=-1)),
+                ('connection', models.BooleanField(default=True)),
             ],
         ),
         migrations.AddField(

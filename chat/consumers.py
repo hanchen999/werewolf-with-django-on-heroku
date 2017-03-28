@@ -1161,16 +1161,12 @@ def ws_connect(message):
 
     log.debug('chat connect room=%s client=%s:%s', 
         room.label, message['client'][0], message['client'][1])
-
-    if room.playerNumber == room.currentNumber:
+    occupied = len(room.players.filter(connection=True).all())
+    if room.playerNumber == occupied:
         log.debug('room is full')
-        return
-    if room.gameStart == 1:
-        log.debug('游戏开始!')
         return
     # Need to be explicit about the channel layer so that testability works
     # This may be a FIXME?
-    Room.objects.filter(label=label).update(currentNumber=room.currentNumber + 1)
     Group('chat-'+label).add(message.reply_channel)
     message.channel_session['room'] = room.label
 
@@ -1207,9 +1203,13 @@ def ws_receive(message):
         except ValueError:
             log.debug("something is wrong")
         if player is not None:
-            if player.address != message.reply_channel.name:
+            if player.address != message.reply_channel.name and player.connection == True:
                 log.debug("this room's position has been occupied by another guy")
                 sendMessage(room.label, message.reply_channel.name, "this room's position has been occupied by another guy", 'error')
+            else:
+                player.address = message.reply_channel.name
+                player.connection = True
+                player.save()
         elif data['handle'] != 0:
             room.players.create(position=data['handle'],address=message.reply_channel.name)
         log.debug('chat message room=%s handle=%s message=%s', 
@@ -1296,10 +1296,9 @@ def ws_disconnect(message):
         Group('chat-'+label).discard(message.reply_channel)
         player = room.players.filter(address=message.reply_channel.name).first()
         if player is not None:
-            Room.objects.filter(label=label).update(currentNumber=room.currentNumber - 1)
-            room.players.filter(address=message.reply_channel.name).delete()
+            room.players.filter(address=message.reply_channel.name).connection = False
+            player.save()
             name = str(room.label) + '-' + str(player.position)
-            thread_pool[name].join()
             thread_pool.pop(name)
     except (KeyError, Room.DoesNotExist):
         pass

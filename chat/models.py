@@ -13,7 +13,6 @@ class Room(models.Model):
     label = models.SlugField(unique=True)
     gameStart = models.IntegerField(default=0)
     playerNumber = models.IntegerField(default=0)
-    currentNumber = models.IntegerField(default=0)
     roleList = models.TextField(default='')
     voteList = models.TextField(default='')
     jinghui = models.IntegerField(default=1)
@@ -55,6 +54,7 @@ class Player(models.Model):
     identification = models.IntegerField(default=-1)
     alive = models.IntegerField(default=1)
     link = models.IntegerField(default=-1)
+    connection = models.BooleanField(default=True)
     def __unicode__(self):
         return '{position}: {address}'.format(**self.as_dict())
     def as_dict(self):
