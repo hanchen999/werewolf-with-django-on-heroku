@@ -234,26 +234,26 @@ def skill(label, number, condition):
                 jiren.jingzhang = 1
                 jiren.save()
                 sendGroupMessage(label,jinghuiList + '号玩家成为警长','message')
-        room.voteList = ''
-        room.save()
-        sendGroupMessage(label,str(player.position) +'号玩家有20s时间可以发动技能','message')
-        time.sleep(20)
-        target, systemInfo = processVote(label,0)
-        if player.identification is 3 and condition == 1:
-            if target is not '' and int(target) > 0:
-                x = room.players.filter(position=int(target)).first()
-                x.alive = 0
-                x.save()
-                sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
-                room.voteList = ''
-                room.save()
-                skill(label, target, 1)
-        if player.link != -1:
-            qinglv = room.players.filter(position=player.link).first()
-            qinglv.alive = 0
-            qinglv.save()
-            sendGroupMessage(label,'情侣' + str(player.link) + '号玩家死亡','message')
-            skill(label, player.link, -1)
+    room.voteList = ''
+    room.save()
+    sendGroupMessage(label,str(player.position) +'号玩家有20s时间可以发动技能','message')
+    time.sleep(20)
+    target, systemInfo = processVote(label,0)
+    if player.identification is 3 and condition == 1:
+        if target is not '' and int(target) > 0:
+            x = room.players.filter(position=int(target)).first()
+            x.alive = 0
+            x.save()
+            sendGroupMessage(label,'猎人发动技能，带走' + target,'message')
+            room.voteList = ''
+            room.save()
+            skill(label, target, 1)
+    if player.link != -1:
+        qinglv = room.players.filter(position=player.link).first()
+        qinglv.alive = 0
+        qinglv.save()
+        sendGroupMessage(label,'情侣' + str(player.link) + '号玩家死亡','message')
+        skill(label, player.link, -1)
 
 
 
