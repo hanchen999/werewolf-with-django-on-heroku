@@ -56,10 +56,13 @@ def keepalive(label, name, messageInfo, typo):
         log.debug('ws room does not exist label=%s', label)
         return
     while 1:
-        m = room.messages.create(**message)
-        player = room.players.filter(address=name).first()
-        Channel(name).send({'text': json.dumps(m.as_dict())})
-        time.sleep(20)
+    	try:
+        	m = room.messages.create(**message)
+        	player = room.players.filter(address=name).first()
+        	Channel(name).send({'text': json.dumps(m.as_dict())})
+        	time.sleep(10)
+        except exception:
+        	break;
 
 
 def sendMessage(label, name, messageInfo, typo):
