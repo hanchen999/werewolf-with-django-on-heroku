@@ -1206,7 +1206,7 @@ def ws_receive(message):
         except ValueError:
             log.debug("something is wrong")
         if player is not None:
-            if player.address != message.reply_channel.name and player.connection == True:
+            if player.connection == True:
                 log.debug("this room's position has been occupied by another guy")
                 sendMessage(room.label, message.reply_channel.name, "this room's position has been occupied by another guy", 'error')
             elif player.connection == False:
