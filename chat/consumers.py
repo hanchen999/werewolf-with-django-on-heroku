@@ -92,8 +92,10 @@ def sendGroupMessage(label, messageInfo, typo):
         return
     m = room.messages.create(**message)
     for i in range(1, room.playerNumber + 1):
-        name = room.players.filter(position=i).first().address
-        Channel(name).send({'text': json.dumps(m.as_dict())})
+        player = room.players.filter(position=i).first()
+        if player is not None and player.connection == True:
+            name = player.address
+            Channel(name).send({'text': json.dumps(m.as_dict())})
 
 
 def judgement(label):
