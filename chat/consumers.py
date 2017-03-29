@@ -211,9 +211,9 @@ def judgementView(label, name):
         Info = Info + '盗贼拾取的身份是： ' + str(identificationDict[int(temp.identification)]) + '\n '
         Info = Info + '盗贼掩埋的身份是: ' + str(identificationDict[int(room.burycard)]) + '\n '
     if room.thirdteam == 0:
-        Info = Info + '含有第三阵营！' + '\n '
-    else:
         Info = Info + '不含有第三阵营！' + '\n '
+    else:
+        Info = Info + '含有第三阵营！' + '\n '
     sendMessage(label, name, Info, 'message')
 
 
@@ -783,7 +783,7 @@ def room_status(label, number, gameStatus, playerList):
         sendGroupMessage(label, '天亮了！', 'message2')
         room.daystatus = 1
         room.save()
-        if room.jinghui is 1:
+        if room.jinghui == 1:
             room_status(label, 9, gameStatus, playerList)
         systemInfo = '昨天晚上死的人有:'
         deadList = ''
