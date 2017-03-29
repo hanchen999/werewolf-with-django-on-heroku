@@ -1203,6 +1203,7 @@ def ws_receive(message):
         player = None
         try:
             player = room.players.filter(position=data['handle']).first()
+            sendGroupMessage(label,data['handle'] + '号玩家进入房间','message')
         except ValueError:
             log.debug("something is wrong")
         if player is not None:
@@ -1213,6 +1214,7 @@ def ws_receive(message):
                 player.address = message.reply_channel.name
                 player.connection = True
                 player.save()
+                sendGroupMessage(label,data['handle'] + '号玩家重连成功！','message')
         elif data['handle'] != 0:
             room.players.create(position=data['handle'],address=message.reply_channel.name)
         log.debug('chat message room=%s handle=%s message=%s', 
@@ -1303,5 +1305,6 @@ def ws_disconnect(message):
             player.save()
             name = str(room.label) + '-' + str(player.position)
             thread_pool.pop(name)
+            sendGroupMessage(label,str(player.position) + '号玩家断线','message')
     except (KeyError, Room.DoesNotExist):
         pass
