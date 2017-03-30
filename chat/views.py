@@ -190,6 +190,7 @@ def judge_room(request):
         return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
 
 
+
 def chat_room(request, label, position):
     """
     Room view - show the room, with latest messages.
