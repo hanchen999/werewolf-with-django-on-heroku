@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}上帝视角{% endblock %}
 {% block content %}
-<form id="myForm" action="{% url 'result' %}" method="post">
+<form id="myForm" action="{% url 'judge_room' %}" method="post">
 {% csrf_token %}
 <label><b>房间号</b></label>
 <input type="text" placeholder="输入房间号" name="id" id="id" required>
