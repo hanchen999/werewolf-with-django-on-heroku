@@ -178,9 +178,12 @@ def judge_room(request):
         return render(request, "chat/judge_room.html", {})
     label = request.POST['label']
     pwd = request.POST['pwd']
+    room = None
     try:
         room = Room.objects.filter(label=label).first()
     except Room.DoesNotExist:
+        return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
+    if room is None:
         return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
     info = room.info
     if pwd == 'sjsu':
