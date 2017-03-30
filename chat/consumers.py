@@ -71,7 +71,7 @@ def executeDeath(label,list):
         return
     temp = list.split(',')
     for i in temp:
-        player = room.players.filter(position=i).first()
+        player = room.players.filter(position=int(i)).first()
         player.alive = 0
         player.save()
 
@@ -729,6 +729,8 @@ def room_status(label, number, gameStatus, playerList):
             duyao, systemInfo = processVote(label,0)
             if len(duyao) is 0:
                 sendMessage(label,nvwu,'你今晚没有使用毒药','message')
+                time.sleep(5)
+                sendGroupMessage(label, '女巫请闭眼！', 'message8')
                 time.sleep(5)
                 return 6
             duyaoList = duyao.split(',')
