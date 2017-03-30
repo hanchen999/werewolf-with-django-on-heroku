@@ -63,13 +63,15 @@ def keepalive(label, name, messageInfo, typo):
         except Exception as e:
         	break;
 #改变死掉的人的状态
-def executeDeath(label,list):
+def executeDeath(label,listinfo):
     try:
         room = Room.objects.get(label=label)
     except Room.DoesNotExist:
         log.debug('ws room does not exist label=%s', label)
         return
-    temp = list.split(',')
+    if len(listinfo) == 0:
+        return
+    temp = listinfo.split(',')
     for i in temp:
         player = room.players.filter(position=int(i)).first()
         player.alive = 0
@@ -769,6 +771,8 @@ def room_status(label, number, gameStatus, playerList):
             huwei, systemInfo = processVote(label,0)
             if len(huwei) is 0:
                 sendMessage(label,huwei,'你今晚没有守人','message')
+                time.sleep(5)
+                sendGroupMessage(label, '护卫请闭眼！', 'message10')
                 time.sleep(5)
                 return 7
             huweiList = huwei.split(',')
