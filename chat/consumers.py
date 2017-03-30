@@ -62,8 +62,20 @@ def keepalive(label, name, messageInfo, typo):
         	time.sleep(10)
         except Exception as e:
         	break;
+#改变死掉的人的状态
+def executeDeath(label,list):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        log.debug('ws room does not exist label=%s', label)
+        return
+    temp = list.split(',')
+    for i in temp:
+        player = room.players.filter(position=i).first()
+        player.alive = 0
+        player.save()
 
-
+#单人信息
 def sendMessage(label, name, messageInfo, typo):
     message = dict()
     message['handle'] = '系统信息'
@@ -79,7 +91,7 @@ def sendMessage(label, name, messageInfo, typo):
         Channel(name).send({'text': json.dumps(m.as_dict())})
     except Exception as e:
         log.debug('Can not send message to ' + name)
-
+#群体信息
 def sendGroupMessage(label, messageInfo, typo):
     message = dict()
     message['handle'] = '系统信息'
@@ -97,7 +109,7 @@ def sendGroupMessage(label, messageInfo, typo):
             name = player.address
             Channel(name).send({'text': json.dumps(m.as_dict())})
 
-
+#胜负判决
 def judgement(label):
     try:
         room = Room.objects.get(label=label)
@@ -147,7 +159,7 @@ def judgement(label):
     else:
         log.debug('判决胜负0')
         return 0
-
+#法官视角
 def judgementView(label, name):
     try:
         room = Room.objects.get(label=label)
@@ -261,7 +273,7 @@ def skill(label, number, condition):
         skill(label, player.link, -1)
 
 
-
+#处理投票
 def processVote(label, args):
     try:
         room = Room.objects.get(label=label)
@@ -324,7 +336,7 @@ def processVote(label, args):
         systemInfo = systemInfo + '投' + key + '的人有：' + val + '\n'
     return deadman, systemInfo
 
-
+#处理预选名单
 def processName(label):
     try:
         room = Room.objects.get(label=label)
@@ -343,7 +355,7 @@ def processName(label):
     room.voteList = ''
     room.save()
     return nameList
-
+#在发言阶段处理退水，爆，开始投票等function
 def checkStatus(label, nameList):
     try:
         room = Room.objects.get(label=label)
@@ -397,7 +409,7 @@ def checkStatus(label, nameList):
             room.save()
             return 2, nameList
     return 0, nameList
-
+#PK台状态
 def pkStatus(label):
     try:
         room = Room.objects.get(label=label)
@@ -417,7 +429,7 @@ def pkStatus(label):
             room.save()
             return 1
     return 0
-
+#PK竞选
 def pkVote(label, nameList, count):
     try:
         room = Room.objects.get(label=label)
@@ -450,6 +462,7 @@ def pkVote(label, nameList, count):
         sendGroupMessage(label,systemInfo,'message')
         return target
 
+#丘比特连人
 def processLink(label):
     try:
         room = Room.objects.get(label=label)
@@ -474,7 +487,7 @@ def processLink(label):
     return number1, number2
 
 
-
+#房间状态机
 def room_status(label, number, gameStatus, playerList):
     try:
         room = Room.objects.get(label=label)
@@ -784,8 +797,6 @@ def room_status(label, number, gameStatus, playerList):
         sendGroupMessage(label, '天亮了！', 'message2')
         room.daystatus = 1
         room.save()
-        if room.jinghui == 1:
-            room_status(label, 9, gameStatus, playerList)
         systemInfo = '昨天晚上死的人有:'
         deadList = ''
         if len(room.deadman) is 0:
@@ -799,12 +810,8 @@ def room_status(label, number, gameStatus, playerList):
                 else:
                     deadList = deadList + ',' + deadman
                 player = room.players.filter(position=int(deadman)).first()
-                player.alive = 0
-                player.save()
                 if player.link != -1:
                     qinglv = room.players.filter(position=player.link).first()
-                    qinglv.alive = 0
-                    qinglv.save()
                     deadList = deadList + ',' + str(player.link)
                 room.save()
             elif room.jieyao == deadman or room.shou == deadman:
@@ -816,27 +823,19 @@ def room_status(label, number, gameStatus, playerList):
                 else:
                     deadList = deadList + ',' + deadman
                 player = room.players.filter(position=int(deadman)).first()
-                player.alive = 0
-                player.save()
                 if player.link != -1:
                     qinglv = room.players.filter(position=player.link).first()
-                    qinglv.alive = 0
-                    qinglv.save()
                     deadList = deadList + ',' + str(player.link)
                 room.save()
         if room.duyao is not 0:
             player = room.players.filter(position=int(room.duyao)).first()
             if player.alive == 1:
-                player.alive = 0
-                player.save()
                 if len(deadList) is 0:
                     deadList = '' + str(room.duyao)
                 else:
                     deadList = deadList + ',' + str(room.duyao)
                 if player.link != -1:
                     qinglv = room.players.filter(position=player.link).first()
-                    qinglv.alive = 0
-                    qinglv.save()
                     deadList = deadList + ',' + str(player.link)
         systemInfo = systemInfo + deadList
         room.deadman = deadList
@@ -844,6 +843,9 @@ def room_status(label, number, gameStatus, playerList):
             room.jieyao = -1
         room.info = room.info + ' ' + systemInfo
         room.save()
+        if room.jinghui == 1:
+            room_status(label, 9, gameStatus, playerList)
+        executeDeath(label,deadList)
         sendGroupMessage(label, systemInfo, 'message')
         time.sleep(10)
         return 8
