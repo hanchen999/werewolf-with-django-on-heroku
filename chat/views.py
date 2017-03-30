@@ -13,6 +13,73 @@ def about(request):
 def home(request):
     return render(request, "chat/about.html")
 
+def judgementView(label):
+    try:
+        room = Room.objects.get(label=label)
+    except Room.DoesNotExist:
+        return 'Can not find the room'
+    cunmin = ''
+    langren = ''
+    yuyanjia = ''
+    nvwu = ''
+    shouwei = ''
+    lieren = ''
+    bailangwang = ''
+    qiubite = ''
+    daozei = ''
+    for player in room.players.all():
+        if player.identification == 0:
+            cunmin = cunmin + player.position + ' '
+        elif player.identification == 1:
+            langren = langren + player.position + ' '
+        elif player.identification == 2:
+            yuyanjia = yuyanjia + player.position + ' '
+        elif player.identification == 3:
+            lieren = lieren + player.position + ' '
+        elif player.identification == 4:
+            nvwu = nvwu + player.position + ' '
+        elif player.identification == 5:
+            shouwei = shouwei + player.position + ' '
+        elif player.identification == 6:
+            bailangwang = bailangwang + player.position + ' '
+        elif player.identification == 7:
+            qiubite = qiubite + player.position + ' '
+    Info = 'Identification list \n '
+    if len(cunmin) > 0:
+        Info = Info + '村民: ' + cunmin + '\n '
+    if len(langren) > 0:
+        Info = Info + '狼人: ' + langren + '\n '
+    if len(yuyanjia) > 0:
+        Info = Info + '预言家: ' + yuyanjia + '\n '
+    if len(lieren) > 0:
+        Info = Info + '猎人: ' + lieren + '\n '
+    if len(nvwu) > 0:
+        Info = Info + '女巫: ' + nvwu + '\n '
+        if room.jieyao != 0:
+            Info = Info + '女巫解药已经使用！' + '\n '
+        if room.duyao != 0:
+            Info = Info + '女巫毒药已经使用！对象是: ' + str(room.duyao) + '\n '
+    if len(shouwei) > 0:
+        Info = Info + '守卫: ' + shouwei + '\n '
+        if room.shou != 0:
+            Info = Info + '守卫昨天晚上守卫的人是: ' + str(room.shou) + '\n '
+    if len(bailangwang) > 0:
+        Info = Info + '白狼王: ' + bailangwang + '\n '
+    if len(qiubite) > 0:
+        Info = Info + '丘比特: ' + qiubite + '\n '
+        Info = Info + '丘比特所连的情侣是: ' + room.link + '\n '
+    if room.theft != -1:
+        Info = Info + '盗贼: ' + str(room.theft) + '\n '
+        temp = room.players.filter(position=room.theft).first
+        Info = Info + '盗贼拾取的身份是： ' + str(identificationDict[int(temp.identification)]) + '\n '
+        Info = Info + '盗贼掩埋的身份是: ' + str(identificationDict[int(room.burycard)]) + '\n '
+    if room.thirdteam == 0:
+        Info = Info + '不含有第三阵营！' + '\n '
+    else:
+        Info = Info + '含有第三阵营！' + '\n '
+    return Info
+
+
 # def new_room(request):
 #     """
 #     Randomly create a new room, and redirect to it.
@@ -35,7 +102,7 @@ def create_room(request):
         label = request.POST['id']
         if Room.objects.filter(label=label).exists():
             room = Room.objects.filter(label=label).first()
-            players = room.players.filter().all()
+            players = room.players.filter(connection=True).all()
             if len(players) > 0:
                 return render(request, "chat/error.html", {'messages' : 'this name has been used'})
             else:
@@ -93,7 +160,9 @@ def join_room(request):
     position = request.POST['position']
     try:
         room = Room.objects.filter(label=label).first()
-        players = room.players.all()
+        if room.gameStart == 1:
+            return render(request, "chat/error.html", {'messages' : 'Game has started!'})
+        players = room.players.filter(connection=True).all()
         count = len(players)
         if int(room.playerNumber) is count:
             return render(request, "chat/error.html", {'messages' : 'this room is full'})
@@ -104,6 +173,20 @@ def join_room(request):
     except Room.DoesNotExist:
         return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
 
+def judge_room(request):
+    if request.method == 'GET':
+        return render(request, "chat/judge_room.html", {})
+    label = request.POST['label']
+    pwd = request.POST['pwd']
+    try:
+        room = Room.objects.filter(label=label).first()
+        info = room.info
+        if pwd == 'sjsu':
+            return render(request, "chat/result.html", {'info' : 'this room is full'})
+        else:
+
+    except Room.DoesNotExist:
+        return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
 
 
 def chat_room(request, label, position):

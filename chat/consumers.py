@@ -635,6 +635,7 @@ def room_status(label, number, gameStatus, playerList):
                 if player.identification == 2 and player.alive is 1:
                     sendMessage(label,player.address,systemInfo,'message')
                     break
+        time.sleep(5)
         sendGroupMessage(label, '预言家请闭眼！', 'message6')
         time.sleep(10)
         return 4
@@ -841,6 +842,7 @@ def room_status(label, number, gameStatus, playerList):
         room.deadman = deadList
         if room.jieyao is not 0:
             room.jieyao = -1
+        room.info = room.info + ' ' + systemInfo
         room.save()
         sendGroupMessage(label, systemInfo, 'message')
         time.sleep(10)
@@ -1110,6 +1112,7 @@ def startGame(label):
         room.burycard = -1
         room.theft = -1
         room.thirdteam = 0
+        room.info = ''
         room.messages.all().delete()
         room.save()
         players = room.players.filter().all()
@@ -1132,6 +1135,7 @@ def startGame(label):
         room.burycard = -1
         room.theft = -1
         room.thirdteam = 0
+        room.info = ''
         room.messages.all().delete()
         room.save()
         players = room.players.filter().all()

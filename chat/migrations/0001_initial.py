@@ -45,6 +45,7 @@ class Migration(migrations.Migration):
                 ('thirdteam', models.IntegerField(default=0)),
                 ('theft', models.IntegerField(default=-1)),
                 ('burycard', models.IntegerField(default=-1)),
+                ('info', models.TextField(default='')),
             ],
         ),
         migrations.CreateModel(

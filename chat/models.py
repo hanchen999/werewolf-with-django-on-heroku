@@ -25,6 +25,7 @@ class Room(models.Model):
     thirdteam = models.IntegerField(default=0)
     theft = models.IntegerField(default=-1)
     burycard = models.TextField(default=-1)
+    info = models.TextField(default='')
     def __unicode__(self):
         return self.label
 
