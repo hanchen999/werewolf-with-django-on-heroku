@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}房间配置{% endblock %}
+{% block content %}
+<script type="text/javascript">
+      function toggle_visibility(id) {
+        var e = document.getElementById(id);
+        if(e.style.display == 'block')
+          e.style.display = 'none';
+        else
+          e.style.display = 'block';
+      }
+</script>
+<div>
+{{info}}
+</div>
+<a href="#" onclick="toggle_visibility('foo');">上帝视角</a>
+<div id="foo" style="display:none">{{identification}}</div>
+{% endblock content %}
