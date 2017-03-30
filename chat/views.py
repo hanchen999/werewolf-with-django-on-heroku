@@ -180,14 +180,14 @@ def judge_room(request):
     pwd = request.POST['pwd']
     try:
         room = Room.objects.filter(label=label).first()
-        info = room.info
-        if pwd == 'sjsu':
-            identification = judgementView(label)
-            return render(request, "chat/result.html", {'info' : info, 'identification' : identification})
-        else:
-            return render(request, "chat/error.html", {'messages' : 'password is wrong'})
     except Room.DoesNotExist:
         return render(request, "chat/error.html", {'messages' : 'this room does not exist'})
+    info = room.info
+    if pwd == 'sjsu':
+        identification = judgementView(label)
+        return render(request, "chat/result.html", {'info' : info, 'identification' : identification})
+    else:
+        return render(request, "chat/error.html", {'messages' : 'password is wrong'})
 
 
 
