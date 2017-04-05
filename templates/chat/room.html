@@ -6,9 +6,6 @@
   <p class="quiet">
     欢迎加入狼人杀游戏！  
   </p>
-  <div class="w3-container">
-  <div class="w3-panel w3-card"><p>w3-card</p></div>
-  </div>
   <p>
     <label for="handle">您的座位号码是：</label>
     <input id="handle" type="text" placeholder="handle" value={{position}} readonly>
@@ -22,6 +19,15 @@
   <form id="jugdementView">
     <button type="submit" id="judgementView">法官视角</button>
   </form>
+   <div class="w3-row-padding">
+    <div class="w3-third">
+    {% for i in playerlist %}
+    <div class="w3-card">
+      <p>{{i}}</p>
+    </div>
+    {% endfor %}
+    </div>
+  </div>
   <form id="chatform">
   <div style="height:200px; overflow:auto;">
     <table id="chat">
