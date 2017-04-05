@@ -17,9 +17,3 @@ p.deck a {
     color: #999;
 
 }
-
-.table-fixed tbody {
-	height: 230px;
-	overflow: -y: auto;
-	width: 100%;
-}
