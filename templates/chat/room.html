@@ -20,12 +20,12 @@
     <button type="submit" id="judgementView">法官视角</button>
   </form>
    <div class="w3-row-padding">
+   {% for i in playerlist %}
     <div class="w3-third">
-    {% for i in playerlist %}
-    <div class="w3-card"><p>{{i}}</p></div>
+    <p>{{i}}</p>
+    </div>
     {% endfor %}
     </div>
-  </div>
   <form id="chatform">
   <div style="height:200px; overflow:auto;">
     <table id="chat">
