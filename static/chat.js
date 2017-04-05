@@ -159,19 +159,13 @@ $(function() {
         return false;
     });
 
-    function vote(i) {
-        var message = {
-            handle: $('#handle').val(),
-            message: i,
-            typo: 'Vote'
-        }
-        chatsock.send(JSON.stringify(message));
-        return false;
-    }
-
     var message = {
             handle: $('#handle').val(),
             message: 'verify the socket address',
             typo: 'Vote'
         }
 });
+
+function vote(i) {
+    $("#message").val("" + i);
+}
