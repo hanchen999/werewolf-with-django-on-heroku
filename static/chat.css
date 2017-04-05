@@ -19,8 +19,8 @@ p.deck a {
 }
 
 .card {
-    width: 100%;
-    height: 100%;
+    width: 20%;
+    height: 10%;
     position: absolute;
     -webkit-transition: -webkit-transform 1s;
     -moz-transition: -moz-transform 1s;
@@ -35,8 +35,8 @@ p.deck a {
 
 .card div {
     display: block;
-    height: 100%;
-    width: 100%;
+    height: 20%;
+    width: 10%;
     line-height: 260px;
     color: white;
     text-align: center;
