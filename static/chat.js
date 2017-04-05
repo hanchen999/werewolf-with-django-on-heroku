@@ -124,6 +124,8 @@ $(function() {
         return false;
     });
 
+
+
     $("#identification").on("submit", function(event) {
         var message = {
             handle: $('#handle').val(),
@@ -156,6 +158,16 @@ $(function() {
         $("#message").val('').focus();
         return false;
     });
+
+    function vote(i) {
+        var message = {
+            handle: $('#handle').val(),
+            message: i,
+            typo: 'Vote'
+        }
+        chatsock.send(JSON.stringify(message));
+        return false;
+    }
 
     var message = {
             handle: $('#handle').val(),
