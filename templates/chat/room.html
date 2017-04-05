@@ -20,11 +20,11 @@
     <button type="submit" id="judgementView">法官视角</button>
   </form>
   <form id="chatform">
+  <div style="height:200px; overflow:auto;">
     <table id="chat">
     <thead>
        Message List
     </thead>
-    <div style="height:200px; overflow:auto;">
       <tbody>
         {% for message in messages %}
           <tr>
@@ -34,16 +34,12 @@
           </tr> 
         {% endfor %}
       </tbody>
-      </div>
-      <tfoot>
-      <tr>
-        <td>投票内容:</td>
-        <td colspan=2>
-          <input id="message" type="text" placeholder="message">
-          <button type="submit" id="go">投票</button>
-        </td>
-      </tfoot>
     </table>
+    </div>
+    <div>
+    <input id="message" type="text" placeholder="message">
+    <button type="submit" id="go">投票</button>
+    </div>
   </form>
   <form id="bloom">
     <button type="submit" id="bloom">爆！</button>
