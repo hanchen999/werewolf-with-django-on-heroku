@@ -19,12 +19,12 @@
   <form id="jugdementView">
     <button type="submit" id="judgementView">法官视角</button>
   </form>
-  <div style="height:200px; overflow:auto;">
   <form id="chatform">
     <table id="chat">
     <thead>
        Message List
     </thead>
+    <div style="height:200px; overflow:auto;">
       <tbody>
         {% for message in messages %}
           <tr>
@@ -34,6 +34,7 @@
           </tr> 
         {% endfor %}
       </tbody>
+      </div>
       <tfoot>
       <tr>
         <td>投票内容:</td>
@@ -44,7 +45,6 @@
       </tfoot>
     </table>
   </form>
-  </div>
   <form id="bloom">
     <button type="submit" id="bloom">爆！</button>
   </form>
@@ -52,7 +52,8 @@
 {% endblock content %}
 
 {% block afterbody %}
-  <script type="text/javascript" src='{% static "jquery-1.12.1.min.js" %}'></script>
+  <script type="text/javascript" src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
+  <script type="text/javascript" src='https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js'></script>
   <script type="text/javascript" src='{% static "reconnecting-websocket.min.js" %}'></script>
   <script type="text/javascript" src='{% static "chat.js" %}'></script>
 {% endblock afterbody %}
