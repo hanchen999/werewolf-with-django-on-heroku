@@ -19,13 +19,6 @@
   <form id="jugdementView">
     <button type="submit" id="judgementView">法官视角</button>
   </form>
-   <div class="w3-row-padding">
-   {% for i in playerlist %}
-    <div class="w3-col s6 w3-green w3-center" onclick="vote({{i}})">
-    <p>{{i}}号玩家</p>
-    </div>
-    {% endfor %}
-    </div>
   <form id="chatform">
   <div style="height:30%; overflow:auto;">
     <table id="chat">
